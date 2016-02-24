@@ -1,0 +1,31 @@
+Nom : Manger
+Birth : false
+Self : false
+Action : L_OwnObject,Object(Objet Baie)
+	Action : L_Instant
+		Action : A_DropObject,Dropped object(Objet Baie),n(Integer 5 Constant __NoConstant)
+		Action : L_Repeat,n(Integer 5 Constant __NoConstant)
+			Action : A_ChangeAttribute,Modified attribute(Attribute faim),n(Integer -100 Constant ReductionFaimBaie)
+	Action : L_OwnObject,Object(Objet Poisson)
+		Action : L_Instant
+			Action : A_DropObject,Dropped object(Objet Poisson),n(Integer 1 Constant __NoConstant)
+			Action : A_ChangeAttribute,Modified attribute(Attribute faim),n(Integer -100 Constant ReductionFaimPoisson)
+		Action : L_OwnObject,Object(Objet Viande)
+			Action : L_Instant
+				Action : A_DropObject,Dropped object(Objet Viande),n(Integer 1 Constant __NoConstant)
+				Action : A_ChangeAttribute,Modified attribute(Attribute faim),n(Integer -100 Constant ReductionFaimViande)
+			Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Nomade:Follower)
+				Action : L_CompareAttribute,attributeToCompare(Attribute faim),comparator(Comparator <=),n(Double -100.0 Constant SeuilFaim)
+					Action : A_ChangeAttribute,Modified attribute(Attribute faim),n(Integer 50 Constant __NoConstant)
+					Action : A_DoNothing
+				Action : L_IsGroupFacilityHere,Facility(Amenagement Setlement),Group(Group societe)
+					Action : L_Instant
+						Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Baie),n(Integer 5 Constant __NoConstant),Amenagement(Amenagement Setlement)
+						Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Viande),n(Integer 1 Constant __NoConstant),Amenagement(Amenagement Setlement)
+						Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Poisson),n(Integer 1 Constant __NoConstant),Amenagement(Amenagement Setlement)
+					Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+						Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Setlement),Group(Group societe)
+						Action : A_DoNothing
+Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Nomade:Leader)
+	Action : A_ChangeAttribute,Modified attribute(Attribute faim),n(Integer 20 Constant __NoConstant)
+	Action : A_DoNothing

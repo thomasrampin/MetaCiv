@@ -1,0 +1,36 @@
+Nom : Chasser
+Birth : false
+Self : false
+Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+	Action : A_DoNothing
+	Action : L_IsInGroup,Group(Group Nomade)
+		Action : A_DoNothing
+		Action : A_CreateGroupFacility,Modified amenagement(Amenagement Setlement),Group(Group societe)
+Action : L_OwnObject,Object(Objet Viande)
+	Action : L_IsGroupFacilityHere,Facility(Amenagement Setlement),Group(Group societe)
+		Action : A_DepositObjectInFacilityHere,Modified object(Objet Viande),n(Integer 1),Amenagement(Amenagement Setlement)
+		Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+			Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Setlement),Group(Group societe)
+			Action : A_DoNothing
+	Action : L_ComparePhero,resourceToCompare(Pheromone Gibier),comparator(Comparator >=),n(Double 1.0)
+		Action : L_Instant
+			Action : A_GetObject,Modified Object(Objet Viande),n(Integer 1)
+			Action : A_Collect,ResourcesToCollect(Pheromone Gibier),n(Double -1.0000000000000187)
+			Action : L_RandomPercent,n(Double 10.0)
+				Action : A_ChangeCognitonWeight,Cogniton(Cogniton Chasse),n(Double 0.19999999999998122)
+				Action : A_DoNothing
+			Action : L_RandomPercent,n(Double 4.0)
+				Action : L_CompareCogniton,Cogniton(Cogniton ManqueResource),comparator(Comparator >),n(Double 1.0)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double -0.3000000000000188)
+					Action : A_DoNothing
+				Action : A_DoNothing
+		Action : L_Instant
+			Action : A_SmellAndMove,ResourcesToFollow(Pheromone Gibier)
+			Action : L_RandomPercent,n(Double 10.0)
+				Action : L_CompareCogniton,Cogniton(Cogniton Chasse),comparator(Comparator >),n(Double 1.0)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton Chasse),n(Double -0.2000000000000188)
+					Action : A_DoNothing
+				Action : A_DoNothing
+			Action : L_RandomPercent,n(Double 4.0)
+				Action : A_ChangeCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double 0.2999999999999812)
+				Action : A_DoNothing

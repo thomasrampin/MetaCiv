@@ -1,0 +1,9 @@
+Nom : Foret
+Couleur : 0.33333334,1.0,0.4
+Passabilite : 25
+Infranchissable : false
+AltMin : 0
+AltMax : 20
+Apparition : 0
+Pheromone : Baies,10.0,0.1
+Pheromone : Bois,2.0,0.2

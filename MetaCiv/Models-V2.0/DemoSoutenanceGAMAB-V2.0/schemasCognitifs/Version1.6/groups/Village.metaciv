@@ -1,0 +1,16 @@
+Name : Village
+Culturon : Chef,Recruter
+Culturon : Chef,Famine?
+Culturon : Chef,ReproduireChef
+Culturon : RienFaire,ConstruireVillage
+Culturon : RienFaire,AllerChercherDesBaies
+Culturon : RienFaire,Recruter
+Culturon : RienFaire,ReproduireRienFaire
+Culturon : RienFaire,BesoinChef
+Culturon : RienFaire,DevenirArtisan?
+Culturon : agriculteur,Agriculteur
+Culturon : agriculteur,ReproduireAgriculteur
+Culturon : Artisan,AllerChercherDuBois
+Culturon : Artisan,BesoinHutte
+Culturon : Artisan,FaireUnePelle
+AutoJoin : false,null

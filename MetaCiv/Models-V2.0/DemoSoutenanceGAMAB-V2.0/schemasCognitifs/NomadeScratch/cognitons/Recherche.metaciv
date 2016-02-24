@@ -1,0 +1,17 @@
+Nom : Recherche
+Description : Un nouveau cogniton
+Type : CULTURON
+StartChance : 0
+Initial : 0
+Influence : Demenager,10
+Influence : Chasser,-2
+Influence : Cueillir,-2
+Influence : Pecher,-2
+Influence : Agricuter,-2
+Hue0 : 0
+Hue1 : 0
+Hue2 : 0
+Hue3 : 0
+Hue4 : 0
+Hue5 : 0
+Hue6 : 0

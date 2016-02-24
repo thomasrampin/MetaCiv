@@ -1,0 +1,10 @@
+Nom : RamenerPelleAuVillage
+Birth : false
+Self : false
+Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Village),Group(Group Village)
+Action : A_DepositObjectInFacilityHere,objetToCompare(Objet Pelle),n(Integer 1),Amenagement(Amenagement Village)
+Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Baies),n(Integer 20),Amenagement(Amenagement Village)
+Action : L_CompareNombreObjets,objetToCompare(Objet Pelle),comparator(Comparator <=),n(Double 0.0 Constant SeuilNePlusRamenerDePellesAuVillage)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton JaiUnePelle),n(Double -4.0)
+	Action : A_DoNothing
+Action : A_DoNothing

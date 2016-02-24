@@ -1,0 +1,11 @@
+Nom : DonnerNaissanceSiJ'aiPasFaim
+Birth : false
+Self : false
+Action : L_OwnCogniton,Cogniton(Cogniton Faim)
+	Action : A_DoNothing
+	Action : L_RandomPercent,n(Double 5.0)
+		Action : L_RandomPercent,n(Double 10.0)
+			Action : A_BirthGroupAndRole,GroupToCreate(GroupAndRole Village:RienFaire)
+			Action : A_DoNothing
+		Action : A_DoNothing
+Action : A_DoNothing

@@ -1,0 +1,25 @@
+Nom : Demenager
+Birth : false
+Self : false
+Action : L_CompareRoleMembers,GroupToCreate(GroupAndRole Nomade:Leader),comparator(Comparator <),n(Double 1.0)
+	Action : A_CreateElectedGroup,GroupToCreate(GroupAndRole Nomade:Leader),RoleOfVoter(GroupAndRole Nomade:Follower),Cogniton(Cogniton ManqueResource),n(Integer 199)
+	Action : A_DoNothing
+Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Nomade:Leader)
+	Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+		Action : A_EmptyAndEraseGroupFacility,Facility(Amenagement Setlement),Group(Group societe)
+		Action : L_CompareAttribute,attributeToCompare(Attribute IterrationDemenagement),comparator(Comparator <=),n(Double 1.0 Constant TickMigration)
+			Action : L_Instant
+				Action : A_ChangeAttribute,Modified attribute(Attribute IterrationDemenagement),n(Integer 1 Constant __NoConstant)
+				Action : A_AvanceAleatoirement
+				Action : A_ReplaceCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double 0.9999999999999811 Constant __NoConstant)
+			Action : L_Instant
+				Action : A_DisbandGroup,GroupToDisband(GroupAndRole Nomade:Leader)
+				Action : A_ChangeAttribute,Modified attribute(Attribute IterrationDemenagement),n(Integer -100 Constant RetourIterration)
+	Action : L_CompareRoleMembers,GroupToCreate(GroupAndRole Nomade:Leader),comparator(Comparator >),n(Double 0.0)
+		Action : L_Instant
+			Action : A_FollowRoleInGroup,GroupeRoleToFollow(GroupAndRole Nomade:Leader)
+			Action : A_ReplaceCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double 0.9999999999999811 Constant __NoConstant)
+		Action : A_DoNothing
+Action : L_IsInGroup,Group(Group Nomade)
+	Action : A_ErasePrivateFacility,Amenagement(Amenagement Ferme)
+	Action : A_DoNothing

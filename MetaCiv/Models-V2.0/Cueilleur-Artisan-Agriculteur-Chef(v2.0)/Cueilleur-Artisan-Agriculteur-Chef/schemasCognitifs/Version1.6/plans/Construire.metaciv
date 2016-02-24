@@ -1,0 +1,8 @@
+Nom : Construire
+Birth : false
+Self : false
+Action : L_IsInGroup,Group type to check(Group Village)
+	Action : L_IsFacilityInGroup,Facility(Amenagement Village),Group(Group Village)
+		Action : A_AddCogniton,Cogniton(Cogniton PasBesoinDeVillage)
+		Action : A_CreateGroupFacility,Facility(Amenagement Village),Group type(Group Village)
+	Action : A_DoNothing

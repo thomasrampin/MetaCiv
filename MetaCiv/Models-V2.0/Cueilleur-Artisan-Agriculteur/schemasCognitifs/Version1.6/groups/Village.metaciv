@@ -1,0 +1,13 @@
+Name : Village
+Culturon : RienFaire,ConstruireVillage
+Culturon : RienFaire,AllerChercherDesBaies
+Culturon : RienFaire,Recruter
+Culturon : RienFaire,ReproduireCueilleur
+Culturon : RienFaire,DevenirArtisan?
+Culturon : RienFaire,DevenirAgriculteur?
+Culturon : agriculteur,Agriculteur
+Culturon : agriculteur,ReproduireAgriculteur
+Culturon : Artisan,AllerChercherDuBois
+Culturon : Artisan,BesoinHutte
+Culturon : Artisan,FaireUnePelle
+Culturon : Artisan,ReproduireArtisan

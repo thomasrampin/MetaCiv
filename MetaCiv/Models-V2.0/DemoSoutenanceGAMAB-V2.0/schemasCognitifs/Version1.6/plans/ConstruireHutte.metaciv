@@ -1,0 +1,9 @@
+Nom : ConstruireHutte
+Birth : false
+Self : false
+Action : L_OwnPrivateFacility,facility(Amenagement hutte)
+	Action : A_AddCogniton,Cogniton(Cogniton PasBesoinHutte)
+	Action : L_IsAnyFacilityHere
+		Action : A_AvanceAleatoirement
+		Action : A_CreatePrivateFacility,Facility(Amenagement hutte)
+Action : A_DoNothing

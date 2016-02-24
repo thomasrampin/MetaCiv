@@ -1,0 +1,7 @@
+Carte : demaoGamab3.metaciv
+DecisionMaker : WeightedStochasticDecisionMaker
+MaxWeight : 2147483647
+RoadCreation : 35
+RoadEvaporation : 20
+VisionRadius : 10
+Dispersion : 1

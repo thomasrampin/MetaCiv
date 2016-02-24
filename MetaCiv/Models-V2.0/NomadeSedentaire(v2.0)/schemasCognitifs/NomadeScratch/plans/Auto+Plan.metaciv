@@ -1,0 +1,31 @@
+Nom : Auto Plan
+Birth : false
+Self : true
+Action : L_CompareAttribute,attributeToCompare(Attribute age),comparator(Comparator <),n(Double -100.0 Constant SeuilAge)
+	Action : A_ChangeAttribute,Modified attribute(Attribute sante),n(Integer -1 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_IsOnTerrain,terrain(Terrain Littoral)
+	Action : L_Instant
+		Action : L_OwnCogniton,Cogniton(Cogniton Peche)
+			Action : A_ChangeCognitonWeightOneTick,Cogniton(Cogniton Peche),n(Double 2.199999999999982 Constant __NoConstant)
+			Action : L_RandomPercent,n(Double 1.0 Constant ChanceDecouvertePeche)
+				Action : A_AddCogniton,Cogniton(Cogniton Peche)
+				Action : A_DoNothing
+	Action : A_DoNothing
+Action : A_ChangeAttribute,Modified attribute(Attribute faim),n(Integer -1 Constant __NoConstant)
+Action : A_ChangeAttribute,Modified attribute(Attribute age),n(Integer 1 Constant AgeParTick)
+Action : L_IsOnTerrain,terrain(Terrain Foret)
+	Action : A_ChangeCognitonWeightOneTick,Cogniton(Cogniton dansForet),n(Double 2.099999999999982)
+	Action : A_DoNothing
+Action : L_IsOnTerrain,terrain(Terrain Prairie)
+	Action : L_Instant
+		Action : A_ChangeCognitonWeightOneTick,Cogniton(Cogniton DansPrairie),n(Double 2.9999999999999827 Constant __NoConstant)
+		Action : L_RandomPercent,n(Double 1.0 Constant __NoConstant)
+			Action : L_RandomPercent,n(Double -100.0 Constant ChanceDecouverteAgriculture)
+				Action : A_AddCogniton,Cogniton(Cogniton Agriculture)
+				Action : A_DoNothing
+			Action : A_DoNothing
+	Action : A_DoNothing
+Action : L_CompareAttribute,attributeToCompare(Attribute faim),comparator(Comparator <),n(Double 0.0 Constant __NoConstant)
+	Action : A_ChangeAttribute,Modified attribute(Attribute sante),n(Integer -1 Constant __NoConstant)
+	Action : A_DoNothing

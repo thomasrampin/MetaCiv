@@ -1,0 +1,36 @@
+Nom : Cueillir
+Birth : false
+Self : false
+Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+	Action : A_DoNothing
+	Action : L_IsInGroup,Group(Group Nomade)
+		Action : A_DoNothing
+		Action : A_CreateGroupFacility,Modified amenagement(Amenagement Setlement),Group(Group societe)
+Action : L_OwnObject,Object(Objet Baie)
+	Action : L_IsGroupFacilityHere,Facility(Amenagement Setlement),Group(Group societe)
+		Action : A_DepositObjectInFacilityHere,Modified object(Objet Baie),n(Integer 5),Amenagement(Amenagement Setlement)
+		Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+			Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Setlement),Group(Group societe)
+			Action : A_AvanceAleatoirement
+	Action : L_ComparePhero,resourceToCompare(Pheromone Baies),comparator(Comparator >=),n(Double 5.0)
+		Action : L_Instant
+			Action : A_GetObject,Modified Object(Objet Baie),n(Integer 5)
+			Action : A_Collect,ResourcesToCollect(Pheromone Baies),n(Double -4.900000000000018)
+			Action : L_RandomPercent,n(Double 5.0 Constant __NoConstant)
+				Action : A_ChangeCognitonWeight,Cogniton(Cogniton Recolte),n(Double 0.2999999999999812)
+				Action : A_DoNothing
+			Action : L_RandomPercent,n(Double 4.0)
+				Action : L_CompareCogniton,Cogniton(Cogniton Recolte),comparator(Comparator >),n(Double 1.0)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double -0.2000000000000188)
+					Action : A_DoNothing
+				Action : A_DoNothing
+		Action : L_Instant
+			Action : A_SmellAndMove,ResourcesToFollow(Pheromone Baies)
+			Action : L_RandomPercent,n(Double 5.0 Constant __NoConstant)
+				Action : L_CompareCogniton,Cogniton(Cogniton Recolte),comparator(Comparator >),n(Double 1.0)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton Recolte),n(Double -0.2000000000000188)
+					Action : A_DoNothing
+				Action : A_DoNothing
+			Action : L_RandomPercent,n(Double 4.0 Constant __NoConstant)
+				Action : A_ChangeCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double 0.2999999999999812)
+				Action : A_DoNothing

@@ -1,0 +1,15 @@
+Nom : ConstruirePelle
+Birth : false
+Self : false
+Action : L_CompareNombreObjets,objetToCompare(Objet Bois),comparator(Comparator >=),n(Double 5.0 Constant NombreDeBoisPourFaireUnePelle)
+	Action : L_IsPrivateFacilityHere,Facility(Amenagement hutte)
+		Action : L_Repeat,n(Integer 1)
+			Action : A_DropItem,Dropped object(Objet Bois),n(Integer 5 Constant NombreDeBoisPourFaireUnePelle)
+			Action : A_ChangeAttribute,Modified attribute(Attribute CompetenceArtisanat),n(Integer 1 Constant CompetenceParPelle)
+			Action : A_AddItem,Modified object(Objet Pelle),n(Integer 1 Constant NombreDePelleAjoute)
+		Action : A_GoToPrivateFacility,Amenagement(Amenagement hutte)
+	Action : A_DoNothing
+Action : L_CompareNombreObjets,objetToCompare(Objet Pelle),comparator(Comparator >=),n(Double 1.0 Constant NombreDePelleAvantDeRamenerAuVillage)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton JaiUnePelle),n(Double 4.0)
+	Action : A_DoNothing
+Action : A_DoNothing

@@ -1,0 +1,6 @@
+Nom : DevenirArtisan
+Birth : false
+Self : false
+Action : A_ChangeRoleForAnother,Change to that role :(GroupAndRole Village:Artisan)
+Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton DevenirArtisan?),n(Double -1.0)
+Action : A_DoNothing

@@ -1,0 +1,9 @@
+Nom : AllerChercherAuVillage
+Birth : false
+Self : false
+Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Village), Group(Group Village)
+Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Baies),n(Integer 6 Constant NombreBaiesRetirerAuVillageSiFaim),Amenagement(Amenagement Village)
+Action : L_CompareNombreObjets,objetToCompare(Objet Baies),comparator(Comparator >),n(Double 5.0 Constant InsatisfaitSiJeNaiPasReussiAPrendreBaies)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton FaimEtRienDansMonSac),n(Double -4.0)
+	Action : A_ChangeAttribute,Modified attribute(Attribute Insatisfaction),n(Integer 1 Constant InsatisfactionSiRessourcesDuVillageVide)
+Action : A_DoNothing

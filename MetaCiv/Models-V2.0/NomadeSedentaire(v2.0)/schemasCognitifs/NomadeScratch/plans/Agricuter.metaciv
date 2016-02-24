@@ -1,0 +1,38 @@
+Nom : Agricuter
+Birth : false
+Self : false
+Action : L_OwnObject,Object(Objet Baie)
+	Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+		Action : L_IsGroupFacilityHere,Facility(Amenagement Setlement),Group(Group societe)
+			Action : A_DepositObjectInFacilityHere,Modified object(Objet Baie),n(Integer 5 Constant __NoConstant),Amenagement(Amenagement Setlement)
+			Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Setlement),Group(Group societe)
+		Action : L_IsInGroup,Group(Group Nomade)
+			Action : A_DoNothing
+			Action : A_CreateGroupFacility,Modified amenagement(Amenagement Setlement),Group(Group societe)
+	Action : L_OwnPrivateFacility,amenagement(Amenagement Ferme)
+		Action : L_IsPrivateFacilityHere,Facility(Amenagement Ferme)
+			Action : L_Instant
+				Action : L_CompareCogniton,Cogniton(Cogniton Agriculture),comparator(Comparator <),n(Double 10.0 Constant __NoConstant)
+					Action : L_RandomPercent,n(Double 10.0 Constant __NoConstant)
+						Action : A_ChangeCognitonWeight,Cogniton(Cogniton Agriculture),n(Double 0.2999999999999812 Constant __NoConstant)
+						Action : A_DoNothing
+					Action : A_DoNothing
+				Action : L_CompareCogniton,Cogniton(Cogniton Agriculture),comparator(Comparator >),n(Double 1.0 Constant __NoConstant)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton Agriculture),n(Double -0.8000000000000187 Constant __NoConstant)
+					Action : A_DoNothing
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+				Action : A_CreateObject,Created object(Objet Baie)
+			Action : A_GoToPrivateFacility,Amenagement(Amenagement Ferme)
+		Action : L_IsAnyFacilityHere
+			Action : L_Instant
+				Action : A_SetTargetToClosestEmptyPatch
+				Action : A_GoToTarget
+			Action : A_CreatePrivateFacility,Modified amenagement(Amenagement Ferme)

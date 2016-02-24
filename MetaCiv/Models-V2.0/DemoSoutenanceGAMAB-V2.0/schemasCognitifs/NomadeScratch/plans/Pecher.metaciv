@@ -1,0 +1,38 @@
+Nom : Pecher
+Birth : false
+Self : false
+Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+	Action : A_DoNothing
+	Action : L_IsInGroup,Group(Group Nomade)
+		Action : A_DoNothing
+		Action : A_CreateGroupFacility,Modified amenagement(Amenagement Setlement),Group(Group societe)
+Action : L_OwnObject,Object(Objet Poisson)
+	Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
+		Action : L_IsGroupFacilityHere,Facility(Amenagement Setlement),Group(Group societe)
+			Action : A_DepositObjectInFacilityHere,Modified object(Objet Poisson),n(Integer 1 Constant __NoConstant),Amenagement(Amenagement Setlement)
+			Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Setlement),Group(Group societe)
+		Action : A_DoNothing
+	Action : L_IsOnTerrain,terrain(Terrain Littoral)
+		Action : L_ComparePhero,resourceToCompare(Pheromone Poisson),comparator(Comparator >),n(Double 1.0 Constant __NoConstant)
+			Action : L_Instant
+				Action : A_CreateObject,Created object(Objet Poisson)
+				Action : A_Collect,ResourcesToCollect(Pheromone Poisson),n(Double -1.0000000000000187 Constant __NoConstant)
+				Action : L_RandomPercent,n(Double 10.0 Constant __NoConstant)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton Peche),n(Double 0.19999999999998122 Constant __NoConstant)
+					Action : A_DoNothing
+				Action : L_RandomPercent,n(Double 20.0 Constant __NoConstant)
+					Action : L_CompareCogniton,Cogniton(Cogniton ManqueResource),comparator(Comparator >),n(Double 1.0 Constant __NoConstant)
+						Action : A_ChangeCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double -0.1000000000000188 Constant __NoConstant)
+						Action : A_DoNothing
+					Action : A_DoNothing
+			Action : L_Instant
+				Action : A_SmellAndMove,ResourcesToFollow(Pheromone Poisson)
+				Action : L_RandomPercent,n(Double 10.0 Constant __NoConstant)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton Peche),n(Double -0.1000000000000188 Constant __NoConstant)
+					Action : A_DoNothing
+				Action : L_RandomPercent,n(Double 10.0 Constant __NoConstant)
+					Action : A_ChangeCognitonWeight,Cogniton(Cogniton ManqueResource),n(Double 0.09999999999998122 Constant __NoConstant)
+					Action : A_DoNothing
+		Action : L_CompareCogniton,Cogniton(Cogniton Peche),comparator(Comparator >),n(Double 1.0 Constant __NoConstant)
+			Action : A_ChangeCognitonWeight,Cogniton(Cogniton Peche),n(Double -0.1000000000000188 Constant __NoConstant)
+			Action : A_DoNothing

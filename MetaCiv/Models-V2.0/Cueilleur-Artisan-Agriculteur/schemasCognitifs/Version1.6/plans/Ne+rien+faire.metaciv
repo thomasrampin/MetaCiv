@@ -1,0 +1,14 @@
+Nom : Ne rien faire
+Birth : false
+Self : false
+Action : L_CompareNombreObjets,objetToCompare(Objet Bois),comparator(Comparator >=),n(Double 1.0 Constant NombreDeBoisPourSculpture)
+	Action : L_RandomPercent,n(Double 50.0)
+		Action : L_CompareAttribute,attributeToCompare(Attribute CompetenceArtisanat),comparator(Comparator >=),n(Double 5.0 Constant NombreDeSculpturePourDevenirUnArtisan)
+			Action : A_DoNothing
+			Action : L_Repeat,n(Integer 1)
+				Action : A_DropObject,Dropped object(Objet Bois),n(Integer 1)
+				Action : A_ChangeAttribute,Modified attribute(Attribute CompetenceArtisanat),n(Integer 1 Constant CompetenseParSculture)
+				Action : A_AddItem,Modified object(Objet Sculture),n(Integer 1)
+		Action : A_DoNothing
+	Action : A_DoNothing
+Action : A_DoNothing

@@ -1,0 +1,5 @@
+Nom : Tuer
+Birth : false
+Self : false
+Action : A_killOtherAgentOnPatchThatIsNotInMyGroup
+Action : A_DoNothing

@@ -1,0 +1,7 @@
+Nom : DevenirChef
+Birth : false
+Self : false
+Action : L_CompareRoleMembers,GroupToCreate(GroupAndRole Village:Chef),comparator(Comparator >=),n(Double 1.0)
+	Action : A_DoNothing
+	Action : A_ChangeRoleForAnother,Change to that role :(GroupAndRole Village:Chef)
+Action : A_DoNothing
