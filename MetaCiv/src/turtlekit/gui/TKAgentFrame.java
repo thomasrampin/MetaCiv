@@ -36,7 +36,6 @@ public class TKAgentFrame extends AgentFrame {
 
 	public TKAgentFrame(AbstractAgent agent) {
 		super(agent);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	

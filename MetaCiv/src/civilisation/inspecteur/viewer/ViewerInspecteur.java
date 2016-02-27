@@ -33,6 +33,7 @@ public class ViewerInspecteur extends TKDefaultViewer{
 		    contentPane.addTab("Options", new PanelOptions());
 		    frame.setContentPane(contentPane);
 			frame.setLocation(50, 0);
+			
 		}
 
 		@Override

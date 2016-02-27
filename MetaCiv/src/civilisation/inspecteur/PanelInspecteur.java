@@ -55,7 +55,7 @@ public class PanelInspecteur extends JPanel{
 	PanelListeCognitons croyances = new PanelListeCognitons();
 	PanelListePlans plans = new PanelListePlans();
 	PanelGenealogie genealogie = new PanelGenealogie();
-
+	
 	int agentID = 0;
 	Human h = null;
 	boolean fixedHuman = false;
@@ -66,8 +66,6 @@ public class PanelInspecteur extends JPanel{
 	public PanelInspecteur()
 	{
 		this.setLayout(new BorderLayout());
-		
-
 		this.add(toolBar, BorderLayout.NORTH);
 		
 		JPanel southPanel = new JPanel();

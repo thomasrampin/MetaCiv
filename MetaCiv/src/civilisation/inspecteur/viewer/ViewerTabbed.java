@@ -61,6 +61,7 @@ public class ViewerTabbed extends TKDefaultViewer{
 
 		    frame.setContentPane(contentPane);
 			frame.setLocation(50, 0);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 
 		@Override
