@@ -1,0 +1,7 @@
+Nom : Se Balader
+Birth : false
+Self : false
+Action : A_AvanceAleatoirement
+Action : L_CompareAttribute,attributeToCompare(Attribute Aggresif),comparator(Comparator >),n(Double 100.0 Constant __NoConstant)
+	Action : A_AddCogniton,Cogniton(Cogniton Violent)
+	Action : A_DoNothing

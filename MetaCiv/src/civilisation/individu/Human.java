@@ -73,6 +73,14 @@ public class Human extends Turtle implements Serializable
 	//ArrayList<Amenagement> privateFacilities;
 	NInventaire inventaire;
 
+	//Cible des interactions
+	Human cibleInteraction;
+	
+
+	
+	
+	
+	
 	Patch cible = null;
 	Human pere;
 	Human mere;
@@ -801,6 +809,7 @@ public class Human extends Turtle implements Serializable
 		else return null;
 	}
 	
+	
 	/**
 	 * 
 	 * @param tortues
@@ -1001,6 +1010,9 @@ public class Human extends Turtle implements Serializable
 	 */
 	public boolean isHere(Turtle cible)
 	{
+		return (this.getPatch() == cible.getPatch());
+		
+		/*
 		Turtle[] tortuesIci = (Turtle[]) this.getOtherTurtles(0, true).toArray(); //TODO to check
 		for(int i = 0;i < tortuesIci.length;i++)
 		{
@@ -1009,7 +1021,7 @@ public class Human extends Turtle implements Serializable
 				return true;
 			}
 		}
-		return false;
+		return false;*/
 		
 	}
 
@@ -1757,7 +1769,29 @@ public class Human extends Turtle implements Serializable
 		// TODO Auto-generated method stub
 		return privateFacilities;
 	}
+	
+	public void setCibleInteraction(Human h){
+		this.cibleInteraction = h;
+	}
 
+	public Human getCibleInteraction(){
+		return cibleInteraction;
+	}
+	
+	
+
+	public Human oneOfHumanInRadius(int radius) //MODIF L.R
+	{
+		List<Turtle> cibles = this.getOtherTurtles(radius, true);
+		ArrayList<Turtle> choix = new ArrayList<Turtle>();
+		for(int i = 0;i<cibles.size();i++)
+		{
+			if(cibles.get(i) != null && cibles.get(i).getClass().equals(this.getClass()) && cibles.get(i)!=this) choix.add(cibles.get(i));
+		}
+		
+		if(!choix.isEmpty()) return (Human) oneOf(choix);
+		else return null;
+	}
 }
 
 

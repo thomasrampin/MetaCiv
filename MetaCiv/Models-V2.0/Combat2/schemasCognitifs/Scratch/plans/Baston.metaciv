@@ -1,0 +1,5 @@
+Nom : Baston
+Birth : false
+Self : false
+Action : A_GetCible_RandomDist
+Action : A_Interaction_Attaquer
