@@ -3,15 +3,20 @@ package civilisation.inspecteur.simulation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 
+import javax.swing.DropMode;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import I18n.I18nList;
 
@@ -28,8 +33,11 @@ public class PanelArbreActions extends JJPanel{
 	JToolBar toolBar = new JToolBar();
 	JPopupMenu popup;
 	Action actionActive; /*Pour m_moriser l'action en cours de modification, le cas _cheant*/
+	Action dragAction;
 	JScrollPane scrollAction;
 	NodeArbreActions nodeActionActive;
+	NodeArbreActions nodeDrag;
+
 	ModeleArbreActions treeModel;
 	
 
@@ -58,6 +66,11 @@ public class PanelArbreActions extends JJPanel{
 		ArbreActionsRenderer renderer = new ArbreActionsRenderer();
 		arbreActions.setCellRenderer(renderer);
 		arbreActions.addMouseListener(new MouseArbreActionsListener(this));
+		arbreActions.setDragEnabled(true);
+		arbreActions.setDropMode(DropMode.ON_OR_INSERT);
+		arbreActions.setTransferHandler(new TreeTransferHandler());
+		arbreActions.getSelectionModel().setSelectionMode(
+                TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
 		arbreActions.setBackground(this.getBackground());
 		scrollAction = new JScrollPane(arbreActions);
 		
@@ -65,6 +78,16 @@ public class PanelArbreActions extends JJPanel{
 		
 		//this.add(arbreActions , BorderLayout.CENTER);
 		javax.swing.ToolTipManager.sharedInstance().registerComponent(arbreActions);
+		DefaultMutableTreeNode root =
+	            (DefaultMutableTreeNode)arbreActions.getModel().getRoot();
+	        Enumeration e = root.breadthFirstEnumeration();
+	        while(e.hasMoreElements()) {
+	            DefaultMutableTreeNode node =
+	                (DefaultMutableTreeNode)e.nextElement();
+	            if(node.isLeaf()) continue;
+	            int row = arbreActions.getRowForPath(new TreePath(node.getPath()));
+	            arbreActions.expandRow(row);
+	        }
 
 	}
 	
@@ -175,7 +198,7 @@ public class PanelArbreActions extends JJPanel{
 
 	public void remove(Action selectedAction) {
 		plan.removeAction(selectedAction);
-		//chang� pour la barre de scroll
+		//chang� pour la barre de scroll
 		this.remove(scrollAction);
 		// this.remove(arbreActions);
 		setupArbreActions();
@@ -189,8 +212,26 @@ public class PanelArbreActions extends JJPanel{
 		this.nodeActionActive = nodeActionActive;
 	}
 
+	public Action getDragAction() {
+		return dragAction;
+	}
 
+	public void setDragAction(Action dragAction) {
+		this.dragAction = dragAction;
+	}
+
+	public NodeArbreActions getNodeDrag() {
+		return nodeDrag;
+	}
+	public void setNodeDrag(NodeArbreActions nodeDrag) {
+		this.nodeDrag = nodeDrag;
+	}
 	
-	
-	
+	public void drag(){
+		/*plan.addActionAfter(dragAction, actionActive);
+		System.out.println("ajout de "+dragAction+" après "+actionActive);
+		treeModel.insertNodeInto(new NodeArbreActions(dragAction), (MutableTreeNode) nodeActionActive.getParent(), nodeActionActive.getParent().getIndex(nodeActionActive)+1);
+		System.out.println("crréation noeud "+ new NodeArbreActions(dragAction)+" après "+nodeActionActive.getParent()+" Emplacement = "+nodeActionActive.getParent().getIndex(nodeActionActive));
+		remove(dragAction);*/
+	}
 }

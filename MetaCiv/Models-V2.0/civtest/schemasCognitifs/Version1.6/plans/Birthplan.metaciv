@@ -1,0 +1,5 @@
+Nom : Birthplan
+Birth : true
+Self : false
+Action : A_SetPoissonLaw,Modified attribute(Attribute EsperanceDeVie)
+Action : A_DoNothing

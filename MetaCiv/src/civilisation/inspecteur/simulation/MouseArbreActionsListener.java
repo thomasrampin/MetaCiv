@@ -20,9 +20,9 @@ public class MouseArbreActionsListener implements MouseListener{
 	    if(SwingUtilities.isRightMouseButton(e)){
 	    	if(p.getArbreActions().getPathForLocation(e.getX(), e.getY()) != null)
 	    	{
-				p.afficherPopup(e,((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getAction());
-				p.setActionActive(((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getAction());
-				p.setNodeActionActive((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent());	    		
+	    		p.setActionActive(((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getAction());
+	    		p.setNodeActionActive((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent());
+				p.afficherPopup(e,((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getAction());	    		
 	    	}
 	    }	
 	}
@@ -40,14 +40,20 @@ public class MouseArbreActionsListener implements MouseListener{
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mousePressed(MouseEvent e) {
+	/*	p.setDragAction(((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getAction());
+		p.setNodeDrag((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent());
+		*/
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+	public void mouseReleased(MouseEvent e) {
+		/*p.setActionActive(((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getAction());
+		p.setNodeActionActive((NodeArbreActions)p.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent());
+		
+		if(p.getNodeActionActive()!=p.getNodeDrag()){
+			p.drag();
+		}*/
 		
 	}
 	

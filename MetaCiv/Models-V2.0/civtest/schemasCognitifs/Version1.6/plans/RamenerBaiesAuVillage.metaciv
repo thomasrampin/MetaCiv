@@ -1,0 +1,13 @@
+Nom : RamenerBaiesAuVillage
+Birth : false
+Self : false
+Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Village),Group(Group Village)
+Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Village:agriculteur)
+	Action : L_CompareNombreObjets,objetToCompare(Objet Pelle),comparator(Comparator >),n(Double 0.0)
+		Action : A_DoNothing
+		Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Pelle),n(Integer 1),Amenagement(Amenagement Village)
+	Action : A_DoNothing
+Action : A_DepositObjectInFacilityHere,objetToCompare(Objet Baies),n(Integer 10 Constant NombreDeBaiesDeposeeParTick),Amenagement(Amenagement Village)
+Action : L_CompareNombreObjets,objetToCompare(Objet Baies),comparator(Comparator <),n(Double 30.0 Constant SeuilNePlusRamenerAuVillage)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton TropDansMonSac),n(Double -4.0)
+	Action : A_DoNothing

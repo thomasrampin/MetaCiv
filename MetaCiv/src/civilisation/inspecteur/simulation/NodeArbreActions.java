@@ -12,6 +12,7 @@ public class NodeArbreActions extends DefaultMutableTreeNode{
 
 	public NodeArbreActions(Action a)
 	{
+		
 		super(a);
 		root = true;
 		this.action = a;
