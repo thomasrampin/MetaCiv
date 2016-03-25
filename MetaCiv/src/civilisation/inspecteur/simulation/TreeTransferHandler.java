@@ -9,6 +9,8 @@ import javax.swing.JTree;
 import javax.swing.TransferHandler;
 import javax.swing.tree.*;
 
+import civilisation.individu.plan.action.Action;
+
 class TreeTransferHandler extends TransferHandler {
     DataFlavor nodesFlavor;
     DataFlavor[] flavors = new DataFlavor[1];
@@ -36,8 +38,7 @@ class TreeTransferHandler extends TransferHandler {
             return false;
         }
         // Do not allow a drop on the drag source selections.
-        JTree.DropLocation dl =
-                (JTree.DropLocation)support.getDropLocation();
+        JTree.DropLocation dl = (JTree.DropLocation)support.getDropLocation();
         JTree tree = (JTree)support.getComponent();
         int dropRow = tree.getRowForPath(dl.getPath());
         int[] selRows = tree.getSelectionRows();
@@ -46,12 +47,25 @@ class TreeTransferHandler extends TransferHandler {
                 return false;
             }
         }
+        NodeArbreActions ad = (NodeArbreActions)dl.getPath().getLastPathComponent();
+        //System.out.println(dl.getPath().getLastPathComponent());
+        if(!ad.isRoot()){
+            if(ad.getAction().getClass().getSuperclass()==Action.class){
+            	return false;
+            }
+        }
+        
+       /* if(ad.getAction().getClass().getSuperclass().getSimpleName()=="Action"){
+        	return false;
+        }*/
         // Do not allow MOVE-action drops if a non-leaf node is
         // selected unless all of its children are also selected.
         int action = support.getDropAction();
+        
         if(action == MOVE) {
-            return haveCompleteNode(tree);
+        	return haveCompleteNode(tree);
         }
+        
         // Do not allow a non-leaf node to be copied to a level
         // which is less than its source level.
         TreePath dest = dl.getPath();
@@ -123,10 +137,8 @@ class TreeTransferHandler extends TransferHandler {
                     toRemove.add(next);
                 }
             }
-            NodeArbreActions[] nodes =
-                copies.toArray(new NodeArbreActions[copies.size()]);
-            nodesToRemove =
-                toRemove.toArray(new NodeArbreActions[toRemove.size()]);
+            NodeArbreActions[] nodes = copies.toArray(new NodeArbreActions[copies.size()]);
+            nodesToRemove = toRemove.toArray(new NodeArbreActions[toRemove.size()]);
             return new NodesTransferable(nodes);
         }
         return null;
@@ -191,7 +203,7 @@ class TreeTransferHandler extends TransferHandler {
     public String toString() {
         return getClass().getName();
     }
-
+    
     public class NodesTransferable implements Transferable {
         NodeArbreActions[] nodes;
 

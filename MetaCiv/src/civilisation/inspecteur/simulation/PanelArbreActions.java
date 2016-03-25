@@ -80,7 +80,7 @@ public class PanelArbreActions extends JJPanel{
 		javax.swing.ToolTipManager.sharedInstance().registerComponent(arbreActions);
 		DefaultMutableTreeNode root =
 	            (DefaultMutableTreeNode)arbreActions.getModel().getRoot();
-	        Enumeration e = root.breadthFirstEnumeration();
+	        Enumeration<?> e = root.breadthFirstEnumeration();
 	        while(e.hasMoreElements()) {
 	            DefaultMutableTreeNode node =
 	                (DefaultMutableTreeNode)e.nextElement();
@@ -95,7 +95,7 @@ public class PanelArbreActions extends JJPanel{
 		if (arbreActions != null) {
 			this.remove(scrollAction);
 		}
-//		System.out.println("Nouveau plan : " + plan.getNom());
+		System.out.println("Nouveau plan : " + plan.getNom());
 		this.plan = plan;
 		setupArbreActions();
 	}
@@ -112,7 +112,6 @@ public class PanelArbreActions extends JJPanel{
 		editerAction.addActionListener(new ActionsMenuActions(this,0,a));
 		editerAction.setIcon(Configuration.getIcon("pencil.png"));
 		popup.add(editerAction);
-		
 		
 		boolean peutRecevoirAction = false;
 		if (parentNode.equals(arbreActions.getModel().getRoot())){
@@ -210,28 +209,5 @@ public class PanelArbreActions extends JJPanel{
 
 	public void setNodeActionActive(NodeArbreActions nodeActionActive) {
 		this.nodeActionActive = nodeActionActive;
-	}
-
-	public Action getDragAction() {
-		return dragAction;
-	}
-
-	public void setDragAction(Action dragAction) {
-		this.dragAction = dragAction;
-	}
-
-	public NodeArbreActions getNodeDrag() {
-		return nodeDrag;
-	}
-	public void setNodeDrag(NodeArbreActions nodeDrag) {
-		this.nodeDrag = nodeDrag;
-	}
-	
-	public void drag(){
-		/*plan.addActionAfter(dragAction, actionActive);
-		System.out.println("ajout de "+dragAction+" après "+actionActive);
-		treeModel.insertNodeInto(new NodeArbreActions(dragAction), (MutableTreeNode) nodeActionActive.getParent(), nodeActionActive.getParent().getIndex(nodeActionActive)+1);
-		System.out.println("crréation noeud "+ new NodeArbreActions(dragAction)+" après "+nodeActionActive.getParent()+" Emplacement = "+nodeActionActive.getParent().getIndex(nodeActionActive));
-		remove(dragAction);*/
 	}
 }
