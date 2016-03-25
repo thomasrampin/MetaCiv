@@ -62,7 +62,7 @@ public class NPlan implements Cloneable, Serializable{
 		else {
 		//	System.out.println("else" + nom);
 			Action a = action.effectuer(h);
-			if (a != null) h.getEsprit().getActions().push(a);
+			if (a != null && h.isAlive()) h.getEsprit().getActions().push(a);
 		
 		}
 		

@@ -1,6 +1,0 @@
-Nom : Auto
-Birth : false
-Self : true
-Action : L_RandomPercent,n(Double 10.0 Constant __NoConstant)
-	Action : A_ChangeAttribute,Modified attribute(Attribute Aggresif),n(Integer 1 Constant __NoConstant)
-	Action : A_DoNothing

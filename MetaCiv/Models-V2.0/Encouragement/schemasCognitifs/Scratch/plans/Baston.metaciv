@@ -1,5 +1,0 @@
-Nom : Baston
-Birth : false
-Self : false
-Action : A_GetCible_RandomDist
-Action : A_Interaction_Encourager,Modified attribute(Attribute Moral),n(Integer 1 Constant __NoConstant)

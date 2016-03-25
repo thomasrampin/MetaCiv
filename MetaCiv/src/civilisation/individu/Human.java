@@ -1792,6 +1792,10 @@ public class Human extends Turtle implements Serializable
 		if(!choix.isEmpty()) return (Human) oneOf(choix);
 		else return null;
 	}
+	
+	public boolean isAlive(){
+		return (!isDie);
+	}
 }
 
 

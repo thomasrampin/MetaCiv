@@ -1,4 +1,0 @@
-Nom : Auto-plan
-Birth : false
-Self : true
-Action : A_ChangeAttribute,Modified attribute(Attribute Aggresif),n(Integer 1 Constant __NoConstant)
