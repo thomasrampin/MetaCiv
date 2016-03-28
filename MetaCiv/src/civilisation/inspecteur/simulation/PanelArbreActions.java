@@ -33,10 +33,8 @@ public class PanelArbreActions extends JJPanel{
 	JToolBar toolBar = new JToolBar();
 	JPopupMenu popup;
 	Action actionActive; /*Pour m_moriser l'action en cours de modification, le cas _cheant*/
-	Action dragAction;
 	JScrollPane scrollAction;
 	NodeArbreActions nodeActionActive;
-	NodeArbreActions nodeDrag;
 
 	ModeleArbreActions treeModel;
 	
@@ -68,7 +66,8 @@ public class PanelArbreActions extends JJPanel{
 		arbreActions.addMouseListener(new MouseArbreActionsListener(this));
 		arbreActions.setDragEnabled(true);
 		arbreActions.setDropMode(DropMode.ON_OR_INSERT);
-		arbreActions.setTransferHandler(new TreeTransferHandler());
+		TreeTransferHandler tth = new TreeTransferHandler();
+		arbreActions.setTransferHandler(tth);
 		arbreActions.getSelectionModel().setSelectionMode(
                 TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
 		arbreActions.setBackground(this.getBackground());
@@ -78,28 +77,24 @@ public class PanelArbreActions extends JJPanel{
 		
 		//this.add(arbreActions , BorderLayout.CENTER);
 		javax.swing.ToolTipManager.sharedInstance().registerComponent(arbreActions);
-		DefaultMutableTreeNode root =
-	            (DefaultMutableTreeNode)arbreActions.getModel().getRoot();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)arbreActions.getModel().getRoot();
 	        Enumeration<?> e = root.breadthFirstEnumeration();
 	        while(e.hasMoreElements()) {
-	            DefaultMutableTreeNode node =
-	                (DefaultMutableTreeNode)e.nextElement();
+	            DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
 	            if(node.isLeaf()) continue;
 	            int row = arbreActions.getRowForPath(new TreePath(node.getPath()));
 	            arbreActions.expandRow(row);
 	        }
-
 	}
 	
 	public void changePlan(NPlan plan) {
 		if (arbreActions != null) {
 			this.remove(scrollAction);
 		}
-		System.out.println("Nouveau plan : " + plan.getNom());
+		//System.out.println("Nouveau plan : " + plan.getNom());
 		this.plan = plan;
 		setupArbreActions();
 	}
-	
 	public void afficherPopup(MouseEvent e, Action a){
 		
 		NodeArbreActions parentNode = ((NodeArbreActions)(((NodeArbreActions) this.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getParent()));
@@ -158,6 +153,10 @@ public class PanelArbreActions extends JJPanel{
 
 	public NPlan getPlan() {
 		return plan;
+	}
+	public void setPlan(NPlan pl){
+		this.plan = pl;
+		setupArbreActions();
 	}
 	
 	public void addNewAction(Action a, Option_BeforeAfter option){

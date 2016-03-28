@@ -9,6 +9,7 @@ import javax.swing.JTree;
 import javax.swing.TransferHandler;
 import javax.swing.tree.*;
 
+import civilisation.individu.plan.NPlan;
 import civilisation.individu.plan.action.Action;
 
 class TreeTransferHandler extends TransferHandler {
@@ -16,7 +17,7 @@ class TreeTransferHandler extends TransferHandler {
     DataFlavor[] flavors = new DataFlavor[1];
     NodeArbreActions[] nodesToRemove;
 
-    public TreeTransferHandler() {
+	public TreeTransferHandler() {
         try {
             String mimeType = DataFlavor.javaJVMLocalObjectMimeType +
                               ";class=\"" +
@@ -153,14 +154,18 @@ class TreeTransferHandler extends TransferHandler {
     protected void exportDone(JComponent source, Transferable data, int action) {
         if((action & MOVE) == MOVE) {
             JTree tree = (JTree)source;
-            DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+            ModeleArbreActions model = (ModeleArbreActions)tree.getModel();
             // Remove nodes saved in nodesToRemove in createTransferable.
             for(int i = 0; i < nodesToRemove.length; i++) {
+            	//pl.removeAction(nodesToRemove[i].action);
+            	//System.out.println("j'enleve "+nodesToRemove[i].action+" du plan");
                 model.removeNodeFromParent(nodesToRemove[i]);
             }
+            NPlan test = model.setPlan((NodeArbreActions) model.getRoot());
+            System.out.println(test.toString());
         }
     }
-
+    
     public int getSourceActions(JComponent c) {
         return COPY_OR_MOVE;
     }
@@ -195,6 +200,8 @@ class TreeTransferHandler extends TransferHandler {
         }
         // Add data to model.
         for(int i = 0; i < nodes.length; i++) {
+        	//System.out.println("j'ajoute "+nodes[i].getAction()+" après "+parent.getAction()+" dans le plan");
+        	//pl.addActionAfter(nodes[i].getAction(), parent.getAction());
             model.insertNodeInto(nodes[i], parent, index++);
         }
         return true;

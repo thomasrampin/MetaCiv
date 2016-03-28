@@ -14,6 +14,8 @@ import civilisation.individu.Esprit;
 import civilisation.individu.Human;
 import civilisation.individu.cognitons.LienCogniton;
 import civilisation.individu.plan.action.Action;
+import civilisation.inspecteur.simulation.ModeleArbreActions;
+import civilisation.inspecteur.simulation.NodeArbreActions;
 
 /**
  * Plans are succession of actions, executed by agent. Each kind of plan is instanciated only one time.
@@ -162,14 +164,13 @@ public class NPlan implements Cloneable, Serializable{
 	}
 	
 	@Override
-	public String toString(){/*
+	public String toString(){
 		return (" Nom : " + nom
 				+ "\n BirthPlan : " + isBirthPlan
 				+ " \n AutoPlan : " + isSelfPlan
 				+ " \n Actions : " + actions.toString()
 				+"\n\n"
-				);*/
-		return nom;
+				);
 	}
 	
 	public Boolean getIsBirthPlan() {
