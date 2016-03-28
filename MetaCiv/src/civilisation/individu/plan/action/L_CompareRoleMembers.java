@@ -52,9 +52,17 @@ public class L_CompareRoleMembers extends LAction{
 		}
 			
 		if (comp.compare(new Double(nombrePersonneRole),d)){
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

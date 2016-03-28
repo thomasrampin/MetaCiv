@@ -12,9 +12,17 @@ public class L_HaveChildrens extends LAction{
 		if (nextAction != null) h.getEsprit().getActions().push(nextAction);
 		Action a;
 		if (h.getEnfants().size() > 0) {
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 	}

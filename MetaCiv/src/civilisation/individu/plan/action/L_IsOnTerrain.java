@@ -21,10 +21,19 @@ Terrain t;
 			h.getEsprit().getActions().push(nextAction);
 		Action a;
 		
-		if (h.getPatch().getColor().equals(t.getCouleur()))
-			a = listeActions.get(0).effectuer(h);
-		else
-			a = listeActions.get(1).effectuer(h);
+		if (h.getPatch().getColor().equals(t.getCouleur())){
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
+		} else {
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
+		}
 		return a;
 	}
 

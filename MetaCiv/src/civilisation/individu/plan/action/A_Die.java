@@ -22,6 +22,7 @@ public class A_Die extends Action{
 				
 			}*/
 		h.die();
+		h.killAgent(h);
 		//return null;
 		return nextAction;
 	}

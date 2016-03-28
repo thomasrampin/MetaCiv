@@ -21,9 +21,17 @@ public class L_CompareObject extends LAction{
 		Action a;
 		if (comp.compare((double) h.getInventaire().possede(objet), d)) {
 //			System.out.println("oui");
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

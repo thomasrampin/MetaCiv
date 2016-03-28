@@ -1,0 +1,7 @@
+Nom : Plaine
+Couleur : 0.25,1.0,0.4
+Passabilite : 20
+Infranchissable : false
+AltMin : 0
+AltMax : 20
+Apparition : 0

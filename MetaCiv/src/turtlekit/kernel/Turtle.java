@@ -161,7 +161,7 @@ public class Turtle extends AbstractAgent {
 	 * @param role
 	 * @return <code>true</code> if the turtle is playing this role
 	 */
-	public  boolean isPlayingRole(String role){
+	public boolean isPlayingRole(String role){
 		return hasRole(community,TKOrganization.TURTLES_GROUP,role);
 	}
 

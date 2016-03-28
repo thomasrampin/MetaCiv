@@ -48,6 +48,8 @@ import civilisation.group.MessageString;
 import civilisation.individu.cognitons.TypeCogniton;
 import civilisation.inventaire.NInventaire;
 import civilisation.inventaire.Objet;
+import civilisation.message.Message;
+import civilisation.message.StringMessage;
 import civilisation.pathfinder.Noeud;
 import civilisation.world.World;
 import civilisation.zones.ZoneComposite;
@@ -74,10 +76,15 @@ public class Human extends Turtle implements Serializable
 	NInventaire inventaire;
 
 	//Cible des interactions
-	Human cibleInteraction;
+	Human cibleInteraction = null;
+	//Human qui lance une interaction sur cet humain
+	Human initiateurInteraction = null;
+	//Degats que l'individu inflige lors d'une I_Attaquer
+	int degats = 1;
 	
 
-	
+	//Boite à lettre
+	ArrayList<Message> mailbox = new ArrayList<Message>();
 	
 	
 	
@@ -1779,7 +1786,7 @@ public class Human extends Turtle implements Serializable
 	}
 	
 	
-
+	// Modif L.R : 
 	public Human oneOfHumanInRadius(int radius) //MODIF L.R
 	{
 		List<Turtle> cibles = this.getOtherTurtles(radius, true);
@@ -1793,9 +1800,89 @@ public class Human extends Turtle implements Serializable
 		else return null;
 	}
 	
+	public Human oneOfHumanInRadiusWithAttribute(int radius, String attributeName) //MODIF L.R
+	{
+		List<Turtle> cibles = this.getOtherTurtles(radius, true);
+		ArrayList<Turtle> choix = new ArrayList<Turtle>();
+		for(int i = 0;i<cibles.size();i++)
+		{
+			if(cibles.get(i) != null && cibles.get(i).getClass().equals(this.getClass()) && cibles.get(i)!=this){
+				Double d = ((Human) cibles.get(i)).getAttr().get(attributeName);
+				if(d > 0)
+					choix.add(cibles.get(i));
+			}
+		}
+		if(!choix.isEmpty()) return (Human) oneOf(choix);
+		else return null;
+	}
+	
+	public ArrayList<Human> OtherHumansInRadius(int radius){
+		List<Turtle> cibles = this.getOtherTurtles(radius, true);
+		ArrayList<Human> humans = new ArrayList<Human>();
+		for(int i = 0;i<cibles.size();i++)
+		{
+			if(cibles.get(i) != null && cibles.get(i).getClass().equals(this.getClass()) && cibles.get(i)!=this) humans.add((Human) cibles.get(i));
+		}
+		
+		if(!humans.isEmpty()) return humans;
+		else return null;
+	}
+	public Human getInitiateur(){
+		return initiateurInteraction;
+	}
+	
+	public void setInitiateur(Human cible){
+		initiateurInteraction = cible;
+	}
+	
+	
 	public boolean isAlive(){
 		return (!isDie);
 	}
+	
+	public int getDegats(){
+		return degats;
+	}
+	public void setDegats(int newDegats){
+		degats = newDegats;
+	}
+	public void augmenterDegats(int augmentation){
+		degats += augmentation;
+	}
+	
+	//Envoi de messages : 
+	protected void recevoirMessage(Message message){
+		mailbox.add(message);
+	}
+	
+	
+	public void sendMessage(Human destinataire, Message message){
+		message.setSender(this);
+		destinataire.recevoirMessage(message);
+	}
+	
+	public void broadcastMessageInRadius(Message message, int radius){
+		message.setSender(this);
+		for(Human h : this.OtherHumansInRadius(radius)){
+			h.recevoirMessage(message);
+		}
+	}
+	
+	public StringMessage gotStringMessage(String contenuRecherche){
+		for(Message message : mailbox){
+			if(message instanceof civilisation.message.StringMessage){
+				if(((civilisation.message.StringMessage) message).getContenu().equals(contenuRecherche)){
+					return (StringMessage) message;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void flushMail(){
+		mailbox = new ArrayList<Message>();
+	}
+	
 }
 
 

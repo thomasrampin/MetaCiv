@@ -53,10 +53,19 @@ public class L_IsAnyGroupFacilityHere extends LAction
 						break;
 				}
 */
-		if (doAction)
-			a = listeActions.get(0).effectuer(h);
-		else
-			a = listeActions.get(1).effectuer(h);
+		if (doAction){
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
+		} else {
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
+		}
 		return a;
 	}
 

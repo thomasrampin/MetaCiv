@@ -21,9 +21,17 @@ public class L_CompareResource extends LAction{
 		if (nextAction != null) h.getEsprit().getActions().push(nextAction);
 		Action a;
 		if (comp.compare(new Double(h.smell(phero.getNom())), d)) {
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

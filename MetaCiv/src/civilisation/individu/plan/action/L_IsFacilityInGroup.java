@@ -21,14 +21,25 @@ public class L_IsFacilityInGroup extends LAction{
 		Action a;
 		if (h.getEsprit().getConcreteGroup(grp)!=null) {
 			if(h.getEsprit().getConcreteGroup(grp).getFacilitiesOfType(amenagements).size()>0){
-				a = listeActions.get(0).effectuer(h); 
-			}
-			else{
-				a = listeActions.get(1).effectuer(h);
+				if(listeActions.size() > 0){
+					a = listeActions.get(0).effectuer(h);
+				}else{
+					a = new A_DoNothing().effectuer(h);
+				}
+			} else {
+				if(listeActions.size() > 1){
+					a = listeActions.get(1).effectuer(h);
+				}else{
+					a = new A_DoNothing().effectuer(h);
+				}
 			}
 			
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

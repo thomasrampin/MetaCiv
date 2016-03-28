@@ -32,9 +32,17 @@ public class L_CompareNombreObjets extends LAction{
 		//Attention cela ne fonctionne que si l'objet est de qualité 1 (par défaut)
 		
 		if (comp.compare((double) numberObjectsToCompare, val.getValue())) {
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

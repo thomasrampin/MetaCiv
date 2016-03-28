@@ -43,9 +43,17 @@ public class L_CompareGroupAttributeToPopulation extends LAction{
 		
 		//System.out.println("L'insatisfaction pour mon groupe est de "+attribut + "et la population de "+d);
 		if (comp.compare(attribut , d) ) {
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

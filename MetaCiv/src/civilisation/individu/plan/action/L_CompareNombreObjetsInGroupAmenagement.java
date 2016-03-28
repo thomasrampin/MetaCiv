@@ -50,9 +50,17 @@ public class L_CompareNombreObjetsInGroupAmenagement extends LAction{
 			numberObjectsToCompare= ame.getInventaire().getListeObjets().get(objet.getNom()).get(1);
 		
 		if (comp.compare((double) numberObjectsToCompare, d)) {
-			a = listeActions.get(0).effectuer(h);
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		} else {
-			a = listeActions.get(1).effectuer(h);
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
 		}
 		return a;
 		

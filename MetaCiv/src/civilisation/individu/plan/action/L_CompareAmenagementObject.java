@@ -22,10 +22,21 @@ public class L_CompareAmenagementObject extends LAction
 		if (nextAction != null)
 			h.getEsprit().getActions().push(nextAction);
 		Action a;
-		if (comp.compare((double) ((Amenagement)h.getPatch().getMark(am.getNom())).getInventaire().possede(objet), d))
-			a = listeActions.get(0).effectuer(h);
-		else
-			a = listeActions.get(1).effectuer(h);
+		ArrayList<Amenagement> amenagementList =  h.getFacilitiesOfTypeHere(am);
+		Amenagement amenagement = amenagementList.get(0);
+		if (comp.compare((double) (amenagement.getInventaire().possede(objet)), d)){
+			if(listeActions.size() > 0){
+				a = listeActions.get(0).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
+		} else {
+			if(listeActions.size() > 1){
+				a = listeActions.get(1).effectuer(h);
+			}else{
+				a = new A_DoNothing().effectuer(h);
+			}
+		}
 		return a;
 	}
 

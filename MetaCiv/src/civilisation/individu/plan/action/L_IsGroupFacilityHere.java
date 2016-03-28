@@ -26,21 +26,30 @@ public class L_IsGroupFacilityHere extends LAction{
 			Action a;
 			boolean doAction = false;
 			
-			for(Turtle t : h.getPatch().getTurtlesWithRole(DefineConstants.Role_Facility))
+			for(Amenagement am : h.getFacilitiesHere())
 			{
-				if(((Amenagement)t).getType().equals(objet))
+				if(am.getType().equals(objet))
 				{
-						if(((Amenagement)t).getMyGroups(h.getCiv().getNom()).contains(h.getEsprit().getConcreteGroup(grp).getId()))
+						if(am.getMyGroups(h.getCiv().getNom()).contains(h.getEsprit().getConcreteGroup(grp).getId()))
 						{
 							doAction = true;break;
 						}
 				}
 			}
 
-			if (doAction)
-				a = listeActions.get(0).effectuer(h);
-			else
-				a = listeActions.get(1).effectuer(h);
+			if (doAction){
+				if(listeActions.size() > 0){
+					a = listeActions.get(0).effectuer(h);
+				}else{
+					a = new A_DoNothing().effectuer(h);
+				}
+			} else {
+				if(listeActions.size() > 1){
+					a = listeActions.get(1).effectuer(h);
+				}else{
+					a = new A_DoNothing().effectuer(h);
+				}
+			}
 			return a;
 		}
 

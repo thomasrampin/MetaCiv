@@ -1,0 +1,6 @@
+Nom : Fuir
+Birth : false
+Self : false
+Action : A_AvanceAleatoirement
+Action : L_RandomPercent,n(Double 10.0 Constant __NoConstant)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Fuir),n(Double -1.0 Constant __NoConstant)

@@ -1,0 +1,18 @@
+package civilisation.individu.plan.action;
+
+import civilisation.individu.Human;
+import civilisation.message.*;
+
+public class I_EnvoyerMessage extends IAction {
+	private StringMessage message; 
+	
+	@Override
+	public Action effectuer(Human h) {
+		if(verifParticipant(h)){
+			message = new StringMessage("Attaque");
+			h.sendMessage(participant2, message);
+		}
+		return nextAction;
+	}
+	
+}

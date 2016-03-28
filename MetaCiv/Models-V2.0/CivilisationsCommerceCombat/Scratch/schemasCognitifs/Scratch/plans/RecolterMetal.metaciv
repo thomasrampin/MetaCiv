@@ -1,0 +1,8 @@
+Nom : RecolterMetal
+Birth : false
+Self : false
+Action : A_SearchForRessources,Resources to collect(Pheromone Metal)
+Action : L_CompareResource,resourceToCompare(Pheromone Metal),comparator(Comparator >),n(Double 0.0 Constant __NoConstant)
+	Action : A_Transformer,Resource to collect(Pheromone Metal),Created Object(Objet Metal)
+Action : L_CompareObject,objetToCompare(Objet Metal),comparator(Comparator >),n(Double 9.0 Constant __NoConstant)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton SacPlein),n(Double 1.0 Constant __NoConstant)
