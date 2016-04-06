@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import civilisation.constant.MCIntegerParameter;
 import civilisation.individu.Human;
+import civilisation.message.StringMessage;
 
 public class I_Attaquer extends IAction{
 	String attributeName;
@@ -15,6 +16,8 @@ public class I_Attaquer extends IAction{
 		}else{
 			if(participant2!=null){
 				participant1.setHeadingTowards(participant2);
+				StringMessage message = new StringMessage("Attaque");
+				h.sendMessage(participant2, message);
 				participant1.fd(1);
 			}
 		}

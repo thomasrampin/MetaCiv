@@ -6,7 +6,7 @@ Action : L_CompareAttribute,attributeToCompare(Attribute Vie),comparator(Compara
 	Action : A_Die
 Action : L_IsAttacked
 	Action : L_AttackerGotTag,attributeToCompare(Attribute Civ2),comparator(Comparator >),n(Double 0.0 Constant __NoConstant)
-		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Riposte),n(Double 1.0 Constant __NoConstant)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Fuir),n(Double 1.0 Constant __NoConstant)
 Action : L_IsAttacked
 	Action : L_AttackerGotTag,attributeToCompare(Attribute Civ1),comparator(Comparator >),n(Double -100.0 Constant __NoConstant)
-		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Riposte),n(Double 1.0 Constant __NoConstant)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Fuir),n(Double 1.0 Constant __NoConstant)
