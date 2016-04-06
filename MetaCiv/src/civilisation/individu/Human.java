@@ -153,7 +153,7 @@ public class Human extends Turtle implements Serializable
 		
 		//this.getEsprit().clearAllCognitons();   /*TODO*/
 		isDie = true; //TODO : verifier
-
+		killAgent(this);
 		//System.out.println("nb litnenr : " + listeners.size());
 		for (HumainListener l : listeners)
 			l.onHumainDie(this);
