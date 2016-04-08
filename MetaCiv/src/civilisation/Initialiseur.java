@@ -234,6 +234,7 @@ public class Initialiseur {
 		//Objets
 		ArrayList<Objet> objets = new ArrayList<Objet>();
 		files = new File(pathToRessources + "/objets").listFiles();
+		System.out.println(files);
 		for (File file : files) {
 			if (!file.isHidden() && file.getName().endsWith(Configuration.getExtension())){
 		    if (file.isFile()) {

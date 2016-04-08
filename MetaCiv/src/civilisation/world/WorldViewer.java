@@ -43,6 +43,7 @@ import civilisation.inspecteur.simulation.NodeArbreActions;
 import civilisation.inspecteur.viewer.ViewerHuman;
 import civilisation.individu.Esprit;
 import civilisation.individu.Human;
+import civilisation.individu.cognitons.Cogniton;
 import civilisation.individu.plan.NPlan;
 import civilisation.individu.plan.action.Action;
 import turtlekit.agr.TKOrganization;
@@ -253,8 +254,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				dx = x;
 				dy = y;
 			}
-			
 			Esprit e = ((Human) t).getEsprit();
+			Color humain = e.getCognitonMaxWeight().getCogniton().getType().getCouleur();
 			
 			// Les dessins sous le carre de couleur
 			if(t==selectedAgent){
@@ -266,9 +267,9 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			{	
 				//Color square
 				if(getCellSize() > 4) {
-					g.setColor(t.getPatch().getColor());
+					g.setColor(/*t.getPatch().getColor()*/Color.BLACK);
 					g.fillRect(dx,dy,size,size);
-					g.setColor(t.getColor());
+					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
 				}
 				else 

@@ -656,4 +656,14 @@ public class Esprit implements Serializable {
 		while(it.hasNext())
 			it.next().leaveGroup(this);}
 	}
+	
+	public Cogniton getCognitonMaxWeight(){
+		Cogniton max=cognitons.get(0);
+		for(Cogniton c : cognitons){
+			if(c.getWeigth()>max.getWeigth()){
+				max=c;
+			}
+		}
+		return max;
+	}
 }
