@@ -48,8 +48,6 @@ import civilisation.group.MessageString;
 import civilisation.individu.cognitons.TypeCogniton;
 import civilisation.inventaire.NInventaire;
 import civilisation.inventaire.Objet;
-import civilisation.message.Message;
-import civilisation.message.StringMessage;
 import civilisation.pathfinder.Noeud;
 import civilisation.world.World;
 import civilisation.zones.ZoneComposite;
@@ -84,7 +82,7 @@ public class Human extends Turtle implements Serializable
 	
 
 	//Boite à lettre
-	ArrayList<Message> mailbox = new ArrayList<Message>();
+	//ArrayList<Message> mailbox = new ArrayList<Message>();
 	
 	
 	
@@ -1852,7 +1850,7 @@ public class Human extends Turtle implements Serializable
 	}
 	
 	//Envoi de messages : 
-	protected void recevoirMessage(Message message){
+	/*protected void recevoirMessage(Message message){
 		mailbox.add(message);
 	}
 	
@@ -1882,7 +1880,7 @@ public class Human extends Turtle implements Serializable
 	
 	public void flushMail(){
 		mailbox = new ArrayList<Message>();
-	}
+	}*/
 	
 }
 

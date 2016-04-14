@@ -157,7 +157,8 @@ public class Communaute extends Turtle implements Serializable
 								this.getY() + (Math.random()*2*this.civ.scatteredModifier));
 						
 				}
-				
+				h.createGroupIfAbsent(this.getCommunity(), "membre");
+				h.requestRole(this.getCommunity(), "membre", "membre");
 			} while (Configuration.couleurs_terrains.get(h.getPatchColor()).getInfranchissable() && h.getPatch().countTurtles() > 0);
 		}
 		return "neRienFaire";

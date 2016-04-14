@@ -6,14 +6,14 @@ import civilisation.Configuration;
 import civilisation.individu.Human;
 import madkit.message.StringMessage;
 
-public class L_IsAttacked extends LAction{
+public class L_IsInTrade extends LAction{
 
 	@Override
 	public Action effectuer(Human h) {
 		if (nextAction != null) h.getEsprit().getActions().push(nextAction);
 		Action a;
 		StringMessage message = (StringMessage) h.nextMessage();
-		if (message != null && message.getContent() == "Attaque") {
+		if (message != null && message.getContent() == "Echange") {
 			if(listeActions.size() > 0){
 				a = listeActions.get(0).effectuer(h);
 			}else{
