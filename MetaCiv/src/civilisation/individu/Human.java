@@ -94,7 +94,8 @@ public class Human extends Turtle implements Serializable
 	Human conjoint;
 	Boolean woman;
 	ArrayList<Human> enfants;
-
+	String debugString="coucou";
+	Color debugStringColor;
 	private static ArrayList<HumainListener> listeners = new ArrayList<HumainListener>();
 	
 	HashMap<String,Amenagement> privateFacilities = new HashMap<String , Amenagement>();
@@ -1884,6 +1885,12 @@ public class Human extends Turtle implements Serializable
 		mailbox = new ArrayList<Message>();
 	}
 	
+	public String getDebugString(){
+		return debugString;
+	}
+	public Color getDebugStringColor(){
+		return debugStringColor;
+	}
 }
 
 

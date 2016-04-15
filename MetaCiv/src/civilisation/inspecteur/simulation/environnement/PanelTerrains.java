@@ -58,7 +58,7 @@ public class PanelTerrains extends JJPanel{
 		supprimer.setIcon(new ImageIcon(this.getClass().getResource("../../icones/cross.png")));
 		popup.add(supprimer);
 		
-		popup.show(this, e.getX(), e.getY());		
+		popup.show(this, e.getX(), e.getY());
 	}
 	
 	public void definirListe(){

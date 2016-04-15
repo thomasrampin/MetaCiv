@@ -18,9 +18,13 @@
 package turtlekit.viewer;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.ConcurrentModificationException;
 
+import civilisation.individu.Human;
 import turtlekit.kernel.Patch;
 import turtlekit.kernel.Turtle;
 
@@ -65,7 +69,6 @@ public class TKDefaultViewer extends AbstractGridViewer{
 		g.setColor(t.getColor());
 		g.fillRect(i , j , cellSize, cellSize);
 	}
-
 	public void paintPatch(final Graphics g, final Patch p, final int x, final int y, final int index) {
 		final Color c = p.getColor();
 		if (c != Color.BLACK) {
@@ -73,6 +76,5 @@ public class TKDefaultViewer extends AbstractGridViewer{
 			g.fillRect(x , y , cellSize, cellSize);
 		}
 	}
-
 }
 

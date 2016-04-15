@@ -2,6 +2,9 @@ package civilisation.world;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -254,7 +257,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				dx = x;
 				dy = y;
 			}
-			Esprit e = ((Human) t).getEsprit();
+			Human h = (Human)t;
+			Esprit e = h.getEsprit();
 			Color humain = e.getCognitonMaxWeight().getCogniton().getType().getCouleur();
 			
 			// Les dessins sous le carre de couleur
@@ -267,10 +271,11 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			{	
 				//Color square
 				if(getCellSize() > 4) {
-					g.setColor(/*t.getPatch().getColor()*/Color.BLACK);
+					g.setColor(t.getPatch().getColor());
 					g.fillRect(dx,dy,size,size);
 					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
+					//paintDebugMessage(g, h);
 				}
 				else 
 				{
@@ -357,7 +362,38 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		}
 	}
 	
-	
+	/*private void paintDebugMessage(Graphics g, Human agent) {
+		if(agent.getDebugString() != ""){
+			String msg = agent.getDebugString();
+			Color fontColor = agent.getDebugStringColor();
+			
+			int distanceBubbleFromAgent = 20;
+			int padding = 2;
+			
+			Font font = new Font("Arial", Font.PLAIN, 10);
+			FontMetrics metrics = g.getFontMetrics(font);
+			Dimension speechBubbleSize = new Dimension(metrics.stringWidth(msg) + (2 * padding), metrics.getHeight() + (2 * padding));
+			
+			Color backgroundColor;
+			boolean fontIsDark = ((fontColor.getRed() + fontColor.getGreen() + fontColor.getBlue()) / 3) < 127;
+			if (fontIsDark)
+				backgroundColor = Color.WHITE;
+			else
+				backgroundColor = Color.BLACK;
+			
+			int posX = (int) ((agent.getX()) * cellSize - (5 / cellSize) - speechBubbleSize.width - distanceBubbleFromAgent);
+			int posY = (int) ((agent.getY()) * cellSize - (5 / cellSize) - speechBubbleSize.height - distanceBubbleFromAgent);
+			g.setColor(Color.BLACK);
+			g.drawLine(posX, posY, ((int) agent.getX() * cellSize), ((int) agent.getY() * cellSize));
+			g.setColor(backgroundColor);
+			g.fillRect(posX, posY, speechBubbleSize.width, speechBubbleSize.height);
+			g.setColor(Color.BLACK);
+			g.drawRect(posX, posY, speechBubbleSize.width, speechBubbleSize.height);
+			g.setColor(fontColor);
+			g.setFont(font);
+			g.drawString(msg, posX + padding, posY + speechBubbleSize.height - padding);
+		}
+	}*/
 	
 	public int getControleurPatch(Patch p)
 	{
