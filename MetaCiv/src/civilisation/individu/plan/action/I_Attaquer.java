@@ -4,20 +4,25 @@ import java.util.ArrayList;
 
 import civilisation.constant.MCIntegerParameter;
 import civilisation.individu.Human;
-import civilisation.message.StringMessage;
+import madkit.message.StringMessage;
 
 public class I_Attaquer extends IAction{
 	String attributeName;
 
 	@Override
 	public Action effectuer(Human h){
+		
 		if(verifParticipant(h) && participant1.isHere(participant2)){
+			StringMessage message = new StringMessage("Attaque");
+			h.sendMessage(participant2.getAgentAddressIn(participant2.getCommunity(), "membre", "membre"), message);
+			participant2.setInitiateur(participant1);
 			participant2.putAttr(attributeName, participant2.getAttr().get(attributeName) - participant1.getDegats());
 		}else{
 			if(participant2!=null){
 				participant1.setHeadingTowards(participant2);
 				StringMessage message = new StringMessage("Attaque");
-				h.sendMessage(participant2, message);
+				h.sendMessage(participant2.getAgentAddressIn(participant2.getCommunity(), "membre", "membre"), message);
+				participant2.setInitiateur(participant1);
 				participant1.fd(1);
 			}
 		}

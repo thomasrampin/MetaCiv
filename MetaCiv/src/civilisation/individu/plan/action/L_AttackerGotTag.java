@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 import civilisation.Configuration;
 import civilisation.constant.MCDoubleParameter;
 import civilisation.individu.Human;
-import civilisation.message.StringMessage;
 
 public class L_AttackerGotTag extends LAction{
 
