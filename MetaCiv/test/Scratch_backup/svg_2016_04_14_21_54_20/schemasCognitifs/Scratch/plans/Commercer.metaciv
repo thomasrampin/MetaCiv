@@ -1,0 +1,8 @@
+Nom : Commercer
+Birth : false
+Self : false
+Action : A_AddItem,Modified object(Objet Baie),n(Integer 5 Constant __NoConstant)
+Action : A_AddItem,Modified object(Objet Bois),n(Integer 5 Constant __NoConstant)
+Action : A_AddItem,Modified object(Objet Metal),n(Integer 5 Constant __NoConstant)
+Action : A_GetCibleInteraction_AutreCiv_Aleatoire,n(Double 99.0 Constant __NoConstant)
+Action : I_EchangerObjet,objectToGive(Objet Baie),nObjectToGive(Integer 1 Constant __NoConstant),objectToTake(Objet Bois),nObjectToTake(Integer 1 Constant __NoConstant)

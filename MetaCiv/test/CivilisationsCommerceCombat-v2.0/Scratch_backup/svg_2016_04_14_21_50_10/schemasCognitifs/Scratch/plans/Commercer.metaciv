@@ -1,0 +1,9 @@
+Nom : Commercer
+Birth : false
+Self : false
+Action : A_AddItem,Modified object(Objet Baie),n(Integer 5 Constant __NoConstant)
+Action : A_AddItem,Modified object(Objet Bois),n(Integer 5 Constant __NoConstant)
+Action : A_AddItem,Modified object(Objet Metal),n(Integer 5 Constant __NoConstant)
+Action : A_TravelTrade,turns(Integer 20 Constant __NoConstant),itemToGive(Objet Baie),nItemToGive(Integer 1 Constant __NoConstant),itemToTake(Objet Bois),nItemToTake(Integer 1 Constant __NoConstant),myTag(String ),compatibleTag(String )
+Action : A_TravelTrade,turns(Integer 20 Constant __NoConstant),itemToGive(Objet Bois),nItemToGive(Integer 1 Constant __NoConstant),itemToTake(Objet Metal),nItemToTake(Integer 1 Constant __NoConstant),myTag(String ),compatibleTag(String )
+Action : A_TravelTrade,turns(Integer 20 Constant __NoConstant),itemToGive(Objet Metal),nItemToGive(Integer 1 Constant __NoConstant),itemToTake(Objet Baie),nItemToTake(Integer 1 Constant __NoConstant),myTag(String ),compatibleTag(String )

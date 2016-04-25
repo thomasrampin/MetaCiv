@@ -1,0 +1,6 @@
+Nom : Commercer
+Birth : false
+Self : false
+Action : A_AddItem,Modified object(Objet Baie),n(Integer 1 Constant __NoConstant)
+Action : A_AddItem,Modified object(Objet Bois),n(Integer 1 Constant __NoConstant)
+Action : A_AddItem,Modified object(Objet Metal),n(Integer 1 Constant __NoConstant)

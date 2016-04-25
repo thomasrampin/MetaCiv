@@ -275,7 +275,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					g.fillRect(dx,dy,size,size);
 					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
-					//paintDebugMessage(g, h);
+					paintDebugMessage(g, h);
 				}
 				else 
 				{
@@ -362,11 +362,11 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		}
 	}
 	
-	/*private void paintDebugMessage(Graphics g, Human agent) {
-		if(agent.getDebugString() != ""){
+	private void paintDebugMessage(Graphics g, Human agent) {
+		if(!agent.getDebugString().equals("")){
 			String msg = agent.getDebugString();
 			Color fontColor = agent.getDebugStringColor();
-			
+			//System.out.println(msg);
 			int distanceBubbleFromAgent = 20;
 			int padding = 2;
 			
@@ -393,7 +393,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			g.setFont(font);
 			g.drawString(msg, posX + padding, posY + speechBubbleSize.height - padding);
 		}
-	}*/
+	}
 	
 	public int getControleurPatch(Patch p)
 	{

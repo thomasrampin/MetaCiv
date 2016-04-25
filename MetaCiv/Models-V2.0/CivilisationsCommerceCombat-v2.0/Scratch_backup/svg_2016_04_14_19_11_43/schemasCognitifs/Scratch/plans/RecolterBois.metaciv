@@ -1,0 +1,8 @@
+Nom : RecolterBois
+Birth : false
+Self : false
+Action : A_SearchForRessources,Resources to collect(Pheromone Bois)
+Action : L_CompareResource,resourceToCompare(Pheromone Bois),comparator(Comparator >),n(Double 0.0 Constant __NoConstant)
+	Action : A_Transformer,Resource to collect(Pheromone Bois),Created Object(Objet Bois)
+Action : L_CompareObject,objetToCompare(Objet Bois),comparator(Comparator >),n(Double 9.0 Constant __NoConstant)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton SacPlein),n(Double 1.0 Constant __NoConstant)
