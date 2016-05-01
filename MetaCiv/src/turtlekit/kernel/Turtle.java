@@ -119,6 +119,10 @@ public class Turtle extends AbstractAgent {
 	 */
 	private static String community;
 
+	private String debugString="coucou";
+	
+	
+
 	@Override
 	protected void activate() {
 //		setLogLevel(Level.ALL);
@@ -1099,6 +1103,14 @@ public class Turtle extends AbstractAgent {
 	 * @deprecated {@link #activate()} should be overridden instead, beginning by super.activate();
 	 */
 	public void setup() {
+	}
+	
+	public String getDebugString() {
+		return debugString;
+	}
+
+	public void setDebugString(String debugString) {
+		this.debugString = debugString;
 	}
 
 }

@@ -52,6 +52,7 @@ public class TKDefaultViewer extends AbstractGridViewer{
 						else {
 								try {
 									paintTurtle(g, p.getTurtles().get(0), i * cellSize, j * cellSize);
+									
 								} catch (NullPointerException | IndexOutOfBoundsException e) {//for the asynchronous mode
 								}
 							}
