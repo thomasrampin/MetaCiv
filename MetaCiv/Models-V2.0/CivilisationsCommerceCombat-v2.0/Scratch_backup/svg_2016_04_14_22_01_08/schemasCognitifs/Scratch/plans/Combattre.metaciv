@@ -1,5 +1,0 @@
-Nom : Combattre
-Birth : false
-Self : false
-Action : A_GetCibleInteraction_AutreCiv_Aleatoire,n(Double 99.0 Constant __NoConstant)
-Action : I_Attaquer,Modified attribute(Attribute PV),n(Integer -10 Constant __NoConstant)

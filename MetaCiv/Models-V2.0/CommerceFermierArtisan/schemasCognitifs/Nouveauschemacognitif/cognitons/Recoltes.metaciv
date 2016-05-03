@@ -1,0 +1,9 @@
+Nom : Recoltes
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 1
+Permet : RecolteBaie
+Permet : RecolteBois
+Influence : RecolteBaie,3
+Influence : RecolteBois,3

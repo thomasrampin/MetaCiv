@@ -1,0 +1,8 @@
+Nom : Consommer
+Birth : false
+Self : false
+Action : L_CompareNombreObjets,objetToCompare(Objet Deprecated),comparator(Comparator <),n(Double 1.0 Constant SeuilConsommationDeBaies)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton FaimEtRienDansMonSac),n(Double 4.0)
+	Action : L_Repeat,n(Integer 1)
+		Action : A_DropObjectAndChangeAttribute,Dropped object(Objet Deprecated),n(Integer 1),Modified attribute(Attribute Energie),n(Double 8.0)
+		Action : A_ChangeAttribute,Modified attribute(Attribute Insatisfaction),n(Integer -1 Constant InsatisfactionQuandJeMangeUneBaie)

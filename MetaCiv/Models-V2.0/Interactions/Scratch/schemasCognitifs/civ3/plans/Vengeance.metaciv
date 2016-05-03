@@ -1,7 +1,0 @@
-Nom : Vengeance
-Birth : false
-Self : false
-Action : A_SetCibleInteractionInitiateur
-Action : L_GotTargetInteraction
-	Action : I_Attaquer,Modified attribute(Attribute Vie),n(Integer -100 Constant __NoConstant)
-	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Riposte),n(Double -1.0 Constant __NoConstant)

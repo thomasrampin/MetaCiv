@@ -28,7 +28,7 @@ public class TypeCogniton implements Cloneable, Serializable{
 	ArrayList<Object[]> triggeringAttributes;
 	
 	
-	public final static int nHues = 7;
+	/*public final static int nHues = 7;
 	Integer[] hues = new Integer[nHues];
 	public final static Color[] hueColors = {Color.gray , Color.pink , Color.red , Color.blue, Color.orange , Color.green , Color.yellow};
 		/* Color from developement spiral (hue):
@@ -49,9 +49,9 @@ public class TypeCogniton implements Cloneable, Serializable{
 		plansAutorises = new ArrayList<NPlan>();
 		triggeringAttributes = new ArrayList<Object[]>();
 
-		for (int i = 0 ; i < hues.length; i++){
+		/*for (int i = 0 ; i < hues.length; i++){
 			hues[i] = 0;
-		}
+		}*/
 	}
 	
 	public TypeCogniton clone() throws CloneNotSupportedException {
@@ -210,13 +210,13 @@ public class TypeCogniton implements Cloneable, Serializable{
 		this.recuAuDemarrage = recuAuDemarrage;
 	}
 
-	public Integer[] getHues() {
+	/*public Integer[] getHues() {
 		return hues;
 	}
 
 	public void setHues(Integer[] spiralColors) {
 		this.hues = spiralColors;
-	}
+	}*/
 	
 	public int getStartChance() {
 		return startChance;
@@ -253,9 +253,9 @@ public class TypeCogniton implements Cloneable, Serializable{
 				out.println("Influence : "+liensPlans.get(i).getP().getNom()+","+liensPlans.get(i).getPoids());
 			}
 			
-	    	for (int i = 0; i < nHues; i++) {
+	    	/*for (int i = 0; i < nHues; i++) {
 				out.println("Hue" + i + " : " + hues[i]);
-	    	}
+	    	}*/
 	    	
 	    	for (int i = 0; i < triggeringAttributes.size(); i++) {
 				out.println("Trigger : " + triggeringAttributes.get(i)[0] + "," + triggeringAttributes.get(i)[1] + "," + triggeringAttributes.get(i)[2]);

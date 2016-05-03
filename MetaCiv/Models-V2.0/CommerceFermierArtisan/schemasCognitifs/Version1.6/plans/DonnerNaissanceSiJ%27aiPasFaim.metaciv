@@ -1,0 +1,15 @@
+Nom : DonnerNaissanceSiJ'aiPasFaim
+Birth : false
+Self : false
+Action : L_OwnCogniton,Cogniton(Cogniton Faim)
+	Action : A_DoNothing
+	Action : L_RandomPercent,n(Double 5.0 Constant ChancesAvoirDesEnfants)
+		Action : L_RandomPercent,n(Double -100.0 Constant ChancesEnfantMemeRole)
+			Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Village:agriculteur)
+				Action : A_BirthGroupAndRole,GroupToCreate(GroupAndRole Village:agriculteur)
+				Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Village:Artisan)
+					Action : A_BirthGroupAndRole,GroupToCreate(GroupAndRole Village:Artisan)
+					Action : A_BirthGroupAndRole,GroupToCreate(GroupAndRole Village:RienFaire)
+			Action : A_BirthGroupAndRole,GroupToCreate(GroupAndRole Village:RienFaire)
+		Action : A_DoNothing
+Action : A_DoNothing

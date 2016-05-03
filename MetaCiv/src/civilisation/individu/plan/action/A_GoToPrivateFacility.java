@@ -20,21 +20,26 @@ import civilisation.individu.Human;
 public class A_GoToPrivateFacility extends Action{
 
 	TypeAmenagement amenagement;
-	Amenagement cible = null;
 	public Action effectuer(Human h)
 	{	
-		if(cible == null)
-			cible = h.getPrivateFacilities().get(amenagement.getNom());
-		if(cible != null)
+
+		if(h.targetMove == null){
+				if(h.getPrivateFacilities().containsKey(amenagement.getNom())){
+					h.targetMove = h.getPrivateFacilities().get(amenagement.getNom());
+				}
+			
+		}
+		if(h.targetMove != null)
 		{
-		 	if(cible.xcor() == h.xcor() && cible.ycor() == h.ycor())
+		 	if(h.targetMove.xcor() == h.xcor() && h.targetMove.ycor() == h.ycor())
 		 	{
+		 		h.targetMove = null;
 		 		return nextAction;
 		 	}
 		 	else
 		 	{
-		 		h.moveTowards(cible);
-		 		return this;
+		 		h.moveTowards(h.targetMove);
+		 		h.targetMove = null;
 		 	}
 		}
 		return nextAction;

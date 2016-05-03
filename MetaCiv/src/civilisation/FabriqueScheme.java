@@ -201,10 +201,6 @@ public class FabriqueScheme {
 				for (int j = 0; j < sc.getCognitons().get(i).getLiensPlans().size() ;j++){
 					out.println("Influence : "+sc.getCognitons().get(i).getLiensPlans().get(j).getP().getNom()+","+sc.getCognitons().get(i).getLiensPlans().get(j).getPoids());
 				}
-				
-		    	for (int j = 0; j < sc.getCognitons().get(i).getHues().length; j++) {
-					out.println("Hue" + j + " : " + sc.getCognitons().get(i).getHues()[j]);
-		    	}
 		    	
 		    	for (int j = 0; j < sc.getCognitons().get(i).getTriggeringAttributes().size(); j++) {
 					out.println("Trigger : " + sc.getCognitons().get(i).getTriggeringAttributes().get(j)[0] + "," + sc.getCognitons().get(i).getTriggeringAttributes().get(j)[1] + "," + sc.getCognitons().get(i).getTriggeringAttributes().get(j)[2]+ "," + sc.getCognitons().get(i).getTriggeringAttributes().get(j)[3]);
@@ -254,10 +250,6 @@ public class FabriqueScheme {
 				for (int j = 0; j < sc.getCloudCognitons().get(i).getLiensPlans().size() ;j++){
 					out.println("Influence : "+sc.getCloudCognitons().get(i).getLiensPlans().get(j).getP().getNom()+","+sc.getCloudCognitons().get(i).getLiensPlans().get(j).getPoids());
 				}
-				
-		    	for (int j = 0; j < sc.getCloudCognitons().get(i).getHues().length; j++) {
-					out.println("Hue" + j + " : " + sc.getCloudCognitons().get(i).getHues()[j]);
-		    	}
 		    	
 		    	for (int j = 0; j < sc.getCloudCognitons().get(i).getTriggeringAttributes().size(); j++) {
 					out.println("Trigger : " + sc.getCloudCognitons().get(i).getTriggeringAttributes().get(j)[0] + "," + sc.getCloudCognitons().get(i).getTriggeringAttributes().get(j)[1] + "," + sc.getCloudCognitons().get(i).getTriggeringAttributes().get(j)[2]);
@@ -419,11 +411,7 @@ public class FabriqueScheme {
 					   		cognitonsDeBase.add(cogni);
 					    	cogni.setRecuAuDemarrage(true);
 				    	}
-				    	for (int i = 0; i < TypeCogniton.nHues; i++) {
-				    		if (Initialiseur.getChamp("Hue" + i , file) != null) {
-				    			cogni.getHues()[i] = Integer.parseInt(Initialiseur.getChamp("Hue" + i , file)[0]);
-				    		}
-				    	}
+				    	
 				    	//Load triggering attributes
 				       	ArrayList<String[]> triggers = Initialiseur.getListeChamp("Trigger", file);
 				       	for(int i = 0 ; i < triggers.size(); i++) {
@@ -492,11 +480,7 @@ public class FabriqueScheme {
 				    		cognitonsDeBase.add(cogni);
 					    	cogni.setRecuAuDemarrage(true);
 				    	}
-				    	for (int i = 0; i < TypeCogniton.nHues; i++) {
-				    		if (Initialiseur.getChamp("Hue" + i , file) != null) {
-				    			cogni.getHues()[i] = Integer.parseInt(Initialiseur.getChamp("Hue" + i , file)[0]);
-				    		}
-				    	}
+				    	
 				    	allCloudCogniton.add(cogni);
 				    }
 					}

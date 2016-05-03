@@ -70,7 +70,7 @@ public class A_DepositObjectInFacilityHere extends Action
 	@Override
 	public String getInfo()
 	{
-		return super.getInfo() + "Deposit a maximum of n Objects ,or as much as the agent can give, in the facility located on the same patch";
+		return super.getInfo() + "Deposit a maximum of n Objects ,or as much as the agent can give, in the facility located on the same patch.<html>";
 	}
 
 	public boolean isDeprecated()
