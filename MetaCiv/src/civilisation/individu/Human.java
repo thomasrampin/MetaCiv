@@ -40,6 +40,7 @@ import civilisation.Communaute;
 import civilisation.Configuration;
 import civilisation.DefineConstants;
 import civilisation.amenagement.Amenagement;
+import civilisation.amenagement.Amenagement_Efficacite;
 import civilisation.amenagement.Amenagement_Route;
 import civilisation.amenagement.TypeAmenagement;
 import civilisation.group.Group;
@@ -79,10 +80,8 @@ public class Human extends Turtle implements Serializable
 	Human initiateurInteraction = null;
 	//Degats que l'individu inflige lors d'une I_Attaquer
 	int degats = 1;
-	
+	public Amenagement targetMove = null;
 
-	//Boite à lettre
-	//ArrayList<Message> mailbox = new ArrayList<Message>();
 	
 	
 	
@@ -96,7 +95,7 @@ public class Human extends Turtle implements Serializable
 	Color debugStringColor;
 	private static ArrayList<HumainListener> listeners = new ArrayList<HumainListener>();
 	
-	HashMap<String,Amenagement> privateFacilities = new HashMap<String , Amenagement>();
+	private HashMap<String, Amenagement> privateFacilities = new HashMap<String , Amenagement>();
 	HashMap<String,Double> attributes;
 
 	/* For map drawing */
@@ -152,11 +151,13 @@ public class Human extends Turtle implements Serializable
 		
 		//this.getEsprit().clearAllCognitons();   /*TODO*/
 		isDie = true; //TODO : verifier
-		System.out.println("Je suis mort mdr : " + isDie + " : " + this.getClass());
-		//killAgent(this);
 		//System.out.println("nb litnenr : " + listeners.size());
-		for (HumainListener l : listeners)
+		
+		for (HumainListener l : listeners){
+			System.out.println(l.getClass());
 			l.onHumainDie(this);
+		}
+		
 		
 		
 		
@@ -1673,13 +1674,32 @@ public class Human extends Turtle implements Serializable
 		{
 			result = new Amenagement(p, this, type);
 			this.launchAgent(result);
-			privateFacilities.put(type.getNom(), result);
+			this.privateFacilities.put(type.getNom(), result);
+			result.createGroupIfAbsent(this.getCiv().getNom(), DefineConstants.Group_PrivateFacilities);
+			result.requestRole(this.getCiv().getNom(), DefineConstants.Group_PrivateFacilities, DefineConstants.Role_Facility);
+
+		}
+		return result;
+	}
+	
+	public Amenagement_Efficacite createPrivateFacilityEfficacite(TypeAmenagement type, Patch p)
+	{
+		Amenagement_Efficacite result = null;
+		
+		if(privateFacilities.get(type.getNom())==null)
+		{
+			result = new Amenagement_Efficacite(p, this, type);
+			this.launchAgent(result);
+			this.privateFacilities.put(type.getNom(), result);
+			result.createGroupIfAbsent(this.getCiv().getNom(), DefineConstants.Group_PrivateFacilities);
 			result.requestRole(this.getCiv().getNom(), DefineConstants.Group_PrivateFacilities, DefineConstants.Role_Facility);
 
 		}
 		return result;
 	}
 
+	
+	
 	public HashMap<String , Amenagement> getPrivateFacilities() {
 		return privateFacilities;
 	}
@@ -1836,9 +1856,9 @@ public class Human extends Turtle implements Serializable
 	}
 	
 	
-	public boolean isAlive(){
+	/*public boolean isAlive(){
 		return (!isDie);
-	}
+	}*/
 	
 	public int getDegats(){
 		return degats;

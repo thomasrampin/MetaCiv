@@ -1,0 +1,18 @@
+Nom : Faim
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 0
+Permet : AcheterNourriture
+Influence : Agriculture,1
+Influence : Artisannat,-1
+Influence : RecolteBois,-1
+Influence : RecolteBaie,1
+Influence : AcheterNourriture,4
+Hue0 : 0
+Hue1 : 0
+Hue2 : 0
+Hue3 : 0
+Hue4 : 0
+Hue5 : 0
+Hue6 : 0

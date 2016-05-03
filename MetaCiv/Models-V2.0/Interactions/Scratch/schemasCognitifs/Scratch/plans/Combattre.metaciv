@@ -1,9 +1,0 @@
-Nom : Combattre
-Birth : false
-Self : false
-Action : L_GotTargetInteraction
-	Action : I_Attaquer,Modified attribute(Attribute Vie),n(Integer -100 Constant __NoConstant)
-	Action : A_GetCibleInteraction_Tag,Modified attribute(Attribute Civ3),n(Integer -100 Constant __NoConstant)
-Action : L_GotTargetInteraction
-	Action : A_DoNothing
-	Action : A_AvanceAleatoirement

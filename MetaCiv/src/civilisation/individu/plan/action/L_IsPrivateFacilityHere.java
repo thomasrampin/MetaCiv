@@ -1,6 +1,7 @@
 package civilisation.individu.plan.action;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
@@ -20,10 +21,12 @@ public class L_IsPrivateFacilityHere extends LAction{
 		if (nextAction != null) h.getEsprit().getActions().push(nextAction);
 		Action a;
 		
-		a = listeActions.get(1).effectuer(h);		
-		if (h.getPrivateFacilitiesOfTypeHere(objet).size()>0)
-		{
-			a = listeActions.get(0).effectuer(h);
+		a = listeActions.get(1).effectuer(h);
+		ArrayList<Amenagement> facilities = h.getFacilitiesOfTypeHere(objet);
+		for(Amenagement f : facilities){
+			if(f.getPossesseur().hashCode() == h.hashCode()){
+				a = listeActions.get(0).effectuer(h);
+			}
 		}
 	
 		return a;

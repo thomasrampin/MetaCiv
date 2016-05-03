@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 import civilisation.Configuration;
 import civilisation.DefineConstants;
@@ -102,6 +103,7 @@ public class Amenagement extends Turtle implements Serializable {
 	public Patch getPosition() {
 		return position;
 	}
+	
 
 	/**
 	 * Les cognitons declench___s par cet amenagement

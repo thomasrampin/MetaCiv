@@ -1,0 +1,8 @@
+Nom : RegenerFaim
+Description : null
+Cible : attribut
+NomCible : Faim
+Valeur : 10.0
+Permanence : true
+Type : 1
+Activation : 1
