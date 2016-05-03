@@ -210,6 +210,17 @@ public class PanelStructureCognitive extends JJPanel{
 		}		
 	}
 	
+	/*public void afficherPopupPanel (MouseEvent e)
+	{
+		popupCouleur = new JPopupMenu("Couleur");
+		JMenuItem parType = new JMenuItem(I18nList.CheckLang("Couleurs par Type"));
+		//parType.addActionListener(new ActionsMenuCouleur());
+		
+		popupCouleur.add(parType);
+		
+		popupCouleur.show(this, e.getX(), e.getY());
+	}*/
+	
 	public void afficherPopupPlan(MouseEvent e , GPlan p){
 		final NPlan refP = p.getPlan(); 
 
@@ -271,6 +282,34 @@ public class PanelStructureCognitive extends JJPanel{
 		editTriggeringAttributes.addActionListener(new ActionsMenuGCogniton(c,3));
 		editTriggeringAttributes.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/lock--arrow.png"));
 		popupGCognitons.add(editTriggeringAttributes);
+		
+		JMenuItem affichageCustom = new JMenuItem(I18nList.CheckLang("Display Custom colors"));
+		affichageCustom.addActionListener(new ActionListener () {
+			
+			public void actionPerformed(ActionEvent e) {
+				for( GCogniton gc : gCognitons)
+				{
+					gc.displayCustomColor();
+				}
+				
+			}
+		});
+		affichageCustom.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/lock--arrow.png"));
+		popupGCognitons.add(affichageCustom);
+		
+		JMenuItem affichageParType = new JMenuItem(I18nList.CheckLang("Display Type colors"));
+		affichageParType.addActionListener(new ActionListener () {
+			
+			public void actionPerformed(ActionEvent e) {
+				for( GCogniton gc : gCognitons)
+				{
+					gc.displayTypeColor();
+				}
+				
+			}
+		});
+		affichageParType.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/lock--arrow.png"));
+		popupGCognitons.add(affichageParType);
 		//JMenuItem editerChaine = new JMenuItem("Edit inter-cogniton links");
 		//editerChaine.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/arrow-in-out.png"));
 		//popupGCognitons.add(editerChaine);

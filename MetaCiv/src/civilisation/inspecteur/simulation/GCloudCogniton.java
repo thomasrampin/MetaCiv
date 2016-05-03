@@ -76,7 +76,7 @@ public class GCloudCogniton extends GCogniton{
     	g2d.drawString(cogniton.getNom(), margeEcriture, (float) (fm.getHeight()*1.3));
     	
     	/*paint the "hues" of the cogniton*/
-    	int huesAlreadyPaint = 0;
+    	/*int huesAlreadyPaint = 0;
     	for (int i = 0 ; i < TypeCogniton.nHues; i++) {
     		if (cogniton.getHues()[i] != 0){
     			g2d.setColor(TypeCogniton.hueColors[i]);
@@ -86,7 +86,7 @@ public class GCloudCogniton extends GCogniton{
     			g2d.drawOval(hueCircleSize*huesAlreadyPaint, 2*fm.getHeight() - (hueCircleSize/2), hueCircleSize, hueCircleSize);
     			huesAlreadyPaint++;
     		}
-    	}
+    	}*/
     	
     	//this.setBounds(   (int)(this.getXx()+margeEcriture),(int)this.getYy()+2,(int) (fm.stringWidth(cogniton.getNom()) + (2*margeEcriture)),2*fm.getHeight());
 

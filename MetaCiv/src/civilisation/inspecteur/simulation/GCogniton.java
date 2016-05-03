@@ -28,6 +28,10 @@ public class GCogniton extends GItemCognitif{
 	static float margeEcriture = 2;
 	public final static int hueCircleSize = 12;
 	
+	private Boolean DisplayCustomColor;
+	private Color CustomColor;
+	
+	
 	/*For individual agent view*/
 	private Cogniton cogniton;
 	
@@ -36,10 +40,14 @@ public class GCogniton extends GItemCognitif{
 		this.typeCogniton = cogniton;
 		this.setToolTipText(cogniton.toString());
 		this.addMouseListener(new MouseGCognitonListener(this));
+		this.CustomColor = Color.WHITE;
+		this.DisplayCustomColor = false;
 	}
 	
 	public GCogniton(JJPanel parent , double xx, double yy, double w, double h) {
 		super(parent, xx, yy, w, h);
+		this.CustomColor = Color.WHITE;
+		this.DisplayCustomColor = false;
 	}
 
 	
@@ -58,14 +66,21 @@ public class GCogniton extends GItemCognitif{
     	g2d.fill(new Ellipse2D.Double(0 ,0,fm.stringWidth(displayedString) + (2*margeEcriture),2*fm.getHeight()));
     	this.setW(fm.stringWidth(displayedString) + (2*margeEcriture));
     	this.setH(2*fm.getHeight() + (hueCircleSize/2) + 2);
-    	g2d.setColor(typeCogniton.getType().getCouleur());
+    	
+    	if(DisplayCustomColor){
+    		g2d.setColor(CustomColor);
+    	}
+    	else
+    	{
+    		g2d.setColor(typeCogniton.getType().getCouleur());
+    	}
     	g2d.fill(new Ellipse2D.Double(margeEcriture,2,fm.stringWidth(displayedString),2*fm.getHeight()-4));
     	
     	g2d.setColor(Color.BLACK);
     	g2d.drawString(displayedString, margeEcriture, (float) (fm.getHeight()*1.3));
     	
     	/*paint the "hues" of the cogniton*/
-    	int huesAlreadyPaint = 0;
+    	/*int huesAlreadyPaint = 0;
     	for (int i = 0 ; i < TypeCogniton.nHues; i++) {
     		if (typeCogniton.getHues()[i] != 0){
     			g2d.setColor(TypeCogniton.hueColors[i]);
@@ -75,7 +90,7 @@ public class GCogniton extends GItemCognitif{
     			g2d.drawOval(hueCircleSize*huesAlreadyPaint, 2*fm.getHeight() - (hueCircleSize/2), hueCircleSize, hueCircleSize);
     			huesAlreadyPaint++;
     		}
-    	}
+    	}*/
     	
     	//this.setBounds(   (int)(this.getXx()+margeEcriture),(int)this.getYy()+2,(int) (fm.stringWidth(cogniton.getNom()) + (2*margeEcriture)),2*fm.getHeight());
 
@@ -102,6 +117,9 @@ public class GCogniton extends GItemCognitif{
 		return typeCogniton;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	public void afficherPopup(MouseEvent e){
 		((PanelStructureCognitive) this.getParent()).afficherPopupCogniton(e , this);
 	}
@@ -114,5 +132,19 @@ public class GCogniton extends GItemCognitif{
 		this.cogniton = cogniton;
 	}
 
+	public void setCouleur(Color c)
+	{
+		this.CustomColor = c;
+	}
+	
+	public void displayCustomColor()
+	{
+		this.DisplayCustomColor = true;
+	}
+	
+	public void displayTypeColor()
+	{
+		this.DisplayCustomColor = false;
+	}
 	
 }

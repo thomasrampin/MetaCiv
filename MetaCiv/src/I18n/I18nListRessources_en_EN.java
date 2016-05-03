@@ -154,6 +154,8 @@ public class I18nListRessources_en_EN extends ListResourceBundle{
 	  			{"Edit influence links","Edit influence links"},
 	  			{"Edit conditional links","Edit conditional links"},
 	  			{"Edit triggering attributes","Edit triggering attributes"},
+	  			{"Display Custom colors","Display Custom colors"},
+	  			{"Display Type colors","Display Type colors"},
 	  		//civilisation.inspecteur.simulation.amenagement
 	  			//PanelAmenagement.java
 	  			{"Facility editor","Facility editor"},
@@ -224,7 +226,7 @@ public class I18nListRessources_en_EN extends ListResourceBundle{
 	  			{"Starting cogniton","Starting cogniton"},
 	  			{"Give this cogniton to new agents?","Give this cogniton to new agents?"},
 	  			{"Starting apparition chance :","Starting apparition chance :"},
-	  			{"Cogniton hues : ","Cogniton hues : "},
+	  			{"Cogniton custom color : ","Cogniton custom color : "},
 	  			{"Editer un cogniton","Edit cogniton"},
 	  			//DialogueEditerLiensConditionnels.java
 	  			{"Conditionned plan :","Conditionned plan :"},

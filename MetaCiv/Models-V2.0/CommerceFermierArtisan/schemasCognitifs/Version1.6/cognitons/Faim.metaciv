@@ -6,11 +6,4 @@ Initial : 0
 Permet : Consommer
 Influence : Consommer,4
 Influence : DonnerNaissanceSiJ'aiPasFaim,-2
-Hue0 : 0
-Hue1 : 0
-Hue2 : 0
-Hue3 : 0
-Hue4 : 0
-Hue5 : 0
-Hue6 : 0
 Trigger : Energie,50.0,-2,SeuiFaim

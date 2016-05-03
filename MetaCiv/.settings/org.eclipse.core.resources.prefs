@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/I18n/I18nListRessources_en_EN.java=UTF-8
+encoding//src/I18n/I18nListRessources_fr_FR.java=UTF-8
 encoding//src/civilisation/Civilisation.java=UTF-8
 encoding//src/civilisation/Configuration.java=UTF-8
 encoding//src/civilisation/Initialiseur.java=UTF-8
@@ -6,8 +8,10 @@ encoding//src/civilisation/effects/Effect.java=UTF-8
 encoding//src/civilisation/effects/EffectA.java=UTF-8
 encoding//src/civilisation/individu/Esprit.java=UTF-8
 encoding//src/civilisation/individu/Human.java=UTF-8
+encoding//src/civilisation/individu/cognitons/TypeCogniton.java=UTF-8
 encoding//src/civilisation/individu/plan/action/A_DoAgriculture.java=UTF-8
 encoding//src/civilisation/inspecteur/simulation/PanelModificationSimulation.java=UTF-8
+encoding//src/civilisation/inspecteur/simulation/PanelStructureCognitive.java=UTF-8
 encoding//src/civilisation/inspecteur/simulation/groupManager/PanelGroupTree.java=UTF-8
 encoding//src/civilisation/world/World.java=UTF-8
 encoding//src/civilisation/world/WorldViewer.java=UTF-8

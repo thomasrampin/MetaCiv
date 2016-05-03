@@ -1,7 +1,0 @@
-Carte : TripleCiv.metaciv
-DecisionMaker : WeightedStochasticDecisionMaker
-MaxWeight : 2147483647
-RoadCreation : 30
-RoadEvaporation : 1
-VisionRadius : 10
-Dispersion : 1

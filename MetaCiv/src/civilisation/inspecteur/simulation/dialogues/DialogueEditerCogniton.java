@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -34,13 +35,13 @@ public class DialogueEditerCogniton extends JDialog implements ActionListener, P
 	GCogniton gCogniton;
     JOptionPane optionPane;
     JCheckBox recuAuDemarrage;
-    JSlider[] hues;
     JSpinner startChance;
     JJIconSelector iconSelector;
     JLabel labname;
     JLabel labtype;
     JLabel labnumb;
-    JLabel labhues;
+    JLabel labcolor;
+    JColorChooser choixCouleur;
     
 	public DialogueEditerCogniton(Frame f , boolean modal, GCogniton gCogniton){
 		super(f,modal);
@@ -90,28 +91,17 @@ public class DialogueEditerCogniton extends JDialog implements ActionListener, P
 		
 		//this.add(iconSelector = new JJIconSelector());
 		
-		/* hues selection*/
-		labhues = new JLabel(I18nList.CheckLang("Cogniton hues : "));
-
-		hues = new JSlider[TypeCogniton.nHues];
-		for (int i = 0; i < TypeCogniton.nHues; i++){
-			int temp = gCogniton.getCogniton().getHues()[i];
-			hues[i] = new JSlider(0,50,temp);
-			hues[i].setMajorTickSpacing(10);
-			hues[i].setMinorTickSpacing(1);
-			hues[i].setPaintTicks(true);
-			hues[i].setPaintLabels(true);
-			//hues[i].setBackground(NCogniton.hueColors[i]);  /*Colorer les sliders?*/
-			
-		}
+		/* Color Chooser */
+		labcolor = new JLabel(I18nList.CheckLang("Cogniton custom color : "));
 		
+		choixCouleur = new JColorChooser();
 		
 
 		this.setTitle(I18nList.CheckLang("Editer un cogniton"));
 		
 		
 		/*Proviens du tutorial Java Sun*/
-	    Object[] array = {labname, nom, labtype, type , recuAuDemarrage, labnumb, startChance , labhues, hues};
+	    Object[] array = {labname, nom, labtype, type , recuAuDemarrage, labnumb, startChance , labcolor, choixCouleur};
 	       
 	    //Create an array specifying the number of dialog buttons
 	    //and their text.
@@ -154,9 +144,8 @@ public class DialogueEditerCogniton extends JDialog implements ActionListener, P
 					}
 					gCogniton.getCogniton().setRecuAuDemarrage(recuAuDemarrage.isSelected());
 				}
-				for (int i = 0; i < TypeCogniton.nHues; i++){
-					gCogniton.getCogniton().getHues()[i] = hues[i].getValue();
-				}
+				
+				gCogniton.setCouleur(choixCouleur.getColor());
 			}		
 	        setVisible(false);
 		}
