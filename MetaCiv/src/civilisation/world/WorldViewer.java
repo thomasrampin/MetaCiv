@@ -248,7 +248,6 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
 					List<Turtle> turtles = t.getOtherTurtles(0, true);
 					for (int i = 0 ; i < turtles.size() ; i++) {
-						//paintDebugMessage(g, (Human)turtles.get(i), dx, dy+50);
 						paintOneTurtle(g,turtles.get(i),x,y,false);
 					}
 				}
@@ -364,6 +363,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	}
 	
 	private void paintDebugMessage(Graphics g, Human agent, int x, int y) {
+		agent.setDebugString(agent.getEsprit().getPlanEnCours().planToString());
 		if(!agent.getDebugString().equals("")){
 			String msg = agent.getDebugString();
 			//System.out.println(msg);
@@ -374,8 +374,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			FontMetrics metrics = g.getFontMetrics(font);
 			Dimension speechBubbleSize = new Dimension(metrics.stringWidth(msg) + (2 * padding), metrics.getHeight() + (2 * padding));
 			
-			int posX = (int) ((agent.getX()) * cellSize - (5 / cellSize) - speechBubbleSize.width - distanceBubbleFromAgent);
-			int posY = (int) ((agent.getY()) * cellSize - (5 / cellSize) - speechBubbleSize.height - distanceBubbleFromAgent);
+			int posX = (int) ((agent.getX()) * cellSize - speechBubbleSize.width - distanceBubbleFromAgent);
+			int posY = (int) ((agent.getY()) * cellSize - speechBubbleSize.height - distanceBubbleFromAgent);
 			System.out.println("posX = "+posX+" posY = "+posY);
 			System.out.println("agentX = "+agent.getX()+" agentY = "+agent.getY());
 			g.setColor(Color.BLACK);

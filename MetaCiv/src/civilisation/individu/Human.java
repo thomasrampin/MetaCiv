@@ -93,9 +93,9 @@ public class Human extends Turtle implements Serializable
 	Boolean woman;
 	ArrayList<Human> enfants;
 	String debugString="coucou";
-	Color debugStringColor;
-	private static ArrayList<HumainListener> listeners = new ArrayList<HumainListener>();
 	
+	private static ArrayList<HumainListener> listeners = new ArrayList<HumainListener>();
+
 	HashMap<String,Amenagement> privateFacilities = new HashMap<String , Amenagement>();
 	HashMap<String,Double> attributes;
 
@@ -1886,8 +1886,8 @@ public class Human extends Turtle implements Serializable
 	public String getDebugString(){
 		return debugString;
 	}
-	public Color getDebugStringColor(){
-		return debugStringColor;
+	public void setDebugString(String debugString) {
+		this.debugString = debugString;
 	}
 }
 

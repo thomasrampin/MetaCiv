@@ -109,6 +109,9 @@ public class NPlanPondere implements Serializable{
 	public String toString(){
 		return "[Plan : " + plan.getNom() + " , Poids : " + poids + "]";
 	}
+	public String planToString(){
+		return plan.getNom();
+	}
 	
 	public void addInfluence(Cogniton cogni) {
 		this.influences.put(cogni,cogni.getWeigth());
