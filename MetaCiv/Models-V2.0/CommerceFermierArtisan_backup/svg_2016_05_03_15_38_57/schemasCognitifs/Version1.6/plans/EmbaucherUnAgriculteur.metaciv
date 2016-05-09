@@ -1,0 +1,9 @@
+Nom : EmbaucherUnAgriculteur
+Birth : false
+Self : false
+Action : L_CompareGroupAttributeToPopulation,attributeToCompare(Attribute Insatisfaction),comparator(Comparator >)
+	Action : L_Repeat,n(Integer 1)
+		Action : A_AskRandomMemberToChangeRoleForAnother,Change to that role :(GroupAndRole Village:agriculteur)
+		Action : A_ChangeAttribute,Modified attribute(Attribute Insatisfaction),n(Integer -50 Constant InsatisfactionCreationAgriculteur)
+	Action : A_DoNothing
+Action : A_DoNothing

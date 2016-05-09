@@ -1,0 +1,9 @@
+Nom : DevenirAgriculteur
+Birth : false
+Self : false
+Action : L_RandomPercent,n(Double 20.0 Constant __NoConstant)
+	Action : L_Repeat,n(Integer 1 Constant __NoConstant)
+		Action : A_ChangeRoleForAnother,Change to that role :(GroupAndRole Village:agriculteur)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton DevenirAgriculteur?),n(Double -1.0 Constant __NoConstant)
+	Action : A_DoNothing
+Action : A_DoNothing

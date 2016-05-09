@@ -1,0 +1,6 @@
+Nom : ReproduireCueilleur
+Description : Un nouveau cogniton
+Type : CULTURON
+StartChance : 0
+Initial : 0
+Permet : DonnerNaissanceSiJ'aiPasFaim

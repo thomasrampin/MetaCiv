@@ -91,7 +91,7 @@ public class Human extends Turtle implements Serializable
 	Human conjoint;
 	Boolean woman;
 	ArrayList<Human> enfants;
-	String debugString="coucou";
+	String debugString;
 	
 	private static ArrayList<HumainListener> listeners = new ArrayList<HumainListener>();
 

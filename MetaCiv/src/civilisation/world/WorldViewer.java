@@ -262,20 +262,22 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			Color humain = e.getCognitonMaxWeight().getCogniton().getType().getCouleur();
 			
 			// Les dessins sous le carre de couleur
-			if(t==selectedAgent){
-				g.setColor(Color.BLUE);
-				g.fillRect(dx-2,dy-2,size +4,size +4);
-			}
 			
 			if ((planVisible == null || planVisible == e.getPlanEnCours().getPlan() ))
 			{	
+				System.out.println(getSelectedAgent().getName());
+				if(t==selectedAgent){
+					g.setColor(Color.BLUE);
+					g.fillRect(dx-2,dy-2,size +4,size +4);
+					paintDebugMessage(g, h, dx, dy);
+				}
 				//Color square
 				if(getCellSize() > 4) {
 					g.setColor(t.getPatch().getColor());
 					g.fillRect(dx,dy,size,size);
 					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
-					paintDebugMessage(g, h, dx, dy+50);
+					//paintDebugMessage(g, h, dx, dy);
 				}
 				else 
 				{
@@ -374,12 +376,14 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			FontMetrics metrics = g.getFontMetrics(font);
 			Dimension speechBubbleSize = new Dimension(metrics.stringWidth(msg) + (2 * padding), metrics.getHeight() + (2 * padding));
 			
-			int posX = (int) ((agent.getX()) * cellSize - speechBubbleSize.width - distanceBubbleFromAgent);
-			int posY = (int) ((agent.getY()) * cellSize - speechBubbleSize.height - distanceBubbleFromAgent);
-			System.out.println("posX = "+posX+" posY = "+posY);
-			System.out.println("agentX = "+agent.getX()+" agentY = "+agent.getY());
+			//le probleme !
+			int posX = (int) x+3*cellSize;//((agent.getX()) * cellSize - (5 / cellSize) - speechBubbleSize.width - distanceBubbleFromAgent);
+			int posY = (int) y+3*cellSize;//((agent.getY()) * cellSize - (5 / cellSize) - speechBubbleSize.height - distanceBubbleFromAgent);
+			
+			//System.out.println("posX = "+posX+" posY = "+posY);
+			//System.out.println("agentX = "+agent.getX()+" agentY = "+agent.getY());
 			g.setColor(Color.BLACK);
-			g.drawLine(posX, posY, ((int) agent.getX()), ((int) agent.getY()));
+			g.drawLine(posX, posY, ((int) agent.getX()+3*cellSize), ((int) agent.getY()+3*cellSize));
 			g.setColor(Color.WHITE);
 			g.fillRect(posX, posY, speechBubbleSize.width, speechBubbleSize.height);
 			g.setColor(Color.BLACK);
@@ -388,7 +392,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			g.setFont(font);
 			g.drawString(msg, posX + padding, posY + speechBubbleSize.height - padding);
 		}
-	}	
+	}
 	
 	public int getControleurPatch(Patch p)
 	{
@@ -448,8 +452,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	}
 
 
-	public void setSelectedAgent(Turtle selectedAgent) {
-		this.selectedAgent = selectedAgent;
+	public void setSelectedAgent(Turtle sAgent) {
+		selectedAgent = sAgent;
 	}
 
 	protected void render(Graphics g) {

@@ -1,0 +1,6 @@
+Nom : PasBesoinDeVillage
+Description : Un nouveau cogniton
+Type : PERCEPT
+StartChance : 0
+Initial : 0
+Influence : Construire,-1

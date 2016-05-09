@@ -1,0 +1,6 @@
+Nom : DonnerNaissance?
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 100
+Initial : 1
+Influence : DonnerNaissanceSiJ'aiPasFaim,2

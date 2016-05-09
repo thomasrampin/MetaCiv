@@ -1,0 +1,9 @@
+Nom : Faim
+Description : Un nouveau cogniton
+Type : PERCEPT
+StartChance : 0
+Initial : 0
+Permet : Consommer
+Influence : Consommer,4
+Influence : DonnerNaissanceSiJ'aiPasFaim,-2
+Trigger : Energie,50.0,-2,SeuiFaim

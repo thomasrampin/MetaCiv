@@ -1,0 +1,8 @@
+Nom : Possession
+Description : null
+Cible : cogniton
+NomCible : ProduireAutreChose
+Valeur : 0.2
+Permanence : false
+Type : 1
+Activation : 0

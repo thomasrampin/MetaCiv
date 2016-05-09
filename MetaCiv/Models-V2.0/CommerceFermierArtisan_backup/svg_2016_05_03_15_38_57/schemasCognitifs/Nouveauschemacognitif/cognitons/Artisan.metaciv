@@ -1,0 +1,7 @@
+Nom : Artisan
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 0
+Permet : Artisannat
+Influence : Artisannat,4
