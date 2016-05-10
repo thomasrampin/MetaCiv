@@ -16,7 +16,7 @@ public enum TypeDeCogniton implements Cloneable, Serializable{
 	    
 	    TypeDeCogniton(Color couleur) {
 	        this.couleur = couleur;
-	    }	    
+	    }
 	    
 	    public static TypeDeCogniton toType(String s){
 			if (s.equals("BELIEF")){

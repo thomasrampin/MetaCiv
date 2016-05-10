@@ -1,0 +1,8 @@
+Nom : Agriculteur
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 100
+Couleur : java.awt.Color[r=255,g=255,b=0]
+Initial : 1
+Permet : Agriculter
+Influence : Agriculter,3

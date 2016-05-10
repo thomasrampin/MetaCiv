@@ -1,5 +1,6 @@
 package civilisation;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -103,7 +104,7 @@ public class FabriqueScheme {
 	
 	/* Sauvegarder avec un path */
 	public static void sauverSchemaCognitif(SchemaCognitif sc, String path){
-		/* Supprimer le dossier déjà existant */
+		/* Supprimer le dossier dï¿½jï¿½ existant */
 		File dossierSchema = new File(path);
 		File supp = new File(path + "/" + sc.getNom());
 
@@ -183,6 +184,7 @@ public class FabriqueScheme {
 				out.println("Description : " + sc.getCognitons().get(i).getDescription());
 				out.println("Type : " + sc.getCognitons().get(i).getType());
 				out.println("StartChance : " + sc.getCognitons().get(i).getStartChance());
+				out.println("Couleur : "+sc.getCognitons().get(i).getCustomColor().getRGB());
 				if (sc.getCognitons().get(i).isRecuAuDemarrage()){
 					out.println("Initial : 1");
 				}
@@ -317,7 +319,7 @@ public class FabriqueScheme {
 				out.println("Nom : " + sc.getPlans().get(i).getNom());
 				out.println("Birth : " + sc.getPlans().get(i).getIsBirthPlan());
 				out.println("Self : " + sc.getPlans().get(i).getIsSelfPlan());
-
+				out.println("Couleur : "+sc.getPlans().get(i).getCustomColor().getRGB());
 				if (!sc.getPlans().get(i).getActions().isEmpty()){
 					for(Action a : sc.getPlans().get(i).getActions())
 					{
@@ -406,6 +408,10 @@ public class FabriqueScheme {
 				    	cogni.setNom(nom);
 				    	cogni.setDescription(Initialiseur.getChamp("Description" , file)[0]);
 				    	cogni.setStartChance(Integer.parseInt(Initialiseur.getChamp("StartChance" , file)[0]));
+				    	String s = Initialiseur.getChamp("Couleur", file)[0];
+				    	if(s!="null"){
+				    		cogni.setCustomColor(new Color(Integer.parseInt(s)));
+				    	}
 				    	cogni.setType(TypeDeCogniton.toType(Initialiseur.getChamp("Type" , file)[0]));
 				    	if (Initialiseur.getChamp("Initial" , file)[0].equals("1")){
 					   		cognitonsDeBase.add(cogni);
@@ -528,7 +534,10 @@ public class FabriqueScheme {
 				       	setupPlans(listePlans.get(nom), file, 0, 0, null, sc);
 				       	listePlans.get(nom).setIsBirthPlan(Boolean.parseBoolean(Initialiseur.getChamp("Birth", file)[0]));
 				       	listePlans.get(nom).setIsSelfPlan(Boolean.parseBoolean(Initialiseur.getChamp("Self", file)[0]));
-	
+				       	String s = Initialiseur.getChamp("Couleur", file)[0];
+				    	if(s!="null"){
+				    		listePlans.get(nom).setCustomColor(new Color(Integer.parseInt(s)));
+				    	}
 				       /*	for (int i = 0; i < actions.size(); i++){
 				       		listePlans.get(nom).addAction(actions.get(i));
 				       		if (i > 0){

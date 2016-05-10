@@ -38,7 +38,7 @@ public class GPlan extends GItemCognitif{
 		this.setToolTipText(plan.toString());
 		this.addMouseListener(new MouseGPlanListener(this));
 		this.DisplayCustomColor = false;
-		this.CustomColor = Color.GRAY;
+		this.CustomColor = plan.getCustomColor();
 
 	}
 
@@ -115,6 +115,7 @@ public class GPlan extends GItemCognitif{
 	public void setCouleur(Color c)
 	{
 		this.CustomColor = c;
+		typePlan.setCustomColor(c);
 	}
 	
 	public void displayCustomColor()

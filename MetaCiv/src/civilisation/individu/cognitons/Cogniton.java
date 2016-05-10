@@ -1,6 +1,7 @@
 package civilisation.individu.cognitons;
 
 import java.util.HashMap;
+import java.awt.Color;
 import java.io.Serializable;
 import civilisation.individu.Esprit;
 
@@ -18,6 +19,7 @@ public class Cogniton implements Serializable {
 	
 	public Cogniton (TypeCogniton cogniton) {
 		this.cogniton = cogniton;
+		
 	}
 
 	public TypeCogniton getCogniton() {
@@ -57,8 +59,5 @@ public class Cogniton implements Serializable {
 	public String toString () {
 		return "C:"+ cogniton.toString();
 	}
-
-
-	
 	
 }

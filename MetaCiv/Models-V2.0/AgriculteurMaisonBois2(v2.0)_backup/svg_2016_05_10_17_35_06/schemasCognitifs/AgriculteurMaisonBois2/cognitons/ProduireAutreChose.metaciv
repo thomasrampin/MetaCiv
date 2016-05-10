@@ -1,0 +1,7 @@
+Nom : ProduireAutreChose
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 80
+Initial : 1
+Permet : ConstruireOutil
+Influence : ConstruireOutil,3

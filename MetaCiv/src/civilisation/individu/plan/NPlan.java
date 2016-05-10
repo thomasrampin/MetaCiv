@@ -1,5 +1,6 @@
 package civilisation.individu.plan;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,8 +29,11 @@ public class NPlan implements Cloneable, Serializable{
 	Boolean isBirthPlan = false;
 	Boolean isSelfPlan = false;
 
+	private Color CustomColor;
+
 	public NPlan(){
 		actions = new ArrayList<Action>();
+		CustomColor = Color.GRAY;
 	}
 	
 	public NPlan clone() throws CloneNotSupportedException {
@@ -271,8 +275,11 @@ public class NPlan implements Cloneable, Serializable{
 		}		
 	}
 
-	
+	public Color getCustomColor() {
+		return CustomColor;
+	}
 
-
-
+	public void setCustomColor(Color customColor) {
+		CustomColor = customColor;
+	}
 }

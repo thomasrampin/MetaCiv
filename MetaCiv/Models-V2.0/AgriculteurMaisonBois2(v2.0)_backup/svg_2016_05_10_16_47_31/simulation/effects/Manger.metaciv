@@ -1,0 +1,8 @@
+Nom : Manger
+Description : null
+Cible : attribut
+NomCible : Vie
+Valeur : 10.0
+Permanence : false
+Type : 1
+Activation : 1

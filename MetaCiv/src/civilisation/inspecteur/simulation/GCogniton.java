@@ -35,18 +35,17 @@ public class GCogniton extends GItemCognitif{
 	/*For individual agent view*/
 	private Cogniton cogniton;
 	
-	public GCogniton(JJPanel parent , double xx, double yy, double w, double h, TypeCogniton cogniton) {
+	public GCogniton(JJPanel parent , double xx, double yy, double w, double h, TypeCogniton tc) {
 		super(parent, xx, yy, w, h);
-		this.typeCogniton = cogniton;
-		this.setToolTipText(cogniton.toString());
+		this.typeCogniton = tc;
+		this.setToolTipText(tc.toString());
 		this.addMouseListener(new MouseGCognitonListener(this));
-		this.CustomColor = Color.WHITE;
+		this.CustomColor = tc.getCustomColor();
 		this.DisplayCustomColor = false;
 	}
 	
 	public GCogniton(JJPanel parent , double xx, double yy, double w, double h) {
 		super(parent, xx, yy, w, h);
-		this.CustomColor = Color.WHITE;
 		this.DisplayCustomColor = false;
 	}
 
@@ -57,7 +56,9 @@ public class GCogniton extends GItemCognitif{
         Graphics2D g2d = genererContexte(g);
 
         String displayedString = typeCogniton.getNom();
-        if (cogniton != null) displayedString += " [" + cogniton.getWeigth() +"]";
+        if (cogniton != null){
+        	displayedString += " [" + cogniton.getWeigth() +"]";
+        }
 
     	FontMetrics fm = g2d.getFontMetrics();
 
@@ -66,7 +67,6 @@ public class GCogniton extends GItemCognitif{
     	g2d.fill(new Ellipse2D.Double(0 ,0,fm.stringWidth(displayedString) + (2*margeEcriture),2*fm.getHeight()));
     	this.setW(fm.stringWidth(displayedString) + (2*margeEcriture));
     	this.setH(2*fm.getHeight() + (hueCircleSize/2) + 2);
-    	
     	if(DisplayCustomColor){
     		g2d.setColor(CustomColor);
     	}
@@ -135,16 +135,19 @@ public class GCogniton extends GItemCognitif{
 	public void setCouleur(Color c)
 	{
 		this.CustomColor = c;
+		typeCogniton.setCustomColor(c);
 	}
 	
 	public void displayCustomColor()
 	{
 		this.DisplayCustomColor = true;
+		typeCogniton.setDisplayCustomColor(true);
 	}
 	
 	public void displayTypeColor()
 	{
 		this.DisplayCustomColor = false;
+		typeCogniton.setDisplayCustomColor(false);
 	}
 	
 }

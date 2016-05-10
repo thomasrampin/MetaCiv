@@ -1,0 +1,8 @@
+Nom : MonChezMoi
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 69
+Couleur : java.awt.Color[r=255,g=51,b=51]
+Initial : 1
+Permet : ConstruireMaison
+Influence : ConstruireMaison,4

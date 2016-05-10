@@ -1,0 +1,7 @@
+Nom : MonChezMoi
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 69
+Initial : 1
+Permet : ConstruireMaison
+Influence : ConstruireMaison,4

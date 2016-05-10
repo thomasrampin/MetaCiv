@@ -26,7 +26,8 @@ public class TypeCogniton implements Cloneable, Serializable{
 	ArrayList<LienPlan> liensPlans; /*Lien avec les plans qu'influence ce cogniton*/
 	ArrayList<NPlan> plansAutorises;
 	ArrayList<Object[]> triggeringAttributes;
-	
+	private Color CustomColor;
+	private Boolean DisplayCustomColor;
 	
 	/*public final static int nHues = 7;
 	Integer[] hues = new Integer[nHues];
@@ -48,12 +49,16 @@ public class TypeCogniton implements Cloneable, Serializable{
 		liensPlans = new ArrayList<LienPlan>();
 		plansAutorises = new ArrayList<NPlan>();
 		triggeringAttributes = new ArrayList<Object[]>();
+		CustomColor = Color.WHITE;
+		DisplayCustomColor = false;
 
 		/*for (int i = 0 ; i < hues.length; i++){
 			hues[i] = 0;
 		}*/
 	}
 	
+	
+
 	public TypeCogniton clone() throws CloneNotSupportedException {
 	    TypeCogniton tcog = null;
 
@@ -234,6 +239,7 @@ public class TypeCogniton implements Cloneable, Serializable{
 			out.println("Description : " + getDescription());
 			out.println("Type : " + getType());
 			out.println("StartChance : " + this.startChance);
+			out.println("Couleur : "+this.CustomColor);
 			if (recuAuDemarrage){
 				out.println("Initial : 1");
 			}
@@ -299,5 +305,21 @@ public class TypeCogniton implements Cloneable, Serializable{
 		else 
 			return false;
 				
+	}
+	
+	public Color getCustomColor() {
+		return CustomColor;
+	}
+
+	public void setCustomColor(Color customColor) {
+		CustomColor = customColor;
+	}
+	
+	public Boolean getDisplayCustomColor() {
+		return DisplayCustomColor;
+	}
+
+	public void setDisplayCustomColor(Boolean displayCustomColor) {
+		DisplayCustomColor = displayCustomColor;
 	}
 }

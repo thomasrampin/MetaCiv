@@ -1,0 +1,8 @@
+Nom : ProduireAutreChose
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 80
+Couleur : java.awt.Color[r=102,g=51,b=0]
+Initial : 1
+Permet : ConstruireOutil
+Influence : ConstruireOutil,3

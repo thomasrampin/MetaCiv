@@ -260,7 +260,13 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			}
 			Human h = (Human)t;
 			Esprit e = h.getEsprit();
-			Color humain = e.getCognitonMaxWeight().getCogniton().getType().getCouleur();
+			Color humain;
+			if(e.getCognitonMaxWeight().getCogniton().getDisplayCustomColor()){
+				humain = e.getCognitonMaxWeight().getCogniton().getCustomColor();
+			}
+			else{
+				humain = e.getCognitonMaxWeight().getCogniton().getType().getCouleur();
+			}
 			
 			// Les dessins sous le carre de couleur
 			
