@@ -1,18 +1,25 @@
 package civilisation.inspecteur.simulation.objets;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneLayout;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import I18n.I18nList;
 
@@ -35,6 +42,11 @@ public class PanelRecette extends JPanel implements ActionListener{
 	public PanelRecette(PanelObjets objet)
 	{
 		super();
+		
+		Box b1 = Box.createVerticalBox();
+		Box b2 = Box.createHorizontalBox();
+		Box b3 = Box.createHorizontalBox();
+		Box b4 = Box.createHorizontalBox();
 		sup = objet;
 		recettes = new ArrayList<String>();
 		necessaires = new ArrayList<Integer>();
@@ -47,12 +59,10 @@ public class PanelRecette extends JPanel implements ActionListener{
 		this.NumberItem = new JSpinner(modele);
 		model.addColumn("Object");
 	     model.addColumn("Number");
-	     
 	     for(int i = 0; i < this.recettes.size();++i)
 	     {
 	    	 this.model.addRow(new Object[]{this.recettes.get(i),this.necessaires.get(i)});
 	     }
-		
 	     scroll.setVisible(true);
 	     for(int i = 0; i < Configuration.objets.size();++i)
 	     {
@@ -64,7 +74,7 @@ public class PanelRecette extends JPanel implements ActionListener{
 	     }
 	     ItemCraft.addActionListener(this);
 	     
-
+	     
 	     this.addItem = new JButton(I18nList.CheckLang("Add item for craft"));
 			this.addItem.addActionListener(this);
 			this.addItem.setActionCommand("item");
@@ -73,17 +83,20 @@ public class PanelRecette extends JPanel implements ActionListener{
 
 			SaveEffect.addActionListener(this);
 			SaveEffect.setActionCommand("SaveEffect");
-	     
-		scroll.setVisible(true);
+	    
 		ItemCraft.setVisible(true);
 		NumberItem.setVisible(true);
 		addItem.setVisible(true);
 		SaveEffect.setVisible(true);
-		this.add(scroll);
-		this.add(ItemCraft);
-		this.add(NumberItem);
-		this.add(addItem);
-		this.add(SaveEffect);
+		b2.add(scroll);
+		b3.add(ItemCraft);
+		b3.add(NumberItem);
+		b3.add(addItem);
+		b4.add(SaveEffect);
+		b1.add(b2);
+		b1.add(b3);
+		b1.add(b4);
+		this.add(b1);
 		this.setVisible(true);
 	}
 	
@@ -171,6 +184,18 @@ public class PanelRecette extends JPanel implements ActionListener{
 			this.update(sup);
 		}
 	}
-	
+	public void resizeColumnWidth(JTable table) {
+	    final TableColumnModel columnModel = table.getColumnModel();
+	    for (int column = 0; column < table.getColumnCount(); column++) {
+	        int width = 50; // Min width
+	        for (int row = 0; row < table.getRowCount(); row++) {
+	            TableCellRenderer renderer = table.getCellRenderer(row, column);
+	            Component comp = table.prepareRenderer(renderer, row, column);
+	            width = Math.max(comp.getPreferredSize().width +1 , width);
+	        }
+	        columnModel.getColumn(column).setPreferredWidth(width);
+	    }
+	}
+
 
 }

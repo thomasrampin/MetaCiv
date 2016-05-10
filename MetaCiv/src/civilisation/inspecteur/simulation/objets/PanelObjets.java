@@ -70,7 +70,6 @@ public class PanelObjets extends JPanel implements ActionListener{
 		
 		recette = new PanelRecette(this);
 		recette.setVisible(false);
-		
 		ArdyLabel = new JLabel(I18nList.CheckLang("Add effect : "));
 
 		ArdyEffect = new JComboBox();
@@ -154,7 +153,7 @@ public class PanelObjets extends JPanel implements ActionListener{
 		Box b4 = Box.createHorizontalBox();
 	
 		b4.add(recette);
-
+		
 		
 		Box b5 = Box.createHorizontalBox();
 
@@ -165,9 +164,10 @@ public class PanelObjets extends JPanel implements ActionListener{
 		b1.add(b2);
 		b1.add(b3);
 		b1.add(b4);
-		b1.add(addEffect);
-		b1.add(saveObject);
-		
+		Box b6 = Box.createHorizontalBox();
+		b6.add(addEffect);
+		b6.add(saveObject);
+		b1.add(b6);
 		
 		b1.add(ArdyLabel);
 		b1.add(ArdyEffect);
