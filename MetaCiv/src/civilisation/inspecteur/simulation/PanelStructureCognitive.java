@@ -229,6 +229,34 @@ public class PanelStructureCognitive extends JJPanel{
 		editerPlan.addActionListener(new ActionsMenuGPlan(p,0));
 		editerPlan.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/pencil.png"));
 		popupGPlans.add(editerPlan);
+		JMenuItem affichageCustom = new JMenuItem(I18nList.CheckLang("Display Custom colors"));
+		affichageCustom.addActionListener(new ActionListener () {
+			
+			public void actionPerformed(ActionEvent e) {
+				for( GPlan gc : gPlan)
+				{
+					gc.displayCustomColor();
+				}
+				
+			}
+		});
+		affichageCustom.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/lock--arrow.png"));
+		popupGPlans.add(affichageCustom);
+		
+		JMenuItem affichageParType = new JMenuItem(I18nList.CheckLang("Display Type colors"));
+		affichageParType.addActionListener(new ActionListener () {
+			
+			public void actionPerformed(ActionEvent e) {
+				for( GPlan gc : gPlan)
+				{
+					gc.displayTypeColor();
+				}
+				
+			}
+		});
+		affichageParType.setIcon(new ImageIcon(System.getProperty("user.dir") + Configuration.pathToIcon + "/lock--arrow.png"));
+		popupGPlans.add(affichageParType);
+		
 		JMenuItem supprimerPlan = new JMenuItem(I18nList.CheckLang("Remove"));
 
 		supprimerPlan.addActionListener(new ActionListener() {

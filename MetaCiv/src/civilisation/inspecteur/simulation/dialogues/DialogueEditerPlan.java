@@ -8,7 +8,9 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -22,6 +24,8 @@ public class DialogueEditerPlan extends JDialog implements ActionListener, Prope
 	GPlan gPlan;
     JOptionPane optionPane;
     JCheckBox isAuto, isBirth;
+    JLabel labcolor;
+    JColorChooser choixCouleur;
 
 	public DialogueEditerPlan(Frame f , boolean modal, GPlan gPlan){
 		super(f,modal);
@@ -43,10 +47,11 @@ public class DialogueEditerPlan extends JDialog implements ActionListener, Prope
 		
 		this.setTitle(I18nList.CheckLang("Edite plan"));
 
-		
+		labcolor = new JLabel(I18nList.CheckLang("Plan custom color : "));
+		choixCouleur = new JColorChooser();
 		
 		/*Proviens du tutorial Java Sun*/
-	    Object[] array = {nom , isAuto , isBirth};
+	    Object[] array = {nom , isAuto , isBirth, choixCouleur};
 	       
 	    //Create an array specifying the number of dialog buttons
 	    //and their text.
@@ -77,6 +82,7 @@ public class DialogueEditerPlan extends JDialog implements ActionListener, Prope
 				gPlan.getPlan().setNom(nom.getText());
 				gPlan.getPlan().setIsSelfPlan(isAuto.isSelected());
 				gPlan.getPlan().setIsBirthPlan(isBirth.isSelected());
+				gPlan.setCouleur(choixCouleur.getColor());
 			}		
 	        setVisible(false);
 		}

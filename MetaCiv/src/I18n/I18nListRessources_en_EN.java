@@ -237,6 +237,7 @@ public class I18nListRessources_en_EN extends ListResourceBundle{
 	  			{"Birth-Plan","Birth-Plan"},
 	  			{"Every agents will run this plan at birth.","Every agents will run this plan at birth."},
 	  			{"Edite plan","Edite plan"},
+	  			{"Plan custom color : ","Plan custom color : "},
 	  			//DialogueEditerTerrain.java
 	  			{"Editer le terrain","Edit field"},
 	  			{"Passability :","Passability :"},

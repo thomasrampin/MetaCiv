@@ -28,12 +28,17 @@ public class GPlan extends GItemCognitif{
 	/*For individual agent view*/
 	NPlanPondere concretePlan = null;
 	
+	private Boolean DisplayCustomColor;
+	private Color CustomColor;
+	
 	
 	public GPlan(JJPanel parent , double xx, double yy, double w, double h, NPlan plan) {
 		super(parent, xx, yy, w, h);
 		this.typePlan = plan;
 		this.setToolTipText(plan.toString());
 		this.addMouseListener(new MouseGPlanListener(this));
+		this.DisplayCustomColor = false;
+		this.CustomColor = Color.GRAY;
 
 	}
 
@@ -61,7 +66,13 @@ public class GPlan extends GItemCognitif{
     	g2d.fill(new Rectangle2D.Double(0,0,fm.stringWidth(displayedString) + (2*margeEcriture),2*fm.getHeight()));
     	this.setW(fm.stringWidth(displayedString) + (2*margeEcriture));
     	this.setH(2*fm.getHeight());
-    	g2d.setColor(backgroundColor);
+    	if(DisplayCustomColor){
+    		g2d.setColor(CustomColor);
+    	}
+    	else
+    	{
+    		g2d.setColor(backgroundColor);
+    	}
     	g2d.fill(new Rectangle2D.Double(margeEcriture,2,fm.stringWidth(displayedString),2*fm.getHeight()-4));
     	
     	if (typePlan.getIsSelfPlan()) {
@@ -101,6 +112,19 @@ public class GPlan extends GItemCognitif{
 	}
 
 
+	public void setCouleur(Color c)
+	{
+		this.CustomColor = c;
+	}
 	
+	public void displayCustomColor()
+	{
+		this.DisplayCustomColor = true;
+	}
+	
+	public void displayTypeColor()
+	{
+		this.DisplayCustomColor = false;
+	}
 	
 }
