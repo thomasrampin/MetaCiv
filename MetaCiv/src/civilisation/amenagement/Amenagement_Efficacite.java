@@ -43,6 +43,10 @@ public class Amenagement_Efficacite extends Amenagement {
 		compteur --;
 	}
 	
+	public void decrementer(int n){
+		compteur = compteur - n;
+	}
+	
 	public void resetCompteur(){
 		compteur = efficacite;
 	}

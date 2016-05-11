@@ -1,0 +1,15 @@
+Nom : Employe
+Birth : false
+Self : false
+Action : L_AUnChef
+	Action : L_IsChefFacilityHere,facility(Amenagement Champ)
+		Action : A_DecrementerAmenagement
+		Action : A_GoToChefFacility,Facility(Amenagement Champ)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Employe),n(Double -5.0 Constant __NoConstant)
+Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator >),n(Integer 0 Constant __NoConstant)
+	Action : L_CheckStrikeValue,comparator(Comparator >=),n(Integer 2 Constant __NoConstant)
+		Action : A_DoNothing
+		Action : L_MultipleActions
+			Action : A_SetStrikeValue,n(Integer 2 Constant __NoConstant)
+			Action : A_RemoveItem,Modified object(Objet Outil),n(Integer 1 Constant __NoConstant)
+	Action : A_DoNothing

@@ -14,11 +14,13 @@ public class A_BroadcastMessage_Commerce extends Action{
 	Integer radius;
 	
 	public Action effectuer(Human h) {
+		AgentAddress ad = null;
 		ArrayList<Human> hinr = h.HumaininRadius(radius);
 		StringMessage sm = new StringMessage("commerce");
 		for(Human target : hinr){
-			AgentAddress ad = target.getAgentAddressIn(target.getCommunity(), "membre", "membre");
-			h.sendMessage(ad, sm);
+			ad = target.getAgentAddressIn(target.getCommunity(), "membre", "membre");
+			if(ad != null)
+				h.sendMessage(ad, sm);
 			target.setInitiateur(h);
 		}
 		return nextAction;

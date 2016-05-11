@@ -1,0 +1,7 @@
+Nom : Init
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 1
+Permet : Init
+Influence : Init,0

@@ -1,0 +1,6 @@
+Nom : ManqueMateriaux
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 0
+Influence : RecolteBois,2

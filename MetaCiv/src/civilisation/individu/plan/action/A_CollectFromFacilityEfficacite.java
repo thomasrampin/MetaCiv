@@ -16,7 +16,6 @@ public class A_CollectFromFacilityEfficacite extends Action{
 	MCIntegerParameter val;
 	
 	public Action effectuer(Human h) {
-		
 		for(Amenagement a : h.getFacilitiesHere())
 		{
 			if(a instanceof Amenagement_Efficacite && ((Amenagement_Efficacite) a).getCompteur() <= 0){

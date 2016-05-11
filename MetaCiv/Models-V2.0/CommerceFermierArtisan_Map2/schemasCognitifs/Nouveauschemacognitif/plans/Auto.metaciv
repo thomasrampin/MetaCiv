@@ -1,0 +1,31 @@
+Nom : Auto
+Birth : false
+Self : true
+Action : A_ChangeAttribute,Modified attribute(Attribute Faim),n(Integer -1 Constant __NoConstant)
+Action : L_CompareAttribute,attributeToCompare(Attribute Faim),comparator(Comparator <),n(Double 150.0 Constant SeuilMangerBaie)
+	Action : L_OwnObject,Object(Objet Baie)
+		Action : L_MultipleActions
+			Action : A_ChangeAttribute,Modified attribute(Attribute Faim),n(Integer 10 Constant FaimRendueBaie)
+			Action : A_AddItem,Modified object(Objet Baie),n(Integer -1 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_CompareAttribute,attributeToCompare(Attribute Faim),comparator(Comparator <),n(Double 50.0 Constant SeuilFaimDeclenche)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Faim),n(Double 3.0 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_CompareAttribute,attributeToCompare(Attribute Faim),comparator(Comparator <=),n(Double 0.0 Constant __NoConstant)
+	Action : A_Die
+	Action : A_DoNothing
+Action : L_CompareAttribute,attributeToCompare(Attribute Faim),comparator(Comparator >),n(Double 80.0 Constant SeuilFaimDeclenche)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Faim),n(Double -3.0 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator >=),n(Integer 0 Constant PrixOutil)
+	Action : A_ReplaceCognitonWeight,Cogniton(Cogniton PasDeQuoiCommercer),n(Double -0.1000000000000188 Constant __NoConstant)
+	Action : A_ReplaceCognitonWeight,Cogniton(Cogniton PasDeQuoiCommercer),n(Double 2.099999999999982 Constant __NoConstant)
+Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator >=),n(Integer -10 Constant SeuilVendreOutils)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton VendreOutils),n(Double 1.0 Constant __NoConstant)
+	Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator <=),n(Integer 1 Constant __NoConstant)
+		Action : A_ReplaceCognitonWeight,Cogniton(Cogniton VendreOutils),n(Double 0.09999999999998122 Constant __NoConstant)
+		Action : A_DoNothing
+Action : L_CompareObject,objetToCompare(Objet Baie),comparator(Comparator >=),n(Integer 50 Constant PrixBaie)
+	Action : L_ARequeteCommerce
+		Action : A_AccepterCommerce
+		Action : A_DoNothing

@@ -1,0 +1,11 @@
+Nom : Init
+Birth : false
+Self : false
+Action : L_RandomPercent,n(Double 50.0 Constant __NoConstant)
+	Action : L_MultipleActions
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Recoltes),n(Double 1.0 Constant __NoConstant)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Init),n(Double -1.0 Constant __NoConstant)
+Action : L_RandomPercent,n(Double 50.0 Constant __NoConstant)
+	Action : L_MultipleActions
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton RecolterBaie),n(Double 1.0 Constant __NoConstant)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Init),n(Double -1.0 Constant __NoConstant)

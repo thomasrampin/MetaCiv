@@ -4,3 +4,4 @@ Type : BELIEF
 StartChance : 0
 Initial : 0
 Influence : AcheterNourriture,-3
+Influence : ChercherEmployeur,3

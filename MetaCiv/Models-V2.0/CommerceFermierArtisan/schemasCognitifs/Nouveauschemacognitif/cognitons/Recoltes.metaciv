@@ -5,5 +5,5 @@ StartChance : 0
 Initial : 1
 Permet : RecolteBaie
 Permet : RecolteBois
-Influence : RecolteBaie,3
+Influence : RecolteBaie,4
 Influence : RecolteBois,3

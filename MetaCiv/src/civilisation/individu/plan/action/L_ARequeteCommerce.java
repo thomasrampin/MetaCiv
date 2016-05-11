@@ -26,6 +26,7 @@ public class L_ARequeteCommerce extends LAction{
 				a = new A_DoNothing().effectuer(h);
 			}
 		}
+		h.purgeMailbox();
 		return a;
 	}
 	

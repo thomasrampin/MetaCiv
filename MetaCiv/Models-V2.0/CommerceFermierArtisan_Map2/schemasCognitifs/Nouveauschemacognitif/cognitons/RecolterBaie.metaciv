@@ -1,0 +1,7 @@
+Nom : RecolterBaie
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 0
+Permet : RecolteBaie
+Influence : RecolteBaie,1

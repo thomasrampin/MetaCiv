@@ -1,0 +1,11 @@
+Nom : RecolteBaie
+Birth : false
+Self : false
+Action : A_SmellAndMove,ResourcesToFollow(Pheromone Baies)
+Action : L_ComparePhero,resourceToCompare(Pheromone Baies),comparator(Comparator >),n(Double 0.0 Constant __NoConstant)
+	Action : A_Transformer,Resource to collect(Pheromone Baies),Created Object(Objet Baie)
+	Action : A_DoNothing
+Action : L_CompareObject,objetToCompare(Objet Baie),comparator(Comparator >=),n(Integer 0 Constant SeuilCommencerAgriculture)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Agriculter),n(Double 1.0 Constant __NoConstant)
+	Action : A_DoNothing
+Action : A_AvanceAleatoirement

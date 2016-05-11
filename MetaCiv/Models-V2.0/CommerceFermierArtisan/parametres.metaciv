@@ -1,5 +1,5 @@
 Carte : CarteTest2.metaciv
-DecisionMaker : WeightedStochasticDecisionMaker
+DecisionMaker : MaxWeightDecisionMaker
 MaxWeight : 2147483647
 RoadCreation : 35
 RoadEvaporation : 20

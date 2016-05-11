@@ -1,8 +1,0 @@
-Nom : AcheterNourriture
-Birth : false
-Self : false
-Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator >),n(Double 1.0 Constant __NoConstant)
-	Action : L_GotTargetInteraction
-		Action : I_Commercer_Repondu,objectToGive(Objet Outil),nObjectToGive(Integer 1 Constant __NoConstant),objectToTake(Objet Baie),nObjectToTake(Integer 10 Constant __NoConstant)
-		Action : A_BroadcastMessage_Commerce,Radius(Integer 10 Constant __NoConstant)
-	Action : A_ReplaceCognitonWeight,Cogniton(Cogniton PasDeQuoiCommercer),n(Double 2.099999999999982 Constant __NoConstant)

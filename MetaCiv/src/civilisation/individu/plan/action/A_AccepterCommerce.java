@@ -9,12 +9,12 @@ import madkit.message.StringMessage;
 public class A_AccepterCommerce extends Action{
 	
 	public Action effectuer(Human h) {
-		StringMessage sm = (StringMessage) h.nextMessage();
 		StringMessage ok = new StringMessage("commerceOK");
 		Human i = h.getInitiateur();
 		if(i != null){
-			i.setCibleInteraction(h);
-			h.sendMessage(i.getAgentAddressIn(h.getCommunity(), "membre", "membre"), ok);
+			if(i.getCibleInteraction() == null)
+				i.setCibleInteraction(h);
+			h.sendMessage(i.getAgentAddressIn(i.getCommunity(), "membre", "membre"), ok);
 		}
 		return nextAction;
 	}

@@ -14,7 +14,7 @@ public class A_SmellAndMove extends Action{
 	@Override
 	public Action effectuer(Human h) {
 
-		Patch p = h.getPatchWithMaxOf(phero.getNom(), 10);
+		Patch p = h.getPatchWithMaxOf(phero.getNom(), 20);
 		if(p != null)
 		{
 			h.setHeading(h.towards(p));

@@ -1,0 +1,8 @@
+Nom : Employe
+Birth : false
+Self : false
+Action : L_AUnChef
+	Action : L_IsChefFacilityHere,facility(Amenagement Champ)
+		Action : A_DecrementerAmenagement
+		Action : A_GoToChefFacility,Facility(Amenagement Champ)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Employe),n(Double -5.0 Constant __NoConstant)

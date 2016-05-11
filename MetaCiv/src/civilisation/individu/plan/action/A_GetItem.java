@@ -26,7 +26,6 @@ public class A_GetItem extends Action{
 			System.out.println(objet);
 		} else if (option.getParametres().get(0).getClass() == Integer.class) {
 			variation = (Integer) option.getParametres().get(0);
-			System.out.println(variation);
 		}
 
 	}

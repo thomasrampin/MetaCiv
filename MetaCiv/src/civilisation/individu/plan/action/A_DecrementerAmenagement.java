@@ -17,7 +17,7 @@ public class A_DecrementerAmenagement extends Action{
 		for(Amenagement a : h.getFacilitiesHere())
 		{
 			if(a instanceof Amenagement_Efficacite){
-				((Amenagement_Efficacite) a).decrementer();
+				((Amenagement_Efficacite) a).decrementer(h.strike);
 			}
 		}
 		return nextAction;
@@ -27,7 +27,7 @@ public class A_DecrementerAmenagement extends Action{
 	@Override
 	public String getInfo()
 	{
-		return super.getInfo() + "Reduce by 1 the counter of the facility on the patch.<html>";
+		return super.getInfo() + "Reduce by the agent's strike value, 1 by default, the counter of the facility on the patch.<html>";
 	}
 
 }

@@ -82,7 +82,15 @@ public class Human extends Turtle implements Serializable
 	int degats = 1;
 	public Amenagement targetMove = null;
 
+	//Variable de chef et d'employés
+	public Human chef = null;
+	public ArrayList<Human> employes = new ArrayList<Human>();
 	
+	//Compteur L_Action everyXtick
+	public int compteurTick = 0;
+	
+	//Valeur reduite sur un amenagement efficace
+	public int strike = 1;
 	
 	
 	Patch cible = null;

@@ -62,7 +62,7 @@ public class NInventaire implements Serializable{
 			if(listeObjets.get(o).containsKey(qualite))
 			{
 				
-				return listeObjets.get(0).get(qualite);
+				return listeObjets.get(o).get(qualite);
 			}
 			else
 			{
@@ -181,7 +181,10 @@ public class NInventaire implements Serializable{
 			}
 			else
 			{
-				int index = 0;
+				int nouveauStock = listeObjets.get(o.getNom()).get(o.getQuality()) - i;
+				listeObjets.get(o.getNom()).put(o.getQuality(), nouveauStock);
+				
+				/*int index = 0;
 				Set cles = listeObjets.get(o.getNom()).keySet();
 				Iterator it = cles.iterator();
 				while(it.hasNext() && index < i)
@@ -198,7 +201,7 @@ public class NInventaire implements Serializable{
 						listeObjets.get(o.getNom()).remove(a);
 						listeObjets.get(o.getNom()).put(a, temp - (index - i));
 					}
-				}
+				}*/
 				
 				for(int j = 0; j < i; ++j)
 				{

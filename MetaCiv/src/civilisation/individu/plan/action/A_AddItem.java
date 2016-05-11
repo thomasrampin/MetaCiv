@@ -23,8 +23,11 @@ public class A_AddItem extends Action{
 	
 	public Action effectuer(Human h) {
 		
-		if (val.getValue() > 0)
+		if (val.getValue() > 0){
 			h.getInventaire().addObjets(Configuration.getObjetByName(ObjectName),val.getValue());
+		}else if(val.getValue() < 0){
+			h.getInventaire().deleteObjets(Configuration.getObjetByName(ObjectName), 0 - val.getValue());
+		}
 		return nextAction;
 	}
 	
