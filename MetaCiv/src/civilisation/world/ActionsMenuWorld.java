@@ -49,6 +49,12 @@ public class ActionsMenuWorld implements ActionListener{
 					w.observeHuman(h);
 				}
 			}
-		}		
+		}	
+		else if(index == 2){
+			w.activDebug = true;
+		}
+		else if(index == 3){
+			w.activDebug = false;
+		}
 	}
 }

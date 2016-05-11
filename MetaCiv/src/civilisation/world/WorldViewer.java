@@ -81,6 +81,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	private int sizeForAccurateView = 8;
 	JPopupMenu popup;
 	BufferedImage bufferedView;
+	boolean activDebug = false;
 
 	public WorldViewer()
 	{
@@ -136,6 +137,18 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		observeAll.addActionListener(new ActionsMenuWorld(this,1,p));
 		observeAll.setIcon(Configuration.getIcon("cross.png"));
 		popup.add(observeAll);
+		if(!activDebug){
+			JMenuItem activDebug = new JMenuItem("Activate DebugString");
+			activDebug.addActionListener(new ActionsMenuWorld(this,2,p));
+			activDebug.setIcon(Configuration.getIcon("eye.png"));
+			popup.add(activDebug);
+		}
+		else{
+			JMenuItem desDebug = new JMenuItem("Desactivate DebugString");
+			desDebug.addActionListener(new ActionsMenuWorld(this,3,p));
+			desDebug.setIcon(Configuration.getIcon("cross.png"));
+			popup.add(desDebug);
+		}
 		
 		popup.show((Component) e.getSource(), e.getX(), (e.getY()));
 	}
@@ -283,7 +296,9 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					g.fillRect(dx,dy,size,size);
 					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
-					paintDebugMessage(g, h, dx+size, dy+size);
+					if(activDebug){
+						paintDebugMessage(g, h, dx+size, dy+size);
+					}
 				}
 				else 
 				{
