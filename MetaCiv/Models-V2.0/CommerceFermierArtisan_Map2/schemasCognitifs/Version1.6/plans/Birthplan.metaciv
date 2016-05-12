@@ -1,5 +1,6 @@
 Nom : Birthplan
 Birth : true
 Self : false
+Couleur : -8355712
 Action : A_SetPoissonLaw,Modified attribute(Attribute EsperanceDeVie)
 Action : A_DoNothing

@@ -1,6 +1,7 @@
 Nom : RamenerPelleAuVillage
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Village),Group(Group Village)
 Action : A_DepositObjectInFacilityHere,objetToCompare(Objet Pelle),n(Integer 1),Amenagement(Amenagement Village)
 Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Deprecated),n(Integer 20),Amenagement(Amenagement Village)

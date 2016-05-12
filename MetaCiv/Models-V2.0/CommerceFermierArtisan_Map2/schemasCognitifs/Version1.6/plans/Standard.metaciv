@@ -1,6 +1,7 @@
 Nom : Standard
 Birth : false
 Self : true
+Couleur : -8355712
 Action : L_CompareAttribute,attributeToCompare(Attribute Energie),comparator(Comparator <),n(Double 0.0 Constant SeuilEnergiePourMourir)
 	Action : A_Die
 	Action : A_DoNothing

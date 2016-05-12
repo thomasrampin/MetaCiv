@@ -15,11 +15,13 @@ public class A_PartagerRessourceEmployes extends Action{
 	public Action effectuer(Human h) {
 		
 		if (val.getValue() > 0){
+			if((h.employes.size()*val.getValue()) <= h.getInventaire().possede(Configuration.getObjetByName(ObjectName))){
 			for(Human e : h.employes){
 				if(h.getInventaire().possede(Configuration.getObjetByName(ObjectName)) > val.getValue()){
 					e.getInventaire().addObjets(Configuration.getObjetByName(ObjectName),val.getValue());
 					h.getInventaire().deleteObjets(Configuration.getObjetByName(ObjectName),val.getValue());
 				}
+			}
 			}
 		}
 		return nextAction;

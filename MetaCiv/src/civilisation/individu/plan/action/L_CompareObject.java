@@ -81,7 +81,7 @@ public class L_CompareObject extends LAction{
 			
 			String[] attr = {"**Objet**" , "objetToCompare"};
 			String[] comp = {"**Comparator**" , "comparator"};	
-			String[] n = {"**Integer**" , "n", "-10" , "10" , "1"};
+			String[] n = {"**Integer**" , "n", "-10" , "100" , "1"};
 
 			
 			schemaParametres.add(attr);

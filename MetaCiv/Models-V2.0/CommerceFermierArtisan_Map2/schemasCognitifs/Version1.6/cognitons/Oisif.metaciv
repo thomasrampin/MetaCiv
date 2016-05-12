@@ -2,6 +2,7 @@ Nom : Oisif
 Description : Un nouveau cogniton
 Type : SKILL
 StartChance : 100
+Couleur : -1
 Initial : 1
 Permet : Ne rien faire
 Influence : Ne rien faire,1

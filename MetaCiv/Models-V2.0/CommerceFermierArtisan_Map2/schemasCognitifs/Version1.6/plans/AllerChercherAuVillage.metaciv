@@ -1,6 +1,7 @@
 Nom : AllerChercherAuVillage
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Village), Group(Group Village)
 Action : A_WithdrawObjectFromFacilityHere,objetToCompare(Objet Deprecated),n(Integer 6 Constant NombreBaiesRetirerAuVillageSiFaim),Amenagement(Amenagement Village)
 Action : L_CompareNombreObjets,objetToCompare(Objet Deprecated),comparator(Comparator >),n(Double 5.0 Constant InsatisfaitSiJeNaiPasReussiAPrendreBaies)

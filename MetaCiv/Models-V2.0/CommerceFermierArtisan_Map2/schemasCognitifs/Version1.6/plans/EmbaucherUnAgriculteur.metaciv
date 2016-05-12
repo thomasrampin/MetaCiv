@@ -1,6 +1,7 @@
 Nom : EmbaucherUnAgriculteur
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_CompareGroupAttributeToPopulation,attributeToCompare(Attribute Insatisfaction),comparator(Comparator >)
 	Action : L_Repeat,n(Integer 1)
 		Action : A_AskRandomMemberToChangeRoleForAnother,Change to that role :(GroupAndRole Village:agriculteur)

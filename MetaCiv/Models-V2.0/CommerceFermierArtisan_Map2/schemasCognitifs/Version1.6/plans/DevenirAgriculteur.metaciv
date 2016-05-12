@@ -1,6 +1,7 @@
 Nom : DevenirAgriculteur
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_RandomPercent,n(Double 20.0 Constant __NoConstant)
 	Action : L_Repeat,n(Integer 1 Constant __NoConstant)
 		Action : A_ChangeRoleForAnother,Change to that role :(GroupAndRole Village:agriculteur)

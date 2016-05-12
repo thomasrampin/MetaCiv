@@ -2,5 +2,6 @@ Nom : PasBesoinHutte
 Description : Un nouveau cogniton
 Type : PERCEPT
 StartChance : 0
+Couleur : -1
 Initial : 0
 Influence : ConstruireHutte,-4

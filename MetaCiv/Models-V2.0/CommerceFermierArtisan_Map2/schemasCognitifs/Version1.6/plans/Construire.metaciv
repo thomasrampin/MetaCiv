@@ -1,6 +1,7 @@
 Nom : Construire
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_IsInGroup,Group type to check(Group Village)
 	Action : L_IsFacilityInGroup,Facility(Amenagement Village),Group(Group Village)
 		Action : A_AddCogniton,Cogniton(Cogniton PasBesoinDeVillage)

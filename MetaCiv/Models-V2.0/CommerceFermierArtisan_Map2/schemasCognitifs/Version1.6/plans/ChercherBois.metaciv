@@ -1,6 +1,7 @@
 Nom : ChercherBois
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_SmellAndMove,ResourcesToFollow(Pheromone Bois)
 Action : A_Transform,Resource to collect(Pheromone Bois),Created Object(Objet Bois)
 Action : A_DoNothing

@@ -1,6 +1,7 @@
 Nom : Agriculter
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_OwnPrivateFacility,Facility(Amenagement ChampDeBaies)
 	Action : L_IsPrivateFacilityHere,Facility(Amenagement ChampDeBaies)
 		Action : L_CompareNombreObjets,objetToCompare(Objet Pelle),comparator(Comparator >=),n(Double 1.0 Constant __NoConstant)

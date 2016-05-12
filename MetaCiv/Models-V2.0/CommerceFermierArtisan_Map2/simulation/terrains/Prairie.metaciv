@@ -5,4 +5,4 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
-Pheromone : Baies,10.0,0.2
+Pheromone : Baies,10.0,0.1

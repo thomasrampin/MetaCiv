@@ -1,0 +1,20 @@
+Nom : RechercheEtCommerceEtranger
+Birth : false
+Self : false
+Couleur : -1
+Action : A_SetEnMissionTrue
+Action : L_CompareObject,objetToCompare(Objet Baie),comparator(Comparator <=),n(Integer -10 Constant PrixOutilEtranger)
+	Action : I_TakeItemsFromChef,objectToTake(Objet Baie),nObjectToTake(Integer 60 Constant __NoConstant)
+	Action : L_GotTargetInteraction
+		Action : I_Commercer_Repondu,objectToGive(Objet Baie),nObjectToGive(Integer 10 Constant PrixOutilEtranger),objectToTake(Objet OutilCiv2),nObjectToTake(Integer 1 Constant __NoConstant)
+		Action : L_CompareObject,objetToCompare(Objet OutilCiv2),comparator(Comparator >=),n(Integer 2 Constant __NoConstant)
+			Action : A_BroadcastMessage_Commerce_SiObjet,objetToCompare(Objet OutilCiv2),Radius(Integer 30 Constant __NoConstant)
+			Action : L_MultipleActions
+				Action : A_Move_Cardinals_Random,NORTH
+				Action : A_BroadcastMessage_Commerce_SiObjet,objetToCompare(Objet OutilCiv2),Radius(Integer 20 Constant __NoConstant)
+Action : L_CompareObject,objetToCompare(Objet OutilCiv2),comparator(Comparator >=),n(Integer 5 Constant __NoConstant)
+	Action : L_MultipleActions
+		Action : I_GiveItemToChef,objectToGive(Objet OutilCiv2),nObjectToGive(Integer 5 Constant __NoConstant)
+		Action : A_ReplaceCognitonWeight,Cogniton(Cogniton RechercherOutilsEtrangers),n(Double 0.09999999999998122 Constant __NoConstant)
+	Action : A_DoNothing
+Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton RechercherOutilsEtrangers),n(Double 1.0 Constant __NoConstant)

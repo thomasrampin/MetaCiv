@@ -2,6 +2,7 @@ Nom : JaiUnePelle
 Description : Un nouveau cogniton
 Type : PERCEPT
 StartChance : 0
+Couleur : -1
 Initial : 0
 Permet : RamenerPelleAuVillage
 Influence : ConstruirePelle,-1

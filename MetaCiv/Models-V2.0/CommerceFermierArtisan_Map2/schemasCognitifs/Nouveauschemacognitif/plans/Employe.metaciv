@@ -1,6 +1,7 @@
 Nom : Employe
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_AUnChef
 	Action : L_IsChefFacilityHere,facility(Amenagement Champ)
 		Action : A_DecrementerAmenagement
@@ -12,4 +13,14 @@ Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator >),n(
 		Action : L_MultipleActions
 			Action : A_SetStrikeValue,n(Integer 2 Constant __NoConstant)
 			Action : A_RemoveItem,Modified object(Objet Outil),n(Integer 1 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_CompareObject,objetToCompare(Objet OutilCiv2),comparator(Comparator >),n(Integer 0 Constant __NoConstant)
+	Action : L_CheckStrikeValue,comparator(Comparator >=),n(Integer 3 Constant __NoConstant)
+		Action : A_DoNothing
+		Action : L_MultipleActions
+			Action : A_SetStrikeValue,n(Integer 3 Constant __NoConstant)
+			Action : A_RemoveItem,Modified object(Objet OutilCiv2),n(Integer 1 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_CompareObject,objetToCompare(Objet OutilCiv2),comparator(Comparator >),n(Integer 1 Constant __NoConstant)
+	Action : I_GiveItemToChef,objectToGive(Objet OutilCiv2),nObjectToGive(Integer 1 Constant __NoConstant)
 	Action : A_DoNothing

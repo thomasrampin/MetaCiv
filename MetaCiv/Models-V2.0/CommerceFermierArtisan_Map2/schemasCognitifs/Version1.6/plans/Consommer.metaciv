@@ -1,6 +1,7 @@
 Nom : Consommer
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_CompareNombreObjets,objetToCompare(Objet Deprecated),comparator(Comparator <),n(Double 1.0 Constant SeuilConsommationDeBaies)
 	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton FaimEtRienDansMonSac),n(Double 4.0)
 	Action : L_Repeat,n(Integer 1)

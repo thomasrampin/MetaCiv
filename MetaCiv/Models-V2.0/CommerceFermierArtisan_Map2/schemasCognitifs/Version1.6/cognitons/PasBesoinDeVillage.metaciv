@@ -2,5 +2,6 @@ Nom : PasBesoinDeVillage
 Description : Un nouveau cogniton
 Type : PERCEPT
 StartChance : 0
+Couleur : -1
 Initial : 0
 Influence : Construire,-1

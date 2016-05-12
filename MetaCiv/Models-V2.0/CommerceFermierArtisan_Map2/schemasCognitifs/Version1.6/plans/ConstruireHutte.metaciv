@@ -1,6 +1,7 @@
 Nom : ConstruireHutte
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_OwnPrivateFacility,facility(Amenagement hutte)
 	Action : A_AddCogniton,Cogniton(Cogniton PasBesoinHutte)
 	Action : L_IsAnyFacilityHere

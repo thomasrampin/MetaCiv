@@ -92,6 +92,8 @@ public class Human extends Turtle implements Serializable
 	//Valeur reduite sur un amenagement efficace
 	public int strike = 1;
 	
+	public Boolean enMission = false;
+	
 	
 	Patch cible = null;
 	Human pere;

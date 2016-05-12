@@ -1,6 +1,7 @@
 Nom : ConstruirePelle
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_CompareNombreObjets,objetToCompare(Objet Bois),comparator(Comparator >=),n(Double 5.0 Constant NombreDeBoisPourFaireUnePelle)
 	Action : L_IsPrivateFacilityHere,Facility(Amenagement hutte)
 		Action : L_Repeat,n(Integer 1)

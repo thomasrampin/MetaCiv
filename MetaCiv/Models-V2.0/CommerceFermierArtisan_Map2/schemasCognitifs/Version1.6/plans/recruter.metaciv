@@ -1,5 +1,6 @@
 Nom : recruter
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_AvanceAleatoirement
 Action : A_HireForRole,GroupToCreate(GroupAndRole Village:RienFaire)

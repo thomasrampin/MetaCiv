@@ -2,6 +2,7 @@ Nom : AllerChercherDuBois
 Description : Un nouveau cogniton
 Type : CULTURON
 StartChance : 0
+Couleur : -1
 Initial : 0
 Permet : ChercherBois
 Influence : ChercherBois,4

@@ -1,5 +1,6 @@
 Nom : Tuer
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_killOtherAgentOnPatchThatIsNotInMyGroup
 Action : A_DoNothing

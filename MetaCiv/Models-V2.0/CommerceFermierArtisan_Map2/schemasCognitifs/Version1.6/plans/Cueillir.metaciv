@@ -1,6 +1,7 @@
 Nom : Cueillir
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_SmellAndMove,ResourcesToFollow(Pheromone Baies)
 Action : A_Transform,Resource to collect(Pheromone Baies),Created Object(Objet Deprecated)
 Action : L_RandomPercent,n(Double 10.0)

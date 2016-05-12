@@ -1,6 +1,7 @@
 Nom : RamenerBaiesAuVillage
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_GoToClosestGroupFacility,Amenagement(Amenagement Village),Group(Group Village)
 Action : L_IsInThatGroupInThatRole,GroupToCreate(GroupAndRole Village:agriculteur)
 	Action : L_CompareNombreObjets,objetToCompare(Objet Pelle),comparator(Comparator >),n(Double 0.0)

@@ -1,6 +1,7 @@
 Nom : Auto
 Birth : false
 Self : true
+Couleur : -8355712
 Action : A_ChangeAttribute,Modified attribute(Attribute Faim),n(Integer -1 Constant __NoConstant)
 Action : L_CompareAttribute,attributeToCompare(Attribute Faim),comparator(Comparator <),n(Double 150.0 Constant SeuilMangerBaie)
 	Action : L_OwnObject,Object(Objet Baie)

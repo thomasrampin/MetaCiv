@@ -1,6 +1,7 @@
 Nom : DonnerNaissanceSiJ'aiPasFaim
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_OwnCogniton,Cogniton(Cogniton Faim)
 	Action : A_DoNothing
 	Action : L_RandomPercent,n(Double 5.0 Constant ChancesAvoirDesEnfants)

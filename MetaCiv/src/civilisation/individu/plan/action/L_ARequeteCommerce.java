@@ -14,6 +14,8 @@ public class L_ARequeteCommerce extends LAction{
 		Action a;
 		StringMessage message = (StringMessage) h.nextMessage();
 		if (message != null && message.getContent() == "commerce") {
+			if(h.getInitiateur().getCommunaute() != h.getCommunaute())
+				System.out.println("happened");
 			if(listeActions.size() > 0){
 				a = listeActions.get(0).effectuer(h);
 			}else{

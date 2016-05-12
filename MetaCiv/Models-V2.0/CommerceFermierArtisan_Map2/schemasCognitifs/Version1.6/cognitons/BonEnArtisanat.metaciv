@@ -2,6 +2,7 @@ Nom : BonEnArtisanat
 Description : Un nouveau cogniton
 Type : PERCEPT
 StartChance : 0
+Couleur : -1
 Initial : 0
 Influence : DevenirArtisan,4
 Trigger : CompetenceArtisanat,5.0,1,NombreDeSculpturePourDevenirUnArtisan

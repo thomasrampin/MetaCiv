@@ -1,0 +1,8 @@
+Nom : RechercherOutilsEtrangers
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Couleur : -1
+Initial : 0
+Permet : RechercheEtCommerceEtranger
+Influence : RechercheEtCommerceEtranger,2
