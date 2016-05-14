@@ -5,23 +5,24 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import civilisation.Configuration;
-import civilisation.ItemPheromone;
 import civilisation.constant.MCIntegerParameter;
 import civilisation.individu.Human;
 import civilisation.inventaire.Objet;
 
-public class L_CompareObject extends LAction{
+public class L_CompareNObject extends LAction{
 	
 	Objet objet;
 	Comparator comp;
 	Double d;
+	Integer variation;
+	MCIntegerParameter val;
 	
 	@Override
 	public Action effectuer(Human h) {
 		if (nextAction != null) h.getEsprit().getActions().push(nextAction);
 		Action a;
 		int nbObjet = h.getInventaire().possede(objet);
-		if (comp.compare((double) nbObjet, d)) {
+		if (comp.compare((double) nbObjet, (double) val.getValue())) {
 //			System.out.println("oui");
 			if(listeActions.size() > 0){
 				a = listeActions.get(0).effectuer(h);
@@ -64,8 +65,9 @@ public class L_CompareObject extends LAction{
 		if (option.getParametres().get(0).getClass().equals(Comparator.class)){
 			comp = (Comparator) option.getParametres().get(0);
 		} else
-		if (option.getParametres().get(0).getClass() == Double.class) {
-			d = (Double) option.getParametres().get(0);
+		if (option.getParametres().get(0).getClass() == Integer.class) {
+			variation = (Integer) option.getParametres().get(0);
+			val= loadIntegerParam(option);
 		}
 	}
 	
@@ -78,7 +80,7 @@ public class L_CompareObject extends LAction{
 			
 			String[] attr = {"**Objet**" , "objetToCompare"};
 			String[] comp = {"**Comparator**" , "comparator"};	
-			String[] n = {"**Double**" , "n", "-10" , "100" , "1"};
+			String[] n = {"**Integer**" , "n", "-10" , "300" , "1"};
 
 			
 			schemaParametres.add(attr);

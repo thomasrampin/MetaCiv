@@ -1,9 +1,0 @@
-Nom : EnvieExplorer
-Description : Un nouveau cogniton
-Type : BELIEF
-StartChance : 64
-Couleur : -39322
-Initial : 1
-Permet : Explorer
-Influence : Agriculter,-1
-Influence : Explorer,3

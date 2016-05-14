@@ -2,7 +2,7 @@ Nom : AcheterNourriture
 Birth : false
 Self : false
 Couleur : -8355712
-Action : L_CompareObject,objetToCompare(Objet Outil),comparator(Comparator >=),n(Integer 0 Constant PrixOutil)
+Action : L_CompareNObject,objetToCompare(Objet Outil),comparator(Comparator >=),n(Integer 0 Constant PrixOutil)
 	Action : L_GotTargetInteraction
 		Action : I_Commercer_Repondu,objectToGive(Objet Outil),nObjectToGive(Integer 1 Constant __NoConstant),objectToTake(Objet Baie),nObjectToTake(Integer 10 Constant __NoConstant)
 		Action : A_BroadcastMessage_Commerce,Radius(Integer 99 Constant __NoConstant)

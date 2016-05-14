@@ -1,9 +1,0 @@
-Nom : EnvieExplorer
-Description : Un nouveau cogniton
-Type : BELIEF
-StartChance : 64
-Couleur : java.awt.Color[r=255,g=255,b=255]
-Initial : 1
-Permet : Explorer
-Influence : Agriculter,-1
-Influence : Explorer,3

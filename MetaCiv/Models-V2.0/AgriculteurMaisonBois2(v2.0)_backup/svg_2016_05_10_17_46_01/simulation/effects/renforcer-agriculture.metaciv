@@ -1,8 +1,0 @@
-Nom : renforcer-agriculture
-Description : null
-Cible : cogniton
-NomCible : Agriculteur
-Valeur : 0.05
-Permanence : true
-Type : 1
-Activation : 1

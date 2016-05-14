@@ -1,8 +1,0 @@
-Nom : Dormir
-Description : null
-Cible : attribut
-NomCible : Sommeil
-Valeur : 40.0
-Permanence : true
-Type : 1
-Activation : 1

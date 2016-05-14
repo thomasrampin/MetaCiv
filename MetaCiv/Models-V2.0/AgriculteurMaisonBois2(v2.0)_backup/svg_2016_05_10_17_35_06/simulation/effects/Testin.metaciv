@@ -1,8 +1,0 @@
-Nom : Testin
-Description : null
-Cible : action
-NomCible : A_AddObject
-Valeur : 0.2
-Permanence : false
-Type : 1
-Activation : 1

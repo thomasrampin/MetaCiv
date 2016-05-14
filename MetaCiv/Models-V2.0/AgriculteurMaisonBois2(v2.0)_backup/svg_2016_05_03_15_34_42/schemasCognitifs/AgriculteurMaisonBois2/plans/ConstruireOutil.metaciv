@@ -1,8 +1,0 @@
-Nom : ConstruireOutil
-Birth : false
-Self : false
-Action : L_CompareObject,objetToCompare(Objet Baton),comparator(Comparator >=),n(Double 2.0)
-	Action : A_CreateObject,Created object(Objet Outil)
-	Action : L_ComparePhero,pheroToCompare(Pheromone Bois),comparator(Comparator >=),n(Double 1.0)
-		Action : A_Transformer,Pheromone to collect(Pheromone Bois),Created Object(Objet Baton)
-		Action : A_SearchForRessources,Pheromone to collect(Pheromone Bois)

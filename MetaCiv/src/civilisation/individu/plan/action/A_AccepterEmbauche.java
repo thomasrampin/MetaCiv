@@ -18,7 +18,7 @@ public class A_AccepterEmbauche extends Action{
 	
 	@Override
 	public String getInfo() {
-		return super.getInfo() + "Accpet a pending trade.<html>";
+		return super.getInfo() + "Recruit an agent who offered to work.<html>";
 	}
 
 	public boolean isDeprecated()

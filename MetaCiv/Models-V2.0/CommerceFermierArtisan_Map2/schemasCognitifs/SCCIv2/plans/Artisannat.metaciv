@@ -5,7 +5,7 @@ Couleur : -8355712
 Action : L_OwnPrivateFacility,facility(Amenagement Atelier)
 	Action : L_IsPrivateFacilityHere,facility(Amenagement Atelier)
 		Action : L_IsCounterAtZero
-			Action : L_CompareObject,objetToCompare(Objet Bois),comparator(Comparator >=),n(Integer 10 Constant BoisNecessaireOutil)
+			Action : L_CompareNObject,objetToCompare(Objet Bois),comparator(Comparator >=),n(Integer 10 Constant BoisNecessaireOutil)
 				Action : L_MultipleActions
 					Action : A_CollectFromFacilityEfficacite,Modified object(Objet OutilCiv2),n(Integer 5 Constant OutilGenereAtelier)
 					Action : A_RemoveItem,Modified object(Objet Bois),n(Integer 1 Constant BoisNecessaireOutil)

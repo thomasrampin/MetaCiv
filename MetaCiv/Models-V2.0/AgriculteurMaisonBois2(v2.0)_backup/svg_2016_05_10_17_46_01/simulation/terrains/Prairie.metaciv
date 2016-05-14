@@ -1,9 +1,0 @@
-Nom : Prairie
-Couleur : 0.38888887,1.0,0.6
-Passabilite : 25
-Infranchissable : false
-AltMin : 0
-AltMax : 20
-Apparition : 0
-Pheromone : Baies,0.0,0.2
-Pheromone : Gibier,0.0,0.2

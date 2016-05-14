@@ -40,7 +40,7 @@ public class A_RemoveItem extends Action{
 		if (schemaParametres == null){
 			schemaParametres = new ArrayList<String[]>();
 			String[] attrName = {"**Objet**" , "Modified object"};
-			String[] n = {"**Integer**" , "n", "1" , "10" , "1"};
+			String[] n = {"**Integer**" , "n", "1" , "100" , "1"};
 
 			schemaParametres.add(attrName);
 			schemaParametres.add(n);
