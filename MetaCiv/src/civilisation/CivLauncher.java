@@ -66,6 +66,7 @@ import madkit.kernel.Probe;
 import madkit.kernel.Watcher;
 import madkit.message.ObjectMessage;
 import madkit.simulation.activator.GenericBehaviorActivator;
+import renderEngine.renderMain;
 import civilisation.inspecteur.viewer.ViewerTabbed;
 import civilisation.inspecteur.viewer.ViewerTableauDeBord;
 import civilisation.stats.AdvancedStatsWindows;
@@ -232,6 +233,9 @@ public class CivLauncher extends TKLauncher {
 					}					
 
 				}else{
+			       
+
+			        
 					network = "false";
 					launcher = CivLauncher.class.getName();
 				}

@@ -31,6 +31,7 @@ import madkit.kernel.AgentAddress;
 import madkit.kernel.KernelAddress;
 import madkit.simulation.probe.SingleAgentProbe;
 import madkit.simulation.viewer.SwingViewer;
+import renderEngine.renderMain;
 import civilisation.Civilisation;
 import civilisation.Configuration;
 import civilisation.DefineConstants;
@@ -78,15 +79,20 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	Group groupToObserve;
 	Turtle selectedAgent;
 	private boolean endRendering;
+	private boolean bufferedView_activate;
 	private int sizeForAccurateView = 8;
 	JPopupMenu popup;
 	BufferedImage bufferedView;
+	Graphics2D g2d;
 	boolean activDebug = false;
-
+	renderMain game;
+	private boolean isNotify;
+	
 	public WorldViewer()
 	{
 		super();
-		
+		bufferedView_activate = false;
+		isNotify = false;
 		cellSize = 5;
 		instance = this;
 		this.getDisplayPane().addMouseListener(new WorldMouseListener(this));
@@ -94,6 +100,14 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	
 	protected void activate() {	
 		super.activate();
+		if(!bufferedView_activate){
+			bufferedView = new BufferedImage(this.getWidth()*this.getCellSize(),this.getHeight()*this.getCellSize(),BufferedImage.TYPE_INT_ARGB);
+			game = new renderMain(bufferedView); 
+			Thread t = new Thread(game);
+			g2d = bufferedView.createGraphics();
+	        t.start();
+	        bufferedView_activate = true;
+		}
 		//System.out.println("WV a fini activate");
 		//this.setDisplayPane(new JScrollPane(new PanelWorldViewer((JScrollPane) this.getDisplayPane())));
 	}
@@ -156,18 +170,28 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	@Override
 	public void paintPatch(Graphics g, Patch p,int x,int y,int cellS){
 		//super.paintPatch(g, p, x, y, cellS);
-
+		
 		
 			if (pheroToMap == null) {
 				g.setColor(p.getColor());
+				if(bufferedView_activate)
+					g2d.setColor(p.getColor());
 				} else {
 					double v = pheromoneToMap.get(cellS);
 					if (v > 255) v = 255;
 					else if (v < 0) v = 0;
 					g.setColor(new Color (255 - (int)v, 255 - (int)v, 255));
+					if(bufferedView_activate)
+						g2d.setColor(new Color (255 - (int)v, 255 - (int)v, 255));
 				}
 				g.fillRect(x,y,this.getCellSize(),this.getCellSize());
-
+				if(bufferedView_activate)
+					g2d.fillRect(x,y,this.getCellSize(),this.getCellSize());
+				if(!isNotify && y == 0 && x/this.getCellSize() == this.getWidth()-1){
+					game.notifyShaderTerrain(this.getWidth(),this.getHeight());
+					isNotify = true;
+				}
+	
 			/*	if (this.frontieresVisibles)
 				{
 					int controleur = getControleurPatch(p);
@@ -238,6 +262,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	@Override
 	public void paintTurtle(Graphics g,Turtle t,int x,int y) {
 		paintOneTurtle( g, t, x, y, true);
+		game.paintOneTurtle(t,x,y);
+
 	}
 
 	
