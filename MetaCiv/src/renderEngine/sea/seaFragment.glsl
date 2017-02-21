@@ -85,9 +85,9 @@ void main(void) {
 
 
 
-	float nDotl = dot(normal2,normalize(fs_in.toLightVector));
+	float nDotl = dot(normal2,normalize(vec3(0,1,0)));
 	float brightness = max(nDotl,0.5);
-	nDotl = dot(normal3,normalize(fs_in.toLightVector));
+	nDotl = dot(normal3,normalize(vec3(0,1,0)));
 	float brightness2 = max(nDotl,0.5);
 
 	float fresnelFactor = dot(viewVector,vec3(0.0,1.0,0.0));
@@ -99,6 +99,8 @@ void main(void) {
 	vec2 ndc = (fs_in.clipSpace.xy/fs_in.clipSpace.w) /2.0 + 0.5;
 	vec2 coords = vec2(ndc.x,-ndc.y);
 	coords += distortion1;
+	coords.x = clamp(coords.x, 0.001, 0.999);
+	coords.y = clamp(coords.y, -0.999, -0.001);
 	//out_Color = texture(diffuseMap,modifyTexCoords);
 	out_Color = texture(diffuseMap,coords);
 

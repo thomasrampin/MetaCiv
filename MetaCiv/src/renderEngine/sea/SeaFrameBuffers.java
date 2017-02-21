@@ -1,4 +1,4 @@
-package renderEngine.water;
+package renderEngine.sea;
  
 import java.nio.ByteBuffer;
  
@@ -17,10 +17,10 @@ import org.lwjgl.opengl.GL33;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL42;
  
-public class WaterFrameBuffers {
+public class SeaFrameBuffers {
  
-    protected static final int REFLECTION_WIDTH = 1280;
-    private static final int REFLECTION_HEIGHT = 720;
+    protected static final int REFLECTION_WIDTH = 800;
+    private static final int REFLECTION_HEIGHT = 600;
      
     protected static final int REFRACTION_WIDTH = 1280;
     private static final int REFRACTION_HEIGHT = 720;
@@ -33,7 +33,7 @@ public class WaterFrameBuffers {
     private int refractionTexture;
     private int refractionDepthTexture;
  
-    public WaterFrameBuffers() {//call when loading the game
+    public SeaFrameBuffers() {//call when loading the game
         initialiseReflectionFrameBuffer();
         initialiseRefractionFrameBuffer();
     }

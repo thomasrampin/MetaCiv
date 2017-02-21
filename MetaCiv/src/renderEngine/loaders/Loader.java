@@ -74,6 +74,18 @@ public class Loader {
 		return new Mesh(vaoID,indices.length);
 	}
 	
+	public Mesh loadToVAO(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		storeDataInAttributeList(0,3,vertices);
+		storeDataInAttributeList(1,3,textureCoords);
+		storeDataInAttributeList(2,3,normals);
+		storeDataInAttributeList(3,3,tangents);
+		unbindVAO();
+		return new Mesh(vaoID,indices.length);
+	}
+
+	
 	public Mesh loadToVAO(float[] positions ,int dimensions){
 		int vaoID = createVAO();
 		storeDataInAttributeList(0,dimensions,positions);
@@ -311,21 +323,33 @@ public class Loader {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-				
+			
+			BufferedImage imageDisp = null;
+			try {
+				imageDisp = ImageIO.read(new File("Assets/Texture/"+t.getDisplacementMap()+".png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			int pixelsDiff[] = new int[imageDiff.getWidth() * imageDiff.getHeight()];
 			imageDiff.getRGB(0, 0, imageDiff.getWidth(), imageDiff.getHeight(), pixelsDiff, 0, imageDiff.getWidth());
-		    ByteBuffer buffer = BufferUtils.createByteBuffer((imageDiff.getWidth()+imageNrm.getWidth()) * (imageDiff.getHeight()) * 4); // <-- 4 for RGBA, 3 for RGB
+		    ByteBuffer buffer = BufferUtils.createByteBuffer((imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth()*/ ) * (imageDiff.getHeight()) * 4); // <-- 4 for RGBA, 3 for RGB
 
 		    int pixelsNrm[] = new int[imageNrm.getWidth() * imageNrm.getHeight()];
 		    imageNrm.getRGB(0, 0, imageNrm.getWidth(), imageNrm.getHeight(), pixelsNrm, 0, imageNrm.getWidth());
 		    
+		    int pixelsDisp[] = new int[imageDisp.getWidth() * imageDisp.getHeight()];
+		    imageDisp.getRGB(0, 0, imageDisp.getWidth(), imageDisp.getHeight(), pixelsDisp, 0, imageDisp.getWidth());
+		    
 		    for(int y = 0; y < imageDiff.getHeight(); y++){
-		        for(int x = 0; x < imageDiff.getWidth()+imageNrm.getWidth(); x++){
+		        for(int x = 0; x < imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth()*/ ; x++){
 		        	int pixel;
 		        	if(x<imageDiff.getWidth())
 		        		pixel = pixelsDiff[y*imageDiff.getHeight()+x];
-		        	else
+		        	else //if(x<imageDiff.getWidth()+imageNrm.getWidth())
 		        		pixel = pixelsNrm[y*imageNrm.getHeight()+(x- imageDiff.getWidth())];
+		        	/*else
+		        		pixel = pixelsDisp[y*imageDisp.getHeight()+(x- imageNrm.getWidth()- imageDiff.getWidth())];*/
 		            buffer.put((byte) ((pixel >>16 ) & 0xFF));
 		            buffer.put((byte)  ((pixel >>8) & 0xFF));
 		            buffer.put((byte)  ((pixel) & 0xFF));
@@ -348,7 +372,7 @@ public class Loader {
 		    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 	
 		    //Send texel data to OpenGL
-		    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, imageDiff.getWidth()+imageNrm.getWidth(), imageDiff.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth() */, imageDiff.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		    texturesAtlas[iterator] = textureTerrainDiffID;
 		   
 		    iterator++;
@@ -448,5 +472,6 @@ public class Loader {
 		buffer.flip();// prepare for reading
 		return buffer;
 	}
+
 
 }

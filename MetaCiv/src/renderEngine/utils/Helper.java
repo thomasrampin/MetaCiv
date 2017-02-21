@@ -16,5 +16,28 @@ public class Helper {
 		return position;
 	}
 
+	public static Vector3f soustrate(Vector3f a,Vector3f b){
+		Vector3f r = new Vector3f();
+		r.x = a.x - b.x;
+		r.y = a.y - b.y;
+		r.z = a.z - b.z;
+		return r;
+	}
+
+	public static Vector3f multiply(Vector3f a,Vector3f b){
+		Vector3f r = new Vector3f();
+		r.x = a.x * b.x;
+		r.y = a.y * b.y;
+		r.z = a.z * b.z;
+		return r;
+	}
+
+	public static Vector3f multiply(Vector3f a,float b){
+		Vector3f r = new Vector3f();
+		r.x = a.x * b;
+		r.y = a.y * b;
+		r.z = a.z * b;
+		return r;
+	}
 	
 }

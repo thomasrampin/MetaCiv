@@ -5,7 +5,7 @@
 out VS_OUT{
 	vec2 tc;
 	vec3 normal;
-
+	float indice;
 }vs_out;
 
 
@@ -22,17 +22,17 @@ uniform int heights_size;
 
 uniform vec4 plane;
 
-float getHeight(float red, float green, float blue);
+int getHeight(float red, float green, float blue);
 
 
 
-float getHeight(float red, float green, float blue){
+int getHeight(float red, float green, float blue){
 
 	for(int i=0;i<heights_size;i++){
 		if(heights[i].r == red && heights[i].g == green && heights[i].b == blue )
-			return heights[i].a;
+			return i;
 	}
-	return -1.0;
+	return -1;
 }
 
 
@@ -57,12 +57,12 @@ void main(void){
 	float red = texture(blendMap,vs_out.tc).r;
 	float blue = texture(blendMap,vs_out.tc).b;
 	float green = texture(blendMap,vs_out.tc).g;
-	float height = -1.0;
+	int indice = -1;
 	vec2 offset = vec2(0.0,0.006);
 	for(int i=0;i<9;i++) // loop to fix ignore point
 	{
-		height = getHeight(red,green,blue);
-		if(height == -1)
+		indice = getHeight(red,green,blue);
+		if(indice == -1)
 		{
 			red = texture(blendMap,vs_out.tc-offset).r;
 			blue = texture(blendMap,vs_out.tc-offset).b;
@@ -72,6 +72,8 @@ void main(void){
 		else
 			break;
 	}
+
+	vs_out.indice = indice;
 
 	/*float heightL = getHeight(texture(tex_displacement,vs_out.tc+vec2(0.5,0.0)).r,texture(tex_displacement,vs_out.tc+vec2(0.5,0.0)).g,texture(tex_displacement,vs_out.tc+vec2(0.5,0.0)).b);
 
@@ -87,7 +89,7 @@ void main(void){
 	vec3 v2 = vertices[gl_VertexID+1].xyz - vertices[gl_VertexID].xyz;*/
 	//vs_out.normal = cross(v1,v2);
 
-	vec4 worldPosition =  vertices[gl_VertexID] + vec4(float(x), height * dmap_depth,float(y),0.0);
+	vec4 worldPosition =  vertices[gl_VertexID] + vec4(float(x), heights[indice].a * dmap_depth,float(y),0.0);
 	//vs_out.toLightVector = lightPosition -  worldPosition.xyz;
 
 

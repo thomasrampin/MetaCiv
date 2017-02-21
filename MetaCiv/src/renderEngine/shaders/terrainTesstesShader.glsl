@@ -1,5 +1,6 @@
 #version 430 core
 
+#define MAX_TERRAIN_TYPE 11
 
 layout (quads, fractional_odd_spacing) in;
 
@@ -9,7 +10,7 @@ in TCS_OUT
 {
 	vec2 tc;
 	vec3 normal;
-
+	float indice;
 }tes_in[];
 
 out TES_OUT
@@ -24,6 +25,7 @@ out TES_OUT
 layout (binding = 0) uniform sampler2D blendMap;
 layout (binding = 1) uniform sampler2D tex_displacement;
 layout (binding = 4) uniform sampler2D tex_displacement_sub;
+uniform sampler2D gSampler[MAX_TERRAIN_TYPE];
 
 uniform mat4 mvp;
 uniform mat4 viewMatrix;
@@ -40,13 +42,21 @@ void main(void){
 	vec2 tc2 = mix(tes_in[2].tc, tes_in[3].tc, gl_TessCoord.x);
 	vec2 tc = mix(tc2, tc1, gl_TessCoord.y);
 
+	float i1 = mix(tes_in[0].indice, tes_in[1].indice, gl_TessCoord.x);
+	float i2 = mix(tes_in[2].indice, tes_in[3].indice, gl_TessCoord.x);
+	float i = mix(i2, i1, gl_TessCoord.y);
+
 	vec4 p1 = mix(gl_in[0].gl_Position,gl_in[1].gl_Position,gl_TessCoord.x);
 	vec4 p2 = mix(gl_in[2].gl_Position,gl_in[3].gl_Position,gl_TessCoord.x);
 
 	vec4 p = mix(p2,p1,gl_TessCoord.y);
 
 	p.y += texture(tex_displacement,tc*2.0).r * 1.0;
-	p.y += (texture(tex_displacement_sub,tc*50.0).r+texture(tex_displacement_sub,tc*50.0).g+texture(tex_displacement_sub,tc*50.0).b) / 100.0;
+
+	float x = mod(tc.x*50,0.333);
+	vec2 parseTc= vec2(x,tc.y*50 )/2.0+0.66666;
+	p.y += (texture(gSampler[int(i)],parseTc).r+texture(gSampler[int(i)],parseTc).g+texture(gSampler[int(i)],parseTc).b) / 100.0;
+
 
 	/*float red = texture(blendMap,tc).r;
 	float blue = texture(blendMap,tc).b;
@@ -85,5 +95,6 @@ void main(void){
 
 	tess_out.toLightVector = lightPosition - worldPos.xyz;
 	tess_out.tc = tc;
+
 
 }

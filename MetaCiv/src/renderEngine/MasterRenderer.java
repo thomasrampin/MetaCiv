@@ -23,13 +23,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
  
 public class MasterRenderer {
      
-    public static final float FOV = 40;
+    public static final float FOV = 45;
     public static final float NEAR_PLANE = 0.1f;
-    public static final float FAR_PLANE = 1000;
+    public static final float FAR_PLANE = 650;
      
     private Matrix4f projectionMatrix;
      
@@ -54,9 +55,9 @@ public class MasterRenderer {
         createProjectionMatrix();
         terrainInit = false;
         renderer = new EntityRenderer(shader,projectionMatrix);
-        terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix);
+        terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures);
         terrainTessRenderer = new TerrainTessRenderer(loader,terrainTessShader,loader.loadTexture("heightmap.png"),loader.loadTexture("heightMap_NRM.png"),loader.loadTexture("forest/forest_DISP.png"),loader.loadTexture("forest/forest_NRM.png"),projectionMatrix,textures);
-        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png")),new ArrayList<Vector4f>());
+        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<Vector4f>());
     }
      
     public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow){
@@ -68,13 +69,19 @@ public class MasterRenderer {
         shader.stop();
 
   
-          /* terrainShader.start();
-            terrainShader.loadLights(lights);
+            terrainShader.start();
+            terrainShader.loadLights(sun);
+            if(invertPitch)
+            	camera.invertPitch();
             terrainShader.loadViewMatrix(camera);
-        	terrainRenderer.render(terrain);
-        	terrainShader.stop();*/
+            terrainShader.loadCameraPos(camera.getPosition());
+            
+        	terrainRenderer.render(terrain,heights,distanceFog);
+        	terrainShader.stop();
+            if(invertPitch)
+            	camera.invertPitch();
         
-       terrainTessRenderer.render(camera,terrain,sun,heights,clipPlane,distanceFog,invertPitch,forceLow);
+       //terrainTessRenderer.render(camera,terrain,sun,heights,clipPlane,distanceFog,invertPitch,forceLow);
         
         
         entities.clear();

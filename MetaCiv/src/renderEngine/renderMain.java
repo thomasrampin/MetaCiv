@@ -23,15 +23,15 @@ import renderEngine.entities.Object3D;
 import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Model;
+import renderEngine.sea.SeaFrameBuffers;
+import renderEngine.sea.SeaRenderer;
+import renderEngine.sea.SeaShader;
 import renderEngine.shaders.StaticShader;
 import renderEngine.terrains.Terrain;
 import renderEngine.utils.FPS;
 import renderEngine.utils.Helper;
 import renderEngine.utils.MousePicker;
 import renderEngine.utils.TerrainTexture;
-import renderEngine.water.WaterFrameBuffers;
-import renderEngine.water.WaterRenderer;
-import renderEngine.water.WaterShader;
 import turtlekit.kernel.Turtle;
 
 
@@ -60,28 +60,28 @@ public class renderMain implements Runnable {
 		heights.add(new Vector4f(0.16666667f,0.4f,1.0f, 1f)); //desert profond
 		heights.add(new Vector4f(0.16666667f,0.2f,1.0f, 1f)); //desert
 		heights.add(new Vector4f(0.33333334f,1.0f,0.4f, 1.5f)); //foret
-		heights.add(new Vector4f(0.5333333f,1.0f,1.0f,0.0f)); //litorral
+		heights.add(new Vector4f(0.5333333f,1.0f,1.0f,0.8f)); //litorral
 		heights.add(new Vector4f(0.6111111f,1.0f,0.6f,0f)); //mer
 		heights.add(new Vector4f(0.0f,0.0f,0.4f,6f)); //montagne
 		heights.add(new Vector4f(0.16666667f,1.0f,0.6f,1.3f)); //plaine aride
 		heights.add(new Vector4f(0.38888887f,1.0f,0.6f,1.3f)); //prairie
 		
 		textures = new ArrayList<>();
-		textures.add(new TerrainTexture(0.16666667f,1.0f,0.4f, "roche/roche", "roche/roche_NRM")); //collines
-		textures.add(new TerrainTexture(0.16666667f,0.4f,1.0f,"sand/sand","sand/sand_NRM")); //desert profond
-		textures.add(new TerrainTexture(0.16666667f,0.2f,1.0f, "sand/sand","sand/sand_NRM")); //desert
-		textures.add(new TerrainTexture(0.33333334f,1.0f,0.4f, "forest/forest", "forest/forest_NRM")); //foret
-		textures.add(new TerrainTexture(0.5333333f,1.0f,1.0f,"sand/sand","sand/sand_NRM")); //litorral
-		textures.add(new TerrainTexture(0.6111111f,1.0f,0.6f,"sand/sand","sand/sand_NRM")); //mer
-		textures.add(new TerrainTexture(0.0f,0.0f,0.4f,"roche/roche","roche/roche_NRM")); //montagne
-		textures.add(new TerrainTexture(0.16666667f,1.0f,0.6f,"grass/grass","grass/grass_NRM")); //plaine aride
-		textures.add(new TerrainTexture(0.38888887f,1.0f,0.6f,"grass/grass","grass/grass_NRM")); //prairie
+		textures.add(new TerrainTexture(0.16666667f,1.0f,0.4f, "roche/roche", "roche/roche_NRM","roche/roche_DISP")); //collines
+		textures.add(new TerrainTexture(0.16666667f,0.4f,1.0f,"sand/sand","sand/sand_NRM","sand/sand_DISP")); //desert profond
+		textures.add(new TerrainTexture(0.16666667f,0.2f,1.0f, "sand/sand","sand/sand_NRM","sand/sand_DISP")); //desert
+		textures.add(new TerrainTexture(0.33333334f,1.0f,0.4f, "forest/forest", "forest/forest_NRM","forest/forest_DISP")); //foret
+		textures.add(new TerrainTexture(0.5333333f,1.0f,1.0f,"sand/sand","sand/sand_NRM","sand/sand_DISP")); //litorral
+		textures.add(new TerrainTexture(0.6111111f,1.0f,0.6f,"sand/sand","sand/sand_NRM","sand/sand_DISP")); //mer
+		textures.add(new TerrainTexture(0.0f,0.0f,0.4f,"roche/roche","roche/roche_NRM","roche/roche_DISP")); //montagne
+		textures.add(new TerrainTexture(0.16666667f,1.0f,0.6f,"grass/grass","grass/grass_NRM","grass/grass_DISP")); //plaine aride
+		textures.add(new TerrainTexture(0.38888887f,1.0f,0.6f,"grass/grass","grass/grass_NRM","grass/grass_DISP")); //prairie
 	}
 
 
 	@Override
 	public void run() {
-		System.out.println("test");
+
 		Window.createDislay();
 		
 		if(Window.checkGlVersion()){
@@ -95,7 +95,7 @@ public class renderMain implements Runnable {
 			Loader loader = new Loader();
 			StaticShader shader = new StaticShader();
 			
-			float distanceFog = 2.0f;
+			float distanceFog = 8.0f;
 			
 			FPS.start();
 			
@@ -106,7 +106,7 @@ public class renderMain implements Runnable {
 			Object3D king2 = new Object3D("3","king_tex",loader, new Vector3f(0,0,20),0,0,0,0.1f);*/
 	
 			List<Light> lights = new ArrayList<Light>();
-			Light sun = new Light(new Vector3f(-4000,15000,-2000),new Vector3f(1,1,1));
+			Light sun = new Light(new Vector3f(-4000,1000,-2000),new Vector3f(1,1,1));
 			Light light = new Light(new Vector3f(-20,10,10),new Vector3f(1,1,1));
 			Light light2 = new Light(new Vector3f(20,10,-10),new Vector3f(0,1,1));
 			Light light3 = new Light(new Vector3f(80,20,-100),new Vector3f(1,0,1));
@@ -134,10 +134,10 @@ public class renderMain implements Runnable {
 	
 			//*************Water Renderer Set-up******************
 			
-			WaterShader waterShader = new WaterShader();
-			WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader,renderer.getProjectionMatrix());
+			SeaShader waterShader = new SeaShader();
+			SeaRenderer waterRenderer = new SeaRenderer(loader, waterShader,renderer.getProjectionMatrix());
 	
-			WaterFrameBuffers fbos = new WaterFrameBuffers();
+			SeaFrameBuffers fbos = new SeaFrameBuffers();
 			
 			
 			Window.showInfo();
@@ -200,13 +200,13 @@ public class renderMain implements Runnable {
 	    		
 	    		
 	    		
-	    		if(distanceFog>=5.0 || distanceFog<=1.0)
+	    		if(distanceFog>=10.0 || distanceFog<=3.0)
 	    			FOG_INCREASE_SPEED = -FOG_INCREASE_SPEED;
-	            
+	    		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 	            fbos.bindReflectionFrameBuffer();
-	            GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
+	            
 	            renderer.render(lights, camera,image,sun,heights,new Vector4f(0,1,0,0),distanceFog,true,true);
-	            GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
+	            
 				fbos.unbindCurrentFrameBuffer();
 				
 				

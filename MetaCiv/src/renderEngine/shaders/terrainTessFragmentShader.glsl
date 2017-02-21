@@ -82,10 +82,10 @@ void main(void){
 			vec2 parseTc = vec2(fs_in.tc.x*50,fs_in.tc.y*50 );
 			vec2 parseTcNrm = vec2(fs_in.tc.x*50,fs_in.tc.y*50 );
 	#else
-		float x = f(fs_in.tc.x*50,0.5);
+		float x = f(fs_in.tc.x*50,0.333);
 		vec2 parseTc = vec2(x,fs_in.tc.y*50 );
 
-		vec2 parseTcNrm = vec2(x,fs_in.tc.y*50 )/2.0+0.5;
+		vec2 parseTcNrm = vec2(x,fs_in.tc.y*50 )/2.0+0.3333;
 	#endif
 
 	if(!forceLow){
@@ -129,9 +129,13 @@ void main(void){
 				break;
 		}
 		vec3 normal3 = normalize((texture(gSampler[indice],parseTcNrm).rbg * 2.0) - vec3(1.0));
+		nDotl = dot(normal3,unitLightVector);
+		float brightness2 = max(nDotl,0.0);
+
 		vec3 reflectedLightDirection = reflect(lightDirection,normal3);
 		landscape = texture(gSampler[indice], parseTc);
-		vec4 lighting =  vec4(brightness * lightColour ,1.0);
+		vec4 lighting =  vec4(brightness * brightness2  * lightColour ,1.0);
+
 		vec3 specular = max(pow(dot(reflectedLightDirection,unitVectorToCamera),shineDamper),0.0) * vec3(1,1,1);
 		landscape *= lighting + vec4(specular,1.0);
 		color = fog(landscape);

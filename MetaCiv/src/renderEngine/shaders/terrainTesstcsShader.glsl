@@ -6,14 +6,14 @@ in VS_OUT
 {
 	vec2 tc;
 	vec3 normal;
-
+	float indice;
 }tcs_in[];
 
 out TCS_OUT
 {
 	vec2 tc;
 	vec3 normal;
-
+	float indice;
 }tcs_out[];
 
 
@@ -26,7 +26,7 @@ uniform float tessLevel;
 
 void main(void){
 	if(gl_InvocationID == 0){
-		bool forceNoTess = true;
+		bool forceNoTess = false;
 		vec4 p0 = projectionMatrix * viewMatrix * (transformationMatrix*gl_in[0].gl_Position);
 		vec4 p1 = projectionMatrix * viewMatrix * (transformationMatrix*gl_in[1].gl_Position);
 		vec4 p2 = projectionMatrix * viewMatrix * (transformationMatrix*gl_in[2].gl_Position);
@@ -71,4 +71,5 @@ void main(void){
 	gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
 	tcs_out[gl_InvocationID].normal   = tcs_in[gl_InvocationID].normal;
 	tcs_out[gl_InvocationID].tc = tcs_in[gl_InvocationID].tc;
+	tcs_out[gl_InvocationID].indice = tcs_in[gl_InvocationID].indice;
 }

@@ -9,14 +9,16 @@ public class TerrainTexture {
 	private int r,g,b;
 	private String texture;
 	private String normalMap;
+	private String displacementMap;
 	
-	public TerrainTexture(float r, float g, float b,String texture,String normalMap){
+	public TerrainTexture(float r, float g, float b,String texture,String normalMap,String displacementMap){
 		int color = Color.HSBtoRGB(r, g,b);
 		this.r = (color >> 16) & 0x000000FF;
 		this.g = (color >>8 ) & 0x000000FF;
 		this.b = (color) & 0x000000FF;
 		this.texture = texture;
 		this.normalMap = normalMap;
+		this.displacementMap = displacementMap;
 	}
 
 	public int getR() {
@@ -55,5 +57,8 @@ public class TerrainTexture {
 		return normalMap;
 	}
 	
+	public String getDisplacementMap(){
+		return displacementMap;
+	}
 	
 }

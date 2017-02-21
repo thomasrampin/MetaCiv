@@ -1,4 +1,4 @@
-package renderEngine.water;
+package renderEngine.sea;
 
 import org.lwjgl.util.vector.Matrix4f;
 
@@ -8,12 +8,12 @@ import renderEngine.shaders.ShaderProgram;
 import renderEngine.shaders.ShaderTessProgram;
 import renderEngine.utils.Matrix;
 
-public class WaterShader extends ShaderTessProgram {
+public class SeaShader extends ShaderTessProgram {
 
-	private final static String VERTEX_FILE = "src/renderEngine/water/waterVertex.glsl";
-	private final static String FRAGMENT_FILE = "src/renderEngine/water/waterFragment.glsl";
-	private static final String TESS_CONTROL_FILE = "src/renderEngine/water/watertcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "src/renderEngine/water/watertesShader.glsl";
+	private final static String VERTEX_FILE = "src/renderEngine/sea/seaVertex.glsl";
+	private final static String FRAGMENT_FILE = "src/renderEngine/sea/seaFragment.glsl";
+	private static final String TESS_CONTROL_FILE = "src/renderEngine/sea/seatcsShader.glsl";
+	private static final String TESS_EVALUATION_FILE = "src/renderEngine/sea/seatesShader.glsl";
 	private static final String GEOMETRY_FILE = "";
 	
 	
@@ -33,7 +33,7 @@ public class WaterShader extends ShaderTessProgram {
 	private int location_distanceFog;
 	
 	
-	public WaterShader() {
+	public SeaShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE,TESS_CONTROL_FILE,TESS_EVALUATION_FILE,GEOMETRY_FILE);
 	}
 

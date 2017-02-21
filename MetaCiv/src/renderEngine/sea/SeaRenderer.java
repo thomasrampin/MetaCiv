@@ -1,4 +1,4 @@
-package renderEngine.water;
+package renderEngine.sea;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import renderEngine.models.Mesh;
 import renderEngine.utils.FPS;
 import renderEngine.utils.Matrix;
 
-public class WaterRenderer {
+public class SeaRenderer {
 
     private static final String DIFFUSE_MAP = "water/water_NRM.png";
     private static final String DUDV_MAP = "water/waterDUDV.png";
@@ -29,16 +29,16 @@ public class WaterRenderer {
 	private static float WAVE_INCREASE_SPEED = 0.0001f;
     
 	private Mesh quad;
-	private WaterShader shader;
+	private SeaShader shader;
 	private int textureID;
 	private int dudvID;
 	private int normalID;
 	private int dispID;
 	private float moveFactor = 0;
-	private float waveStrenght = 1.0f;
+	private float waveStrenght = 1.1f;
 	private int tessLevel = 16;
 
-	public WaterRenderer(Loader loader, WaterShader shader, Matrix4f projectionMatrix) {
+	public SeaRenderer(Loader loader, SeaShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -51,12 +51,12 @@ public class WaterRenderer {
 		GL40.glPatchParameteri(GL40.GL_PATCH_VERTICES, 4);
 	}
 
-	public void render(Camera camera, Light light,WaterFrameBuffers fbos,float distanceFog) {
+	public void render(Camera camera, Light light,SeaFrameBuffers fbos,float distanceFog) {
 		prepareRender(camera,light);	
 		
 			Matrix4f modelMatrix = Matrix.createTransformationMatrix(
-					new Vector3f(-128f,5,-128f), 0, 0, 0,
-					6);
+					new Vector3f(-128,16,-128), 0, 0, 0,
+					13);
 			shader.loadModelMatrix(modelMatrix);
 			shader.conectTexture();
 			shader.loadTessLevel(tessLevel);
