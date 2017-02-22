@@ -28,7 +28,7 @@ public class PanelEnvironnement extends JJPanel{
 	ArrayList<ArrayList<PseudoPatch>> carte;
 	int largeur = 120;
 	int hauteur = 120;
-	int taillePseudoPatch = 2;
+	int taillePseudoPatch = 4;
 	GCarte gCarte;
 	
 	/*Parametres d'affichage*/
