@@ -76,6 +76,7 @@ public class TerrainRenderer {
         		
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+        shader.connectTextureUnits();
         for(int i=0;i<diffuseArray.length;i++){
         	GL13.glActiveTexture(GL13.GL_TEXTURE0+i+1);
         	GL11.glBindTexture(GL11.GL_TEXTURE_2D, diffuseArray[i]);

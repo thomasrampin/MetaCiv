@@ -15,7 +15,7 @@ out vec4 color;
 
 
 
-layout (binding = 0) uniform sampler2D blendMap;
+uniform sampler2D blendMap;
 
 
 #if GL_ARB_bindless_texture_is_supported

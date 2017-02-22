@@ -56,7 +56,7 @@ public class MasterRenderer {
         terrainInit = false;
         renderer = new EntityRenderer(shader,projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures);
-        terrainTessRenderer = new TerrainTessRenderer(loader,terrainTessShader,loader.loadTexture("heightmap.png"),loader.loadTexture("heightMap_NRM.png"),loader.loadTexture("forest/forest_DISP.png"),loader.loadTexture("forest/forest_NRM.png"),projectionMatrix,textures);
+        terrainTessRenderer = new TerrainTessRenderer(loader,terrainTessShader,loader.loadTexture("heightmap.png"),loader.loadTexture("heightmap_NRM.png"),loader.loadTexture("forest/forest_DISP.png"),loader.loadTexture("forest/forest_NRM.png"),projectionMatrix,textures);
         terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<Vector4f>());
     }
      

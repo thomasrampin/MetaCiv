@@ -101,7 +101,7 @@ public class renderMain implements Runnable {
 			
 	
 			
-			king = new Object3D("1","king", loader,new Vector3f(0,0,0),0,0,0,0.06f);
+			//king = new Object3D("1","king", loader,new Vector3f(0,0,0),0,0,0,0.06f);
 			/*Object3D plateau = new Object3D("plateau","plateau",loader, new Vector3f(0,0,0),0,0,0,0.1f);
 			Object3D king2 = new Object3D("3","king_tex",loader, new Vector3f(0,0,20),0,0,0,0.1f);*/
 	
@@ -120,7 +120,7 @@ public class renderMain implements Runnable {
 		
 			
 			objects = new ArrayList<Object3D>();
-			objects.add(king);
+			//objects.add(king);
 			//objects.add(king2);
 			
 			//MousePicker picker = new MousePicker(camera,renderer.getProjectionMatrix(),plateau);
