@@ -15,8 +15,8 @@ public class JJComponentMouseMotionListener implements MouseMotionListener{
 	public void mouseDragged(MouseEvent e) {
 		if (c.isDragable()){
 			if (e.getSource().equals(c)){
-				c.setXx(c.getXx() + e.getX());
-				c.setYy(c.getYy() + e.getY());
+				c.setXx(c.getXx() + e.getX() - c.getWidth() / 2);
+				c.setYy(c.getYy() + e.getY() - c.getHeight() / 2);
 			}
 			else
 			{
