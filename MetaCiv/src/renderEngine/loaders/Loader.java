@@ -109,9 +109,9 @@ public class Loader {
 		return textureID;
 	}
 	
-	  private static BufferedImage blur(BufferedImage image) {
+	  public static BufferedImage blur(BufferedImage image) {
 
-		  	float value =  1f/2f;
+		  	float value =  1f/1f;
 		    Kernel kernel = new Kernel(3, 3, new float[] { value, value, value,
 		    		value,value,value,value, value,value });
 		    BufferedImageOp op = new ConvolveOp(kernel,ConvolveOp.EDGE_NO_OP, null);

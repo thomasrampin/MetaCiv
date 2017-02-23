@@ -57,7 +57,7 @@ public class Terrain {
 	private Mesh generateTerrain(Loader loader , BufferedImage image,BufferedImage image2,ArrayList<Vector4f> heights){
 		
 
-		
+		//image = Loader.blur(image);
 		VERTEX_COUNT = image.getHeight()/5;
 		int VERTEX_COUNT_W = image.getHeight()/5;
 		SIZE_X = image.getHeight();
@@ -68,26 +68,56 @@ public class Terrain {
         float[] normals = new float[count * 3];
         float[] textureCoords = new float[count*3];
         float[] tangents = new float[count*3];
+        ArrayList<Vector3f> ver = new ArrayList<>();
+        ArrayList<Vector3f> norm = new ArrayList<>();
+        ArrayList<Vector3f> tc = new ArrayList<>();
+        
+        
         Vector3f[] pos = new Vector3f[count];
         Vector3f[] Uv = new Vector3f[count];
         int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
         int vertexPointer = 0;
         int ii=0;
         int jj =0;
+        float lastH = 0;
+        float max = 0;
         for(int i=0;i<VERTEX_COUNT;i++){
         	jj = 0;
             for(int j=0;j<VERTEX_COUNT_W;j++){
+            	float h;
+            	h = getHeight(jj,ii,image,heights) ;
+            	
+        		float heightL = getHeight(Math.max(jj-3,0), ii, image,heights);
+        		float heightR = getHeight(Math.min(jj+3,image.getHeight()), ii, image,heights);
+        		float heightD = getHeight(jj, Math.max(ii-3,0), image,heights);
+        		float heightU = getHeight(jj, Math.min(ii+3,image.getHeight()), image,heights);
+
+        		float heightL2 = getHeight(Math.max(jj-3,0), Math.max(ii-3,0), image,heights);
+        		float heightR2 = getHeight(Math.min(jj+3,image.getHeight()), Math.max(ii+3,image.getHeight()), image,heights);
+        		float heightD2 = getHeight(Math.max(jj+3,image.getHeight()), Math.max(ii-3,0), image,heights);
+        		float heightU2 = getHeight(Math.max(jj-3,0), Math.min(ii+3,image.getHeight()), image,heights);
+        		
+        		float heightL3 = getHeight(Math.max((jj-6),0), ii, image,heights);
+        		float heightR3 = getHeight(Math.min(jj+6,image.getHeight()), ii, image,heights);
+        		float heightD3 = getHeight(jj, Math.max(ii-6,0), image,heights);
+        		float heightU3 = getHeight(jj, Math.min(ii+6,image.getHeight()), image,heights);
+        		
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
-                vertices[vertexPointer*3+1] = getHeight(jj,ii,image,heights);
+                vertices[vertexPointer*3+1] = (heightL+heightR+heightD+heightU+heightL2+heightR2+heightD2+heightU2+heightL3+heightR3+heightD3+heightU3)/12;
                 vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth(),image2);
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE_X;
+               
+                
+                
                 pos[vertexPointer] = new Vector3f(vertices[vertexPointer*3],vertices[vertexPointer*3+1],vertices[vertexPointer*3+2]);
+                ver.add(new Vector3f(vertices[vertexPointer*3],vertices[vertexPointer*3+1],vertices[vertexPointer*3+2]));
                 Vector3f normal = calculateNormal2(jj,ii,image,heights);
-               if(normal.equals(new Vector3f(0,1,0))){
+               if(normal.equals(new Vector3f(0,1,0)) || true){
 	            	Vector3f normal2 = calculateNormal(jj%image2.getHeight(),ii%image2.getWidth(),image2);
 	                normals[vertexPointer*3] = normal2.x;
 	                normals[vertexPointer*3+1] = normal2.y;
 	                normals[vertexPointer*3+2] = normal2.z;
+	                norm.add(new Vector3f (normal2.x, normal2.y, normal2.z));
                }
                else{
 	                normals[vertexPointer*3] = normal.x;
@@ -95,13 +125,15 @@ public class Terrain {
 	                normals[vertexPointer*3+2] = normal.z;
                 }
        
+               
+               
                 textureCoords[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_W - 1);
                 textureCoords[vertexPointer*3+1] = (float)i/((float)VERTEX_COUNT - 1);
                 textureCoords[vertexPointer*3+2] = 0;
                 Uv[vertexPointer] = new Vector3f(textureCoords[vertexPointer*3],textureCoords[vertexPointer*3+1],textureCoords[vertexPointer*3+2]);
                 vertexPointer++;
                 
-                
+                lastH = h;
                 
                 jj+=5;
             }
@@ -109,7 +141,7 @@ public class Terrain {
         }
         
         //Compute tangents
-        for(int i=0;i<count-3;i++){
+       /* for(int i=0;i<count-3;i++){
 	        Vector3f deltaPos1 = Helper.soustrate(pos[i+1], pos[i]);
 	        Vector3f deltaPos2 = Helper.soustrate(pos[i+2], pos[i]);
 	
@@ -125,7 +157,7 @@ public class Terrain {
 	        tangents[i*3+1] = r * (deltaUv2.y * deltaPos1.y - deltaUv1.y * deltaPos2.y);
 	        tangents[i*3+2] =  r * (deltaUv2.y * deltaPos1.z - deltaUv1.y * deltaPos2.z);
         }
-        
+        */
         int pointer = 0;
         for(int gz=0;gz<VERTEX_COUNT_W-1;gz++){
             for(int gx=0;gx<VERTEX_COUNT-1;gx++){
@@ -189,16 +221,55 @@ public class Terrain {
 		float height = 0.0f;
 		
 		
-		for(Vector4f vector:heights){
+		for(int i=0;i<heights.size();i++){
+			Vector4f vector = heights.get(i);
+			
 			
 			int color = Color.HSBtoRGB(vector.x, vector.y, vector.z);
 			float red2 = (color >> 16) & 0x000000FF;
 			float green2 = (color >>8 ) & 0x000000FF;
 			float blue2 = (color) & 0x000000FF;
+			
+			
 			if(red2 == red && green2 == green && blue2 == blue){
 				height = vector.w*10;
 				break;
-			}
+			}/*else{
+				for(int j=0;j<heights.size()-1;j++){
+					if(true){
+						Vector4f vectorS = heights.get(j);
+						int colo2 = Color.HSBtoRGB(vectorS.x, vectorS.y, vectorS.z);
+						float red3 = (colo2 >> 16) & 0x000000FF;
+						float green3 = (colo2 >>8 ) & 0x000000FF;
+						float blue3 = (colo2) & 0x000000FF;
+						
+						
+						if((red2 >= red && green2 >= green && blue2 >= blue && red3 <= red && green3 <= green && blue3 <= blue)){
+							
+							float smooth = Helper.smoothStep(red2,red3,red);
+							if(smooth == 0 || smooth == 1)
+								smooth = Helper.smoothStep(green2,green3,green);
+							if(smooth == 0 || smooth == 1)
+								smooth = Helper.smoothStep(blue2,blue3,blue);
+							System.out.println(smooth);
+							height = (vector.w+ vectorS.w)*smooth*10;
+							break;
+						}else if(red2 <= red && green2 <= green && blue2 <= blue && red3 >= red && green3 >= green && blue3 >= blue){
+							
+							float smooth = Helper.smoothStep(red3,red2,red);
+							if(smooth == 0 || smooth == 1)
+								smooth = Helper.smoothStep(green3,green2,green);
+							if(smooth == 0 || smooth == 1)
+								smooth = Helper.smoothStep(blue3,blue2,blue);
+							System.out.println(smooth);
+							height = (vector.w+ vectorS.w)*smooth*10;
+							break;							
+						}
+						
+					}
+				}
+				
+			}*/
 		}
 
 		

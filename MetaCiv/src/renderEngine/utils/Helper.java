@@ -40,4 +40,18 @@ public class Helper {
 		return r;
 	}
 	
+	public static double clamp(float val, double d,double e){
+	    return Math.max(d, Math.min(e, val));
+	}
+
+	
+	public static float smoothStep(float a, float b,float x){
+		float  t = (float) clamp((x - a) / (b - a), 0.0, 1.0);
+	    return (float) (t * t * (3.0 - 2.0 * t));
+	}
+	
+	public static float mix(float x , float y, float a){
+		return x*(1-a)+y*a;
+	}
+	
 }
