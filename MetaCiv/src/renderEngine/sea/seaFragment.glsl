@@ -80,7 +80,7 @@ void main(void) {
 	vec3 reflectedLight = reflect(normalize(fs_in.fromLightVector), normal);
 	float specular = max(dot(reflectedLight, viewVector), 0.3);
 	specular = pow(specular, shineDamper);
-	vec3 specularHighlights = lightColour * specular * reflectivity;
+	vec3 specularHighlights = lightColour * specular * reflectivity *2.0;
 
 
 

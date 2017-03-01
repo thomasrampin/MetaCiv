@@ -30,7 +30,7 @@ public class MasterRenderer {
      
     public static final float FOV = 45;
     public static final float NEAR_PLANE = 0.1f;
-    public static final float FAR_PLANE = 650;
+    public static final float FAR_PLANE = 1000;
      
     private Matrix4f projectionMatrix;
      
@@ -49,8 +49,8 @@ public class MasterRenderer {
     private boolean terrainInit;
      
     public MasterRenderer(Loader loader,ArrayList<TerrainTexture> textures){
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+		/*GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);*/
 
         createProjectionMatrix();
         terrainInit = false;

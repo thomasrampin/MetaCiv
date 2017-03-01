@@ -36,6 +36,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_toShadowMapSpace;
 	private int location_shadowMap;
 	private int location_diffuseMap;
+	private int location_blurMap;
 	private int location_reciveShadow;
 	
 	private int location_heights[];
@@ -73,7 +74,7 @@ public class TerrainShader extends ShaderProgram {
 		location_diffuseMap = super.getUniformLocation("blendMap"); 
 		location_reciveShadow = super.getUniformLocation("reciveShadow");
 		location_dmap_depth = super.getUniformLocation("dmap_depth");
-
+		location_blurMap = super.getUniformLocation("blurMap");
 		
 		location_distanceFog = super.getUniformLocation("distanceFog");
 
@@ -96,6 +97,7 @@ public class TerrainShader extends ShaderProgram {
 	
 	public void connectTextureUnits(){
 		super.loadInt(location_diffuseMap, 0);
+		super.loadInt(location_blurMap, 1);
 		//super.loadInt(location_shadowMap, 1);
 	}
 	
@@ -173,7 +175,7 @@ public class TerrainShader extends ShaderProgram {
 	public void conectTextureDiff(int id) {
 		String name = "gSampler["+id+"]";
 		int location = super.getUniformLocation(name);
-		super.loadInt(location, id+1);
+		super.loadInt(location, id+2);
 		
 	}
 }

@@ -41,5 +41,15 @@ public class Matrix {
         Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
         return viewMatrix;
     }
+
+	public static Matrix4f createTransformationMatrix(float angle) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+
+		Matrix4f.rotate((float) Math.toRadians(angle), new Vector3f(0,1,0), matrix, matrix);
+
+
+		return matrix;
+	}
 	
 }

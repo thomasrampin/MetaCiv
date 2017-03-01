@@ -37,6 +37,7 @@ public class TerrainRenderer {
         this.press = false;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
+        shader.connectTextureUnits();
         shader.stop();
         diffuseArray = Loader.loadTextureAtlas(textures); 
     }
@@ -76,9 +77,11 @@ public class TerrainRenderer {
         		
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
-        shader.connectTextureUnits();
+        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlur().getID());
+        
         for(int i=0;i<diffuseArray.length;i++){
-        	GL13.glActiveTexture(GL13.GL_TEXTURE0+i+1);
+        	GL13.glActiveTexture(GL13.GL_TEXTURE0+i+2);
         	GL11.glBindTexture(GL11.GL_TEXTURE_2D, diffuseArray[i]);
         	shader.conectTextureDiff(i);
         }

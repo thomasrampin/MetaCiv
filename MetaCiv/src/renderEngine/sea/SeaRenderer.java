@@ -55,7 +55,7 @@ public class SeaRenderer {
 		prepareRender(camera,light);	
 		
 			Matrix4f modelMatrix = Matrix.createTransformationMatrix(
-					new Vector3f(-128,15,-128), 0, 0, 0,
+					new Vector3f(-128,16,-128), 0, 0, 0,
 					13);
 			shader.loadModelMatrix(modelMatrix);
 			shader.conectTexture();

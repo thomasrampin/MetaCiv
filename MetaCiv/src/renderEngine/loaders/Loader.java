@@ -36,10 +36,9 @@ import org.lwjgl.util.vector.Vector4f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
+
 import renderEngine.models.Mesh;
-import renderEngine.models.TextureData;
+
 import renderEngine.utils.TerrainTexture;
 
 public class Loader {
@@ -51,6 +50,7 @@ public class Loader {
 	private static int textureTerrainID = -1;
 	private static int textureTerrainDiffID = -1;
 	private static int texturesAtlas[];
+	private static int textureTerrainBlurID = -1;
 	
 	/*********************************
 	 * VAO
@@ -111,9 +111,13 @@ public class Loader {
 	
 	  public static BufferedImage blur(BufferedImage image) {
 
-		  	float value =  1f/1f;
-		    Kernel kernel = new Kernel(3, 3, new float[] { value, value, value,
-		    		value,value,value,value, value,value });
+		  	float value =  1f/80f;
+		    Kernel kernel = new Kernel(6, 6, new float[] { value, value, value,value, value, value,value, value, value,
+		    		value,value,value,value, value, value,value, value, value,
+		    		value, value,value,value, value, value,value, value, value,
+		    		value, value,value,value, value, value,value, value, value,
+		    		value, value,value,value, value, value,value, value, value,
+		    		value, value,value,value, value, value,value, value, value});
 		    BufferedImageOp op = new ConvolveOp(kernel,ConvolveOp.EDGE_NO_OP, null);
 		    image = op.filter(image, null);
 		    return image;
@@ -124,6 +128,7 @@ public class Loader {
         Graphics g2d = bufferedView.createGraphics();
         g2d .setColor(Color.BLUE);    //draw the things you want
         g2d .fillOval(0,0,30,30);   //draw the things you want*/
+		
 		
 		//image = Loader.blur(image);
 		
@@ -173,6 +178,59 @@ public class Loader {
 	    return textureTerrainID;
 	 }
 
+	public static int loadTextureBlur(BufferedImage image){
+		/*BufferedImage bufferedView = new BufferedImage(60,60,BufferedImage.TYPE_INT_ARGB);
+        Graphics g2d = bufferedView.createGraphics();
+        g2d .setColor(Color.BLUE);    //draw the things you want
+        g2d .fillOval(0,0,30,30);   //draw the things you want*/
+	
+			image = Loader.blur(image);
+		
+		if(textureTerrainBlurID!=-1)
+			GL11.glDeleteTextures(textureTerrainBlurID);
+		
+	    int pixels[] = new int[image.getWidth() * image.getHeight()];
+	    image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+	    ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); // <-- 4 for RGBA, 3 for RGB
+
+	    for(int y = 0; y < image.getHeight(); y++){
+	        for(int x = 0; x < image.getWidth(); x++){
+	      
+	            int pixel = pixels[y*image.getHeight()+x];
+	          
+	            /*buffer.put((byte) (pixel & 0x00FF0000));     // Red component
+	            buffer.put((byte) (pixel & 0x0000FF00));      // Green component
+	            buffer.put((byte) (pixel & 0x000000FF));               // Blue component
+	            buffer.put((byte) ((pixel & 0xFF000000) >>> 24));    // Alpha component. Only for RGBA*/
+	            
+	            
+	            
+	            buffer.put((byte) ((pixel >>16 ) & 0xFF));
+	            buffer.put((byte)  ((pixel >>8) & 0xFF));
+	            buffer.put((byte)  ((pixel) & 0xFF));
+	            
+	            buffer.put((byte)  ((pixel >>24 ) & 0xFF));
+	        }
+	    }
+
+	    buffer.flip();
+
+	    textureTerrainBlurID = GL11.glGenTextures(); //Generate texture ID
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureTerrainBlurID);
+
+	    // Setup wrap mode
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+
+	    //Setup texture scaling filtering
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+
+	    //Send texel data to OpenGL
+	    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+
+	    return textureTerrainBlurID;
+	 }
 	
     private static BufferedImage scale(BufferedImage bImage, double factor) {
         int destWidth=(int) (bImage.getWidth() * factor);
@@ -379,42 +437,8 @@ public class Loader {
 		}
 	    return texturesAtlas;		
 	}
-	
-	public int loadCubeMap(String[] textureFiles){
-		int texID = GL11.glGenTextures();
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
-		for(int i=0;i<textureFiles.length;i++){
-			TextureData data = decodeTextureFile("Assets/Skybox/" + textureFiles[i] + ".png");
-			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
-		
-		}
-		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		textures.add(texID);
-		return texID;
-	}
-	
-	private TextureData decodeTextureFile(String fileName) {
-		int width = 0;
-		int height = 0;
-		ByteBuffer buffer = null;
-		try {
-			FileInputStream in = new FileInputStream(fileName);
-			PNGDecoder decoder = new PNGDecoder(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			buffer = ByteBuffer.allocateDirect(4 * width * height);
-			decoder.decode(buffer, width * 4, Format.RGBA);
-			buffer.flip();
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Tried to load texture " + fileName + ", didn't work");
-			System.exit(-1);
-		}
-		return new TextureData(buffer, width, height);
-	}
+
+
 	
 	private int createVAO(){
 		int vaoID = GL30.glGenVertexArrays();

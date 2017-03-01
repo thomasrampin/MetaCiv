@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 	
-	private static final float ZOOM_OUT_MAX = 500;
+	private static final float ZOOM_OUT_MAX = 200;
 	private static final float SPEED = 1.5f;
 	
 	private Vector3f position = new Vector3f(0,0,0);
@@ -31,7 +31,7 @@ public class Camera {
 		
 		if(Mouse.isButtonDown(0)){
 			float pitchChange = Mouse.getDY() * 0.3f;
-			if(pitch - pitchChange >1 && pitch - pitchChange <85)
+			//if(pitch - pitchChange >1 && pitch - pitchChange <85)
 				pitch -= pitchChange;
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPivot -= angleChange;
@@ -109,6 +109,11 @@ public class Camera {
 
 	public float getRoll() {
 		return roll;
+	}
+
+	public void setTarget(Vector3f position2) {
+		this.lookAt = position2;
+		
 	}
 	
 	

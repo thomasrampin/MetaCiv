@@ -16,7 +16,7 @@ out vec4 color;
 
 
 uniform sampler2D blendMap;
-
+uniform sampler2D blurMap;
 
 #if GL_ARB_bindless_texture_is_supported
 	layout(binding = 5, std140) uniform TEXTURE_BLOCK
@@ -121,7 +121,7 @@ void main(void){
 	float green = texture(blendMap,fs_in.tc).g;
 	int indice = -1;
 
-	vec2 offset = vec2(0.0,0.006);
+	vec2 offset = vec2(0.006,0.006);
 	for(int i=0;i<9;i++) // loop to fix ignore point
 	{
 		indice = getIndice(red,green,blue);
@@ -135,6 +135,13 @@ void main(void){
 		else
 			break;
 	}
+	red = texture(blendMap,fs_in.tc).r;
+	blue = texture(blendMap,fs_in.tc).b;
+	green = texture(blendMap,fs_in.tc).g;
+
+
+
+
 
 	vec3 unitVectorToCamera = normalize(fs_in.toCameraVector);
 
@@ -184,9 +191,8 @@ void main(void){
 
 
 
+		landscape = texture(gSampler[indice],parseTc);
 
-
-	landscape = texture(gSampler[indice],parseTc);
 	landscape *= vec4(totalDiffuse,1.0)  + vec4(specular,1.0);
 
 	out_Color = fog(landscape);

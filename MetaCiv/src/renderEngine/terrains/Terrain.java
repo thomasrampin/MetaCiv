@@ -35,6 +35,9 @@ public class Terrain {
 	
 	private Mesh model;
 	private Material texture;
+	private Material blur;
+	
+	private static BufferedImage image;
 	
 	public Terrain(int gridX, int gridZ, Loader loader,Material texture,ArrayList<Vector4f> heights){
 		this.texture = texture;
@@ -42,7 +45,7 @@ public class Terrain {
 		SIZE_Z = 800;
 		this.x = gridX * SIZE_X;
 		this.z = gridZ * SIZE_Z;
-		BufferedImage image = null;
+		image = null;
 		try {
 			image = ImageIO.read(new File("Assets/Texture/heightmap.png"));
 		} catch (IOException e) {
@@ -50,6 +53,7 @@ public class Terrain {
 		}
 		gridSize = new Vector2f(image.getWidth(),image.getHeight());
 		this.model = generateTerrain(loader,image,image,heights);
+		this.blur = new Material(Loader.loadTextureBlur(image));
 	}
 	
 
@@ -87,24 +91,10 @@ public class Terrain {
             	float h;
             	h = getHeight(jj,ii,image,heights) ;
             	
-        		float heightL = getHeight(Math.max(jj-3,0), ii, image,heights);
-        		float heightR = getHeight(Math.min(jj+3,image.getHeight()), ii, image,heights);
-        		float heightD = getHeight(jj, Math.max(ii-3,0), image,heights);
-        		float heightU = getHeight(jj, Math.min(ii+3,image.getHeight()), image,heights);
-
-        		float heightL2 = getHeight(Math.max(jj-3,0), Math.max(ii-3,0), image,heights);
-        		float heightR2 = getHeight(Math.min(jj+3,image.getHeight()), Math.max(ii+3,image.getHeight()), image,heights);
-        		float heightD2 = getHeight(Math.max(jj+3,image.getHeight()), Math.max(ii-3,0), image,heights);
-        		float heightU2 = getHeight(Math.max(jj-3,0), Math.min(ii+3,image.getHeight()), image,heights);
-        		
-        		float heightL3 = getHeight(Math.max((jj-6),0), ii, image,heights);
-        		float heightR3 = getHeight(Math.min(jj+6,image.getHeight()), ii, image,heights);
-        		float heightD3 = getHeight(jj, Math.max(ii-6,0), image,heights);
-        		float heightU3 = getHeight(jj, Math.min(ii+6,image.getHeight()), image,heights);
         		
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
-                vertices[vertexPointer*3+1] = (heightL+heightR+heightD+heightU+heightL2+heightR2+heightD2+heightU2+heightL3+heightR3+heightD3+heightU3)/12;
-                vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth(),image2);
+                vertices[vertexPointer*3+1] = h;
+                vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE_X;
                
                 
@@ -177,10 +167,10 @@ public class Terrain {
     }
 
 	private Vector3f calculateNormal(int x, int z, BufferedImage image){
-		float heightL = getHeight(x-5, z, image);
-		float heightR = getHeight(x+5, z, image);
-		float heightD = getHeight(x, z-5, image);
-		float heightU = getHeight(x, z+5, image);
+		float heightL = getHeight(x-5, z);
+		float heightR = getHeight(x+5, z );
+		float heightD = getHeight(x, z-5 );
+		float heightU = getHeight(x, z+5);
 		
 		Vector3f normal = new Vector3f(heightL - heightR, 2f  , heightD - heightU);
 		normal.normalise();
@@ -198,7 +188,15 @@ public class Terrain {
 		return normal;
 	}
 	
-	private float getHeight(int x, int z, BufferedImage image){
+	public static int getImageHeight(){
+		return image.getHeight();
+	}
+	
+	public static int getImageWidth(){
+		return image.getWidth();
+	}
+	
+	public static float getHeight(int x, int z){
 		if(x<0 || x>= image.getHeight() || z<0 || z>=image.getHeight()){
 			return 0;
 		}
@@ -210,7 +208,7 @@ public class Terrain {
 		return height;
 	}
 	
-	private float getHeight(int x, int z, BufferedImage image,ArrayList<Vector4f> heights){
+	private static float getHeight2(int x, int z, BufferedImage image,ArrayList<Vector4f> heights){
 		if(x<0 || x>= image.getWidth() || z<0 || z>=image.getHeight()){
 			return 0;
 		}
@@ -271,8 +269,30 @@ public class Terrain {
 				
 			}*/
 		}
-
+		return height;
+	}
+	
+	public static float getHeight(int x, int z, BufferedImage image,ArrayList<Vector4f> heights){
 		
+		float heightL = getHeight2(Math.max(x-3,0), z, image,heights);
+		float heightR = getHeight2(Math.min(x+3,image.getHeight()), z, image,heights);
+		float heightD = getHeight2(x, Math.max(z-3,0), image,heights);
+		float heightU = getHeight2(x, Math.min(z+3,image.getHeight()), image,heights);
+
+		float heightL2 = getHeight2(Math.max(x-3,0), Math.max(z-3,0), image,heights);
+		float heightR2 = getHeight2(Math.min(x+3,image.getHeight()), Math.max(z+3,image.getHeight()), image,heights);
+		float heightD2 = getHeight2(Math.max(x+3,image.getHeight()), Math.max(z-3,0), image,heights);
+		float heightU2 = getHeight2(Math.max(x-3,0), Math.min(z+3,image.getHeight()), image,heights);
+		
+		float heightL3 = getHeight2(Math.max((x-6),0), z, image,heights);
+		float heightR3 = getHeight2(Math.min(x+6,image.getHeight()), z, image,heights);
+		float heightD3 = getHeight2(x, Math.max(z-6,0), image,heights);
+		float heightU3 = getHeight2(x, Math.min(z+6,image.getHeight()), image,heights);
+		
+		
+		
+
+		float height = (heightL+heightR+heightD+heightU+heightL2+heightR2+heightD2+heightU2+heightL3+heightR3+heightD3+heightU3)/12;
 		return height;
 	}
 	
@@ -302,6 +322,13 @@ public class Terrain {
 		}
 		this.model = generateTerrain(loader,image,image2,heights);
 		this.texture = new Material(Loader.loadTexture(image));
+		this.blur = new Material(Loader.loadTextureBlur(image));
+	}
+
+
+
+	public Material getBlur() {
+		return blur;
 	}
 	
 	

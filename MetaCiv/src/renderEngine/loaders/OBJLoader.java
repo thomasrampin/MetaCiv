@@ -17,7 +17,7 @@ public class OBJLoader {
 	public static Model loadObjModel(String fileName,Loader loader){
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("Assets/Obj/"+fileName+".obj"));
+			fr = new FileReader(new File("Assets/OBJ/"+fileName+".obj"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load file!");
 			e.printStackTrace();
@@ -175,7 +175,7 @@ public class OBJLoader {
 	private static Material loadMaterial(String fileName,Loader loader){
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("Assets/Obj/"+fileName));
+			fr = new FileReader(new File("Assets/OBJ/"+fileName));
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load file!");
 			e.printStackTrace();
