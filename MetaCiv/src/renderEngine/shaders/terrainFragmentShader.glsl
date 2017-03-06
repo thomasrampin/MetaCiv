@@ -123,9 +123,7 @@ vec2 ParallaxMapping(int indice, vec2 texCoords, vec3 viewDir)
 	   return texCoords - texCoordOffset;
 }
 
-vec4 blend(vec4 color1, vec4 color2, float alpha){
-	return color1*(1.0-alpha)+b*t;
-}
+
 
 void main(void){
 
