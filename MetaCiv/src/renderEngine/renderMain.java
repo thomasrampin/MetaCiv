@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import civilisation.CivLauncher;
 import civilisation.DefineConstants;
 import renderEngine.postProcessing.FrameBufferObject;
 import renderEngine.postProcessing.PostProcessing;
@@ -34,9 +35,11 @@ import renderEngine.shaders.StaticShader;
 import renderEngine.sky.SkyRenderer;
 import renderEngine.terrains.Terrain;
 import renderEngine.utils.FPS;
+import renderEngine.utils.Helper;
 import renderEngine.utils.MousePicker;
 import renderEngine.utils.TerrainTexture;
 import turtlekit.kernel.Turtle;
+import madkit.kernel.Scheduler;
 
 
 
@@ -50,12 +53,10 @@ public class renderMain implements Runnable {
 	
 	private ArrayList<Vector4f> heights;
 	private ArrayList<TerrainTexture> textures;
-	private Object3D king;
-	private List<Object3D> objects;
 	private ArrayList<Turtle3D> turtles;
 	private int tempId;
 	private Loader loader;
-	
+	float i =0;
 	private static float FOG_INCREASE_SPEED = 0.0001f;
 	
 	public renderMain(BufferedImage bufferedView) {
@@ -110,31 +111,22 @@ public class renderMain implements Runnable {
 			
 	
 			
-			king = new Object3D("1","king", loader,new Vector3f(150,8,150),0,0,0,0.03f);
-			/*Object3D plateau = new Object3D("plateau","plateau",loader, new Vector3f(0,0,0),0,0,0,0.1f);
-			Object3D king2 = new Object3D("3","king_tex",loader, new Vector3f(0,0,20),0,0,0,0.1f);*/
+			
+
 	
 			List<Light> lights = new ArrayList<Light>();
-			Light sun = new Light(new Vector3f(-4000,1000,-2000),new Vector3f(1,1,1));
-			Light light = new Light(new Vector3f(-20,10,10),new Vector3f(1,1,1));
-			Light light2 = new Light(new Vector3f(20,10,-10),new Vector3f(0,1,1));
-			Light light3 = new Light(new Vector3f(80,20,-100),new Vector3f(1,0,1));
-			Light light4 = new Light(new Vector3f(50,10,80),new Vector3f(1,1,0));
+			Light sun = new Light(new Vector3f(-4000,8000,-2000),new Vector3f(1,1,1));
+
 			lights.add(sun);
-			/*lights.add(light);
-			lights.add(light2);
-			lights.add(light3);
-			lights.add(light4);*/
-			
+
 		
 			
-			objects = new ArrayList<Object3D>();
-			objects.add(king);
-			//objects.add(king2);
+			
+			
 			
 			//MousePicker picker = new MousePicker(camera,renderer.getProjectionMatrix(),plateau);
 			
-			FrameBufferObject fbo = new FrameBufferObject(Display.getWidth(), Display.getHeight(),FrameBufferObject.DEPTH_RENDER_BUFFER);
+			FrameBufferObject fbo = new FrameBufferObject(Display.getWidth(), Display.getHeight(),FrameBufferObject.DEPTH_TEXTURE);
 			PostProcessing.init(loader);
 			
 			
@@ -149,12 +141,15 @@ public class renderMain implements Runnable {
 	
 			SeaFrameBuffers fbos = new SeaFrameBuffers();
 			
-			turtles.add(new Turtle3D(loader));
+			
+			Turtle3D.setUp(loader);
 			Window.showInfo();
+			
+			
 			
 			while(!Display.isCloseRequested()){
 				FPS.updateFPS();
-				
+				float delta = FPS.getDelta();
 				/*Notify Terrain Shader handle*/
 				if(isNotify){
 					int id = Loader.loadTexture(image);
@@ -200,11 +195,11 @@ public class renderMain implements Runnable {
 	            if(!Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1))
 	            	pressMinus = false;			
 	            
-
-	            camera.setTarget(objects.get(0).getPosition());
+	           // if(tempId != -1)
+	            //	camera.setTarget(turtles.get(0).getObject3d().getPosition());
 	            /*sunRotate += SUN_ROTATE ;
-	            sun.setPosition(Helper.rotateAround(sunRotate, 15000, 0, new Vector3f(0,0,0)));
-	            System.out.println(sun.getPosition());*/
+	            sun.setPosition(Helper.rotateAround(sunRotate, 15000, 0, new Vector3f(0,0,0)));*/
+	            //System.out.println(sun.getPosition());
 	    		//distanceFog += FOG_INCREASE_SPEED ;
 	    		
 	    		
@@ -218,20 +213,39 @@ public class renderMain implements Runnable {
 	            renderer.render(lights, camera,image,sun,heights,new Vector4f(0,1,0,0),distanceFog,true,true);
 	            skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,0),true);
 				fbos.unbindCurrentFrameBuffer();
+				
+	            fbos.bindRefractionFrameBuffer();
+	            renderer.render(lights, camera,image,sun,heights,new Vector4f(0,1,0,100000),distanceFog,false,true);
+	            
+				fbos.unbindCurrentFrameBuffer();
+				
 				if(turtles.size()>0)
 		            for(Turtle3D entity:turtles){
+		            	
 		                renderer.processEntity(entity.getObject3d());
 		            }
 				fbo.bindFrameBuffer();
 				renderer.render(lights, camera,image,sun,heights,new Vector4f(0,1,0,100000),distanceFog,false,false);
 				
-				waterRenderer.render( camera,sun,fbos,distanceFog);
+				waterRenderer.render( camera,sun,fbos,distanceFog,delta);
 				
 				skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,100000),false);
 				fbo.unbindFrameBuffer();
 				
-				PostProcessing.doPostProcessing(fbo.getColourTexture());
+				PostProcessing.doPostProcessing(fbo.getColourTexture(),fbo.getDepthTexture());
 				Window.updateDisplay();
+				
+				if(turtles.size()>0){
+					
+					for(int id=0;id<turtles.size();id++){
+						if((double)CivLauncher.sch.getDelay() <= 1.0)
+							turtles.get(id).setInterpolation(1);
+						else
+							turtles.get(id).increaseInterpolation( (float) (1.0/((double)CivLauncher.sch.getDelay()/ (float)delta)));
+							
+						interpolate(Helper.clamp(turtles.get(id).getInterpolation(), 0,1),id);
+					}
+				}
 				
 			}
 			
@@ -255,17 +269,57 @@ public class renderMain implements Runnable {
 		image = bI;
 	}
 
-
-	public void paintOneTurtle(Turtle t, int x, int y) {
-		//objects.add(king);
-		//objects.get(objects.size()-1).setPosition(new Vector3f((float)x/10.0f,0.0f,(float)y/10.0f));
-		if(tempId == -1 && t.isPlayingRole(DefineConstants.Role_Human)){
-			tempId = t.getID();
-			
+	private int containTurtle(int id){
+		int iterator = 0;
+		for(Turtle3D turtle:turtles){
+			if(turtle.getId() == id)
+				return iterator;
+			iterator++;
 		}
-		if(t.getID() == tempId){
+		return -1;
+	}
+	
+	private void interpolate(float i,int id){
+		
+
+		float x ,y,z;
+		
+		x = Helper.mix(turtles.get(id).getLastX(), turtles.get(id).getX(), i);
+		
+		y = Helper.mix(turtles.get(id).getLastY(), turtles.get(id).getY(), i);
+
+		z = Helper.mix(turtles.get(id).getLastZ(), turtles.get(id).getZ(), i);
+		
+		turtles.get(id).getObject3d().setPosition(new Vector3f(x,y,z));
+
+	
+	}
+	
+	public void paintOneTurtle(Turtle t, int x, int y) {
+		
+		int id = containTurtle(t.getID());
+		if(id == -1 && t.isPlayingRole(DefineConstants.Role_Human)){
+			tempId = t.getID();
+			turtles.add(new Turtle3D(t.getID()));
+			turtles.get(turtles.size()-1).setInterpolation(0);
+		
+			turtles.get(turtles.size()-1).setX((float)x);
+			turtles.get(turtles.size()-1).setY(Terrain.getHeight(x%Terrain.getImageHeight(),y%Terrain.getImageWidth()) + Terrain.getHeight(x, y, image, heights));
+			turtles.get(turtles.size()-1).setZ((float)y);
+			turtles.get(turtles.size()-1).setLastX(turtles.get(id).getX());
+			turtles.get(turtles.size()-1).setLastY(turtles.get(id).getY());
+			turtles.get(turtles.size()-1).setLastZ(turtles.get(id).getZ());	
+		}
+		else{
 			
-			turtles.get(0).getObject3d().setPosition(new Vector3f((float)x,Terrain.getHeight(x%Terrain.getImageHeight(),y%Terrain.getImageWidth()) + Terrain.getHeight(x, y, image, heights),(float)y));
+			turtles.get(id).setInterpolation(0);
+			turtles.get(id).setLastX(turtles.get(id).getX());
+			turtles.get(id).setLastY(turtles.get(id).getY());
+			turtles.get(id).setLastZ(turtles.get(id).getZ());
+			//turtles.get(id).getObject3d().setPosition(new Vector3f((float)x,Terrain.getHeight(x%Terrain.getImageHeight(),y%Terrain.getImageWidth()) + Terrain.getHeight(x, y, image, heights),(float)y));
+			turtles.get(id).setX((float)x);
+			turtles.get(id).setY(Terrain.getHeight(x%Terrain.getImageHeight(),y%Terrain.getImageWidth()) + Terrain.getHeight(x, y, image, heights));
+			turtles.get(id).setZ((float)y);
 		}
 	}
 	

@@ -92,7 +92,7 @@ public class CivLauncher extends TKLauncher {
 	private static String GPU_gradients = "true";
 	private static String network = "true"; 
 	private static String launcher = CivLauncher.class.getName();
-	
+	public static TKScheduler sch;
 	private InterfaceServeur iS;
 	private InterfaceClient iC;
 	
@@ -380,7 +380,7 @@ public class CivLauncher extends TKLauncher {
 	
 	@Override
 	protected void launchScheduler(){
-		final TKScheduler sch = (TKScheduler) launchAgent(getMadkitProperty(scheduler));
+		 sch = (TKScheduler) launchAgent(getMadkitProperty(scheduler));
 
 		//Group management activator
 		sch.addActivator(new GenericBehaviorActivator<Group>(DefineConstants.Comunity_MetacivSoftware, DefineConstants.Group_MetacivSocialStructure, DefineConstants.Role_ConcreteGroup, "processMessages"));

@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL30;
 import renderEngine.models.Mesh;
 import renderEngine.bloom.BrightFilter;
 import renderEngine.bloom.CombineFilter;
+import renderEngine.depthOfField.DepthOfFieldFilter;
 import renderEngine.gaussianBlur.HorizontalBlur;
 import renderEngine.gaussianBlur.VerticalBlur;
 import renderEngine.loaders.Loader;
@@ -22,8 +23,11 @@ public class PostProcessing {
 	private static VerticalBlur vBlur;
 	private static HorizontalBlur hBlur2;
 	private static VerticalBlur vBlur2;
+	private static HorizontalBlur hBlur3;
+	private static VerticalBlur vBlur3;
 	private static BrightFilter brightFilter;
 	private static CombineFilter combineFilter;
+	private static DepthOfFieldFilter dofFilter;
 
 	public static void init(Loader loader){
 		quad = loader.loadToVAO(POSITIONS, 2);
@@ -33,17 +37,24 @@ public class PostProcessing {
 		vBlur = new VerticalBlur(Display.getWidth()/16,Display.getHeight()/16);
 		hBlur2 = new HorizontalBlur(Display.getWidth()/4,Display.getHeight()/4);
 		vBlur2 = new VerticalBlur(Display.getWidth()/4,Display.getHeight()/4);
-		combineFilter = new CombineFilter();
+		hBlur3 = new HorizontalBlur(Display.getWidth(),Display.getHeight());
+		vBlur3 = new VerticalBlur(Display.getWidth(),Display.getHeight());
+		dofFilter = new DepthOfFieldFilter();
+		combineFilter = new CombineFilter(Display.getWidth(),Display.getHeight());
 	}
 	
-	public static void doPostProcessing(int colourTexture){
+	public static void doPostProcessing(int colourTexture,int depthBuffer){
 		start();
 		brightFilter.render(colourTexture);
 		hBlur.render(brightFilter.getOutputTexture());
 		vBlur.render(hBlur.getOutputTexture());
 		hBlur2.render(hBlur.getOutputTexture());
 		vBlur2.render(hBlur2.getOutputTexture());
+	
 		combineFilter.render(colourTexture,vBlur2.getOutputTexture());
+		hBlur3.render(combineFilter.getOutputTexture());
+		vBlur3.render(hBlur3.getOutputTexture());	
+		dofFilter.render(combineFilter.getOutputTexture(), vBlur3.getOutputTexture(),depthBuffer);
 		end();
 	}
 	
@@ -51,10 +62,13 @@ public class PostProcessing {
 		contrastChanger.cleanUp();
 		brightFilter.cleanUp();
 		combineFilter.cleanUp();
+		dofFilter.cleanUp();
 		hBlur.cleanUp();
 		vBlur.cleanUp();
 		hBlur2.cleanUp();
 		vBlur2.cleanUp();
+		hBlur3.cleanUp();
+		vBlur3.cleanUp();
 	}
 	
 	private static void start(){

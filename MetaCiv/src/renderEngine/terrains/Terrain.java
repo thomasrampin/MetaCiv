@@ -322,7 +322,7 @@ public class Terrain {
 		}
 		this.model = generateTerrain(loader,image,image2,heights);
 		this.texture = new Material(Loader.loadTexture(image));
-		this.blur = new Material(Loader.loadTextureBlur(image));
+		this.blur = new Material(loader.loadTexture("fade.png"));
 	}
 
 

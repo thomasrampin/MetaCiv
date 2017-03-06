@@ -111,7 +111,7 @@ public class Loader {
 	
 	  public static BufferedImage blur(BufferedImage image) {
 
-		  	float value =  1f/80f;
+		  	float value =  1f/1f;
 		    Kernel kernel = new Kernel(6, 6, new float[] { value, value, value,value, value, value,value, value, value,
 		    		value,value,value,value, value, value,value, value, value,
 		    		value, value,value,value, value, value,value, value, value,

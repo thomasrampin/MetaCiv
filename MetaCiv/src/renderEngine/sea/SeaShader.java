@@ -21,6 +21,7 @@ public class SeaShader extends ShaderTessProgram {
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
 	private int location_diffuseMap;
+	private int location_refractionMap;
 	private int location_dudvMap;
 	private int location_moveFactor;
 	private int location_normalMap;
@@ -31,6 +32,7 @@ public class SeaShader extends ShaderTessProgram {
 	private int location_tessLevel;
 	private int location_waveStrenght;
 	private int location_distanceFog;
+	private int location_depthMap;
 	
 	
 	public SeaShader() {
@@ -48,6 +50,7 @@ public class SeaShader extends ShaderTessProgram {
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
 		location_diffuseMap = getUniformLocation("diffuseMap");
+		location_refractionMap = getUniformLocation("refractionMap");
 		location_dudvMap = getUniformLocation("dudvMap");
 		location_moveFactor = getUniformLocation("moveFactor");
 		location_normalMap = getUniformLocation("normalMap");
@@ -58,13 +61,16 @@ public class SeaShader extends ShaderTessProgram {
 		location_tessLevel = getUniformLocation("tessLevel");
 		location_waveStrenght = getUniformLocation("waveStrenght");
 		location_distanceFog = super.getUniformLocation("distanceFog");
+		location_depthMap = super.getUniformLocation("depthMap");
 	}
 
 	public void conectTexture(){
 		super.loadInt(location_diffuseMap, 0);
-		super.loadInt(location_dudvMap, 1);
-		super.loadInt(location_normalMap, 2);
-		super.loadInt(location_dispMap, 3);
+		super.loadInt(location_refractionMap, 1);
+		super.loadInt(location_dudvMap, 2);
+		super.loadInt(location_normalMap, 3);
+		super.loadInt(location_dispMap, 4);
+		super.loadInt(location_depthMap, 5);
 	}
 
 	public void loadDistanceFog(float distanceFog){

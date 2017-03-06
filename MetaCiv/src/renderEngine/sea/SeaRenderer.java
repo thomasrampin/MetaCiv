@@ -26,7 +26,7 @@ public class SeaRenderer {
     private static final String NORMAL_MAP = "water/water_NRM.png";
     private static final String DISP_MAP = "water/water_DISP.png";
 	private static final float WAVE_SPEED = 0.01f;
-	private static float WAVE_INCREASE_SPEED = 0.0001f;
+	private static float WAVE_INCREASE_SPEED = 0.001f;
     
 	private Mesh quad;
 	private SeaShader shader;
@@ -51,8 +51,8 @@ public class SeaRenderer {
 		GL40.glPatchParameteri(GL40.GL_PATCH_VERTICES, 4);
 	}
 
-	public void render(Camera camera, Light light,SeaFrameBuffers fbos,float distanceFog) {
-		prepareRender(camera,light);	
+	public void render(Camera camera, Light light,SeaFrameBuffers fbos,float distanceFog, float delta) {
+		prepareRender(camera,light,delta);	
 		
 			Matrix4f modelMatrix = Matrix.createTransformationMatrix(
 					new Vector3f(-128,16,-128), 0, 0, 0,
@@ -64,26 +64,33 @@ public class SeaRenderer {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getReflectionTexture());
 			GL13.glActiveTexture(GL13.GL_TEXTURE1);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,dudvID);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionTexture());
 			GL13.glActiveTexture(GL13.GL_TEXTURE2);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,normalID);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D,dudvID);
 			GL13.glActiveTexture(GL13.GL_TEXTURE3);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D,normalID);
+			GL13.glActiveTexture(GL13.GL_TEXTURE4);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D,dispID);
+			GL13.glActiveTexture(GL13.GL_TEXTURE5);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionDepthTexture());
+			
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
 			//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
 			//GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 			GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64 * 64);
 		
-		//unbind();
+		unbind();
 	}
 	
-	private void prepareRender(Camera camera, Light light){
+	private void prepareRender(Camera camera, Light light, float delta){
 		shader.start();
 		shader.loadlight(light);
 		shader.loadViewMatrix(camera);
 		shader.loadCamera(camera);
 		//GL30.glBindVertexArray(quad.getVaoID());
 		//GL20.glEnableVertexAttribArray(0);
-		moveFactor += WAVE_SPEED * (float)FPS.getDelta()/1000;
+		moveFactor += WAVE_SPEED * delta/1000;
 		moveFactor %= 1;
 		waveStrenght += WAVE_INCREASE_SPEED ;
 		
@@ -96,8 +103,9 @@ public class SeaRenderer {
 	}
 	
 	private void unbind(){
-		GL20.glDisableVertexAttribArray(0);
-		GL30.glBindVertexArray(0);
+		GL11.glDisable(GL11.GL_BLEND);
+		//GL20.glDisableVertexAttribArray(0);
+		//GL30.glBindVertexArray(0);
 		shader.stop();
 	}
 

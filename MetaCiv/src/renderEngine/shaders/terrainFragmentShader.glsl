@@ -67,7 +67,19 @@ uniform bool textured;
 
 int getIndice(float red, float green, float blue);
 
-
+int foundCloseOne(float red,float green,float blue){
+	float redClose=heights[0].r,greenClose=heights[0].g,blueClose=heights[0].b;
+	int indice = -1;
+	for(int i=1;i<heights_size;i++){
+		if(abs(redClose-red)>abs(heights[i].r - red) && abs(greenClose-green)>abs(heights[i].g - green) && abs(blueClose-blue)>abs(heights[i].b - blue)){
+			redClose = heights[i].r;
+			greenClose = heights[i].g;
+			blueClose = heights[i].b;
+			indice = i;
+		}
+	}
+	return indice;
+}
 
 int getIndice(float red, float green, float blue){
 
@@ -111,6 +123,10 @@ vec2 ParallaxMapping(int indice, vec2 texCoords, vec3 viewDir)
 	   return texCoords - texCoordOffset;
 }
 
+vec4 blend(vec4 color1, vec4 color2, float alpha){
+	return color1*(1.0-alpha)+b*t;
+}
+
 void main(void){
 
 
@@ -135,10 +151,26 @@ void main(void){
 		else
 			break;
 	}
+
+	/*int indice2 =-1;
 	red = texture(blendMap,fs_in.tc).r;
 	blue = texture(blendMap,fs_in.tc).b;
 	green = texture(blendMap,fs_in.tc).g;
-
+	vec2 offset2 = vec2(0.01,0.00);
+	int i;
+	for( i=0;i<9;i++) // loop to fix ignore point
+	{
+		indice2 = getIndice(red,green,blue);
+		if(indice2 == -1 || indice==indice2)
+		{
+			red = texture(blendMap,fs_in.tc-offset2).r;
+			blue = texture(blendMap,fs_in.tc-offset2).b;
+			green = texture(blendMap,fs_in.tc-offset2).g;
+			offset2 += offset2;
+		}
+		else
+			break;
+	}*/
 
 
 
@@ -189,9 +221,22 @@ void main(void){
 	// Brighter
 	totalDiffuse = totalDiffuse * diffuseColour;
 
+	vec2 blurTextureCoords[11];
+	for(int i=-5;i<5;i++){
+			blurTextureCoords[i+5] = parseTc + vec2(0.0,0.006 * i);
 
+	}
 
+	/*if(indice2!=-1 )
+		landscape = mix(texture(gSampler[indice2],parseTc),texture(gSampler[indice], parseTc),i/9.0);
+
+	else*/
 		landscape = texture(gSampler[indice],parseTc);
+
+
+
+
+
 
 	landscape *= vec4(totalDiffuse,1.0)  + vec4(specular,1.0);
 

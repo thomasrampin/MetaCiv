@@ -15,6 +15,15 @@ public class Object3D {
 	private float rotX,rotY,rotZ;
 	private float scale;
 	private String label;
+
+	public Object3D(Object3D object3d){
+		this.model = object3d.getModel();
+		this.position = new Vector3f(object3d.getPosition());
+		this.rotX = object3d.getRotX();
+		this.rotY = object3d.getRotY();
+		this.rotZ = object3d.getRotZ();
+		this.scale = object3d.getScale();
+		}
 	
 	public Object3D(String label,Model model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.label = label;
