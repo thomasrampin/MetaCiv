@@ -32,7 +32,7 @@ uniform float distanceFog;
 uniform float waveStrenght;
 const float shineDamper = 20.0;
 const float reflectivity = 0.6;
-const vec4 coastlineColor = vec4(0.039,0.819,0.905,1);
+const vec4 coastlineColor = vec4(0.039,0.719,0.925,1);
 
 vec4 fog(vec4 c)
 {
@@ -149,7 +149,7 @@ void main(void) {
 	out_Color *= (lighting + lighting2  );
 	out_Color *= lighting3 + lighting4;
 	out_Color *= lighting5;
-	out_Color = mix(coastlineColor,out_Color,clamp(seaDepth/13.0,0.0,1.0)),
+	out_Color = mix(coastlineColor,out_Color,clamp(seaDepth/15.0,0.0,1.0)),
 	out_Color += vec4(specularHighlights,0.0);
 	out_Color.a = clamp(seaDepth/5.0,0.0,1.0);
 	out_Color = fog(out_Color);

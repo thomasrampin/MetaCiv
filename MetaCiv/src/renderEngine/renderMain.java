@@ -295,12 +295,12 @@ public class renderMain implements Runnable {
 	
 	}
 	
-	public void paintOneTurtle(Turtle t, int x, int y) {
+	public void paintOneTurtle(Turtle t, int x, int y, Turtle selectedAgent) {
 		
 		int id = containTurtle(t.getID());
 		if(id == -1 && t.isPlayingRole(DefineConstants.Role_Human)){
 			tempId = t.getID();
-			turtles.add(new Turtle3D(t.getID()));
+			turtles.add(new Turtle3D(t.getID(),t==selectedAgent));
 			turtles.get(turtles.size()-1).setInterpolation(0);
 		
 			turtles.get(turtles.size()-1).setX((float)x);

@@ -123,8 +123,6 @@ vec2 ParallaxMapping(int indice, vec2 texCoords, vec3 viewDir)
 	   return texCoords - texCoordOffset;
 }
 
-
-
 void main(void){
 
 
@@ -150,25 +148,7 @@ void main(void){
 			break;
 	}
 
-	/*int indice2 =-1;
-	red = texture(blendMap,fs_in.tc).r;
-	blue = texture(blendMap,fs_in.tc).b;
-	green = texture(blendMap,fs_in.tc).g;
-	vec2 offset2 = vec2(0.01,0.00);
-	int i;
-	for( i=0;i<9;i++) // loop to fix ignore point
-	{
-		indice2 = getIndice(red,green,blue);
-		if(indice2 == -1 || indice==indice2)
-		{
-			red = texture(blendMap,fs_in.tc-offset2).r;
-			blue = texture(blendMap,fs_in.tc-offset2).b;
-			green = texture(blendMap,fs_in.tc-offset2).g;
-			offset2 += offset2;
-		}
-		else
-			break;
-	}*/
+
 
 
 
@@ -176,14 +156,14 @@ void main(void){
 	vec3 unitVectorToCamera = normalize(fs_in.toCameraVector);
 
 
-	float x = f(fs_in.tc.x*40,0.5);
-	vec2 parseTc = vec2(x,fs_in.tc.y*40 );
+	float x = f(fs_in.tc.x*15,0.5);
+	vec2 parseTc = vec2(x,fs_in.tc.y*15 );
 
 
-	vec2 parseTcNrm = vec2(x,fs_in.tc.y*40 )/2.0+(0.5);
+	vec2 parseTcNrm = vec2(x,fs_in.tc.y*15 )/2.0+(0.5);
 
 
-	vec2 parseTcDisp = vec2(x,fs_in.tc.y*40 )/2.0+(0.666);
+	vec2 parseTcDisp = vec2(x,fs_in.tc.y*15 )/2.0+(0.666);
 
 
 	vec2 texCoords = ParallaxMapping(indice,parseTcDisp,fs_in.viewDir);
@@ -225,11 +205,7 @@ void main(void){
 
 	}
 
-	/*if(indice2!=-1 )
-		landscape = mix(texture(gSampler[indice2],parseTc),texture(gSampler[indice], parseTc),i/9.0);
-
-	else*/
-		landscape = texture(gSampler[indice],parseTc);
+	landscape = texture(gSampler[indice],parseTc);
 
 
 

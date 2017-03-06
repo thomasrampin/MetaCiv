@@ -262,7 +262,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	@Override
 	public void paintTurtle(Graphics g,Turtle t,int x,int y) {
 		paintOneTurtle( g, t, x, y, true);
-		game.paintOneTurtle(t,x,y);
+		game.paintOneTurtle(t,x,y,selectedAgent);
 
 	}
 

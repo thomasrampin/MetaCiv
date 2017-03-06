@@ -10,10 +10,10 @@ public class Camera {
 	private static final float SPEED = 1.5f;
 	
 	private Vector3f position = new Vector3f(0,0,0);
-	private Vector3f lookAt = new Vector3f(0,0,0);
-	private float pitch=20;
+	private Vector3f lookAt = new Vector3f(100,0,100);
+	private float pitch=15;
 	private float angleAroundPivot=0;
-	private float distanceFromPivot=50;
+	private float distanceFromPivot=100;
 	private float yangle;
 	private float roll;
 	
