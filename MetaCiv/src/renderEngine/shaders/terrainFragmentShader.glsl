@@ -11,12 +11,14 @@
 
 #define MAX_TERRAIN_TYPE 11
 
-out vec4 color;
+layout (location = 0) out vec4 FragmentColor0;
+layout (location = 1) out vec4 FragmentColor1;
 
 
 
 uniform sampler2D blendMap;
 uniform sampler2D blurMap;
+uniform sampler2DShadow shadowMap;
 
 #if GL_ARB_bindless_texture_is_supported
 	layout(binding = 5, std140) uniform TEXTURE_BLOCK
@@ -41,6 +43,7 @@ in VS_OUT
 	vec3 normal;
 	vec3 tangent;
 	vec3 viewDir;
+	vec4 shadow_coord;
 }fs_in;
 
 
@@ -133,6 +136,8 @@ void main(void){
 	float green = texture(blendMap,fs_in.tc).g;
 	int indice = -1;
 
+
+
 	vec2 offset = vec2(0.006,0.006);
 	for(int i=0;i<9;i++) // loop to fix ignore point
 	{
@@ -148,6 +153,24 @@ void main(void){
 			break;
 	}
 
+	int indice2 = -1;
+	float red2 = texture(blendMap,fs_in.tc).r;
+	float blue2 = texture(blendMap,fs_in.tc).b;
+	float green2 = texture(blendMap,fs_in.tc).g;
+	offset = vec2(0.006,0.006);
+		for(int i=0;i<2;i++) // loop to fix ignore point
+		{
+			indice2 = getIndice(red2,green2,blue2);
+			if(indice2 == -1 || (red == red && green == green2 && blue == blue2))
+			{
+				red2 = texture(blendMap,fs_in.tc-offset).r;
+				blue2 = texture(blendMap,fs_in.tc-offset).b;
+				green2 = texture(blendMap,fs_in.tc-offset).g;
+				offset += offset;
+			}
+			else
+				break;
+		}
 
 
 
@@ -205,7 +228,9 @@ void main(void){
 
 	}
 
-	landscape = texture(gSampler[indice],parseTc);
+
+	landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(gSampler[indice],parseTc);
+
 
 
 
@@ -214,8 +239,8 @@ void main(void){
 
 	landscape *= vec4(totalDiffuse,1.0)  + vec4(specular,1.0);
 
-	out_Color = fog(landscape);
+	FragmentColor0 = fog(landscape);
 	//out_Color = vec4(fs_in.tangent,1.0);
-
+	FragmentColor1 = vec4(0,0,0,1);
 
 }

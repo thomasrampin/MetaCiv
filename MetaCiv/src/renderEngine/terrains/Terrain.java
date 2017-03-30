@@ -21,6 +21,10 @@ import turtlekit.kernel.Patch;
 
 public class Terrain {
 
+	public class face{
+		Vector3f normal;
+		int pos[]= new int[3];
+	}
 	private float SIZE_X;
 	private float SIZE_Z;
 	private static final float MAX_HEIGHT = 10;
@@ -60,7 +64,7 @@ public class Terrain {
 
 	
 	private Mesh generateTerrain(Loader loader , BufferedImage image,BufferedImage image2,ArrayList<Vector4f> heights){
-		
+		System.out.println("Generate Terrain...");
 
 		//image = Loader.blur(image);
 		VERTEX_COUNT = image.getHeight()/5;
@@ -81,6 +85,7 @@ public class Terrain {
         Vector3f[] pos = new Vector3f[count];
         Vector3f[] Uv = new Vector3f[count];
         int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
+        face[] faces  = new face[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
         int vertexPointer = 0;
         int ii=0;
         int jj =0;
@@ -105,9 +110,9 @@ public class Terrain {
                 Vector3f normal = calculateNormal2(jj,ii,image,heights);
                if(normal.equals(new Vector3f(0,1,0)) || true){
 	            	Vector3f normal2 = calculateNormal(jj%image2.getHeight(),ii%image2.getWidth(),image2);
-	                normals[vertexPointer*3] = normal2.x;
-	                normals[vertexPointer*3+1] = normal2.y;
-	                normals[vertexPointer*3+2] = normal2.z;
+	                normals[vertexPointer*3] = 0;
+	                normals[vertexPointer*3+1] = 0;
+	                normals[vertexPointer*3+2] = 0;
 	                norm.add(new Vector3f (normal2.x, normal2.y, normal2.z));
                }
                else{
@@ -131,8 +136,11 @@ public class Terrain {
             ii +=5;
         }
         
+        
+
+        
         //Compute tangents
-       /* for(int i=0;i<count-3;i++){
+        for(int i=0;i<count-3;i++){
 	        Vector3f deltaPos1 = Helper.soustrate(pos[i+1], pos[i]);
 	        Vector3f deltaPos2 = Helper.soustrate(pos[i+2], pos[i]);
 	
@@ -148,8 +156,9 @@ public class Terrain {
 	        tangents[i*3+1] = r * (deltaUv2.y * deltaPos1.y - deltaUv1.y * deltaPos2.y);
 	        tangents[i*3+2] =  r * (deltaUv2.y * deltaPos1.z - deltaUv1.y * deltaPos2.z);
         }
-        */
+        
         int pointer = 0;
+        int k=0;
         for(int gz=0;gz<VERTEX_COUNT_W-1;gz++){
             for(int gx=0;gx<VERTEX_COUNT-1;gx++){
                 int topLeft = (gz*VERTEX_COUNT_W)+gx;
@@ -159,11 +168,82 @@ public class Terrain {
                 indices[pointer++] = topLeft;
                 indices[pointer++] = bottomLeft;
                 indices[pointer++] = topRight;
+        		Vector3f a = ver.get(topLeft);
+        		Vector3f b = ver.get(bottomLeft);
+        		Vector3f c = ver.get(topRight);
+        		Vector3f vp1 = new Vector3f(b.x-a.x,b.y-a.y,b.z-a.z);
+        		Vector3f vp2 = new Vector3f(c.x-a.x,c.y-a.y,c.z-a.z);
+        		Vector3f v1 = new Vector3f(vp1.getX(),vp1.getY(),vp1.getZ());
+        		Vector3f v2 = new Vector3f(vp2.getX(),vp2.getY(),vp2.getZ());
+        		Vector3f normal = Helper.Vectoriel(v1,v2);
+        		
+        		normal.normalise();
+        		faces[k] = new face();
+        		faces[k].normal = normal;
+				faces[k].pos[0] =topLeft;
+				faces[k].pos[1] =bottomLeft; 
+				faces[k].pos[2] =topRight; 
+                k++;
+				
                 indices[pointer++] = topRight;
                 indices[pointer++] = bottomLeft;
                 indices[pointer++] = bottomRight;
+                
+        		a = ver.get(topRight);
+        		b = ver.get(bottomLeft);
+        		c = ver.get(bottomRight);
+        		vp1 = new Vector3f(b.x-a.x,b.y-a.y,b.z-a.z);
+        		vp2 = new Vector3f(c.x-a.x,c.y-a.y,c.z-a.z);
+        		v1 = new Vector3f(vp1.getX(),vp1.getY(),vp1.getZ());
+        		v2 = new Vector3f(vp2.getX(),vp2.getY(),vp2.getZ());
+        		normal = Helper.Vectoriel(v1,v2);
+        		
+        		normal.normalise();
+        		faces[k] = new face();
+        		faces[k].normal = normal;
+				faces[k].pos[0] =topRight;
+				faces[k].pos[1] =bottomLeft; 
+				faces[k].pos[2] =bottomRight; 
+                k++;
             }
         }
+        
+
+        int[] dividande =  new int[count * 3];
+        int kk=0;
+        for(int i=0;i<count * 3;i++){
+	   		for(int j=0;j<k;j++){
+	   			for(int m=0;m<3;m++){
+	   				if(faces[j].pos[m] == i){
+	                       normals[kk] += faces[j].normal.getX();
+	                       normals[kk+1] += faces[j].normal.getY();
+	                       normals[kk+2] += faces[j].normal.getZ();
+	                       dividande[i] ++;
+	                       break;
+	   				}
+	   			}
+	   		}
+	   		kk+=3;
+        }
+        
+    	k = 0;
+    	for(int i=0;i<count*3;i+=3){
+    		normals[i] /= dividande[k];
+    		normals[i+1] /= dividande[k];
+    		normals[i+2] /= dividande[k];
+    		k++;
+                   
+    	}
+    	
+    	for(int i=0;i<count*3;i+=3){
+    		float norme = (float) Math.sqrt((normals[i]*normals[i])+(normals[i+1]*normals[i+1])+(normals[i+2]*normals[i+2]));
+    		normals[i] /= norme;
+    		normals[i+1] /= norme;
+    		normals[i+2] /= norme;
+    	
+    	}
+    	
+    	System.out.println("Task done");
         return loader.loadToVAO(vertices, textureCoords, normals,tangents, indices);
     }
 

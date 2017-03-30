@@ -10,10 +10,10 @@ public class Camera {
 	private static final float SPEED = 1.5f;
 	
 	private Vector3f position = new Vector3f(0,0,0);
-	private Vector3f lookAt = new Vector3f(100,0,100);
-	private float pitch=15;
-	private float angleAroundPivot=0;
-	private float distanceFromPivot=100;
+	private Vector3f lookAt = new Vector3f(180,0,100);
+	private float pitch=10;
+	private float angleAroundPivot=45;
+	private float distanceFromPivot=200;
 	private float yangle;
 	private float roll;
 	
@@ -31,7 +31,7 @@ public class Camera {
 		
 		if(Mouse.isButtonDown(0)){
 			float pitchChange = Mouse.getDY() * 0.3f;
-			if(pitch - pitchChange >10 && pitch - pitchChange <85)
+			if(pitch - pitchChange >0 && pitch - pitchChange <85)
 				pitch -= pitchChange;
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPivot -= angleChange;

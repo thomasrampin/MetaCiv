@@ -25,12 +25,15 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import org.newdawn.slick.opengl.Texture;
@@ -61,15 +64,17 @@ public class Loader {
 	 * |   |
 	 * |   |
 	 *  -------------------------------
+	 * @param tangents 
 	 */
 	
 	
-	public Mesh loadToVAO(float[] positions, float[] textureCoords,float[] normals,int[] indices){
+	public Mesh loadToVAO(float[] positions, float[] textureCoords,float[] normals,int[] indices, float[] tangents){
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0,3,positions);
 		storeDataInAttributeList(1,3,textureCoords);
 		storeDataInAttributeList(2,3,normals);
+		storeDataInAttributeList(3,3,normals);
 		unbindVAO();
 		return new Mesh(vaoID,indices.length);
 	}
@@ -99,6 +104,15 @@ public class Loader {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("Assets/Texture/"+fileName));
 		} catch (FileNotFoundException e) {
 			System.out.println("file :"+fileName+" not found.");
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS,0);
+			if(GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic){
+				float quantity = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+				GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, quantity);
+			}else{
+				System.out.println("Not supported anisotropic filtering");
+			}
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -163,15 +177,31 @@ public class Loader {
 
 	    textureTerrainID = GL11.glGenTextures(); //Generate texture ID
 	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureTerrainID);
-
 	    // Setup wrap mode
 	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 
+		//GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+		//GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+		//GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS,0);
+		/*if(GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic){
+			float quantity = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, quantity);
+		}else{
+			System.out.println("Not supported anisotropic filtering");
+		}
+		*/
+
+
 	    //Setup texture scaling filtering
 	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-
+	    if(GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic){
+			float quantity = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, quantity);
+		}else{
+			System.out.println("Not supported anisotropic filtering");
+		}		
 	    //Send texel data to OpenGL
 	    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 

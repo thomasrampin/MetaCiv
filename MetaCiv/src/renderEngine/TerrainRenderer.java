@@ -8,6 +8,8 @@ import renderEngine.materials.Material;
 import renderEngine.models.Mesh;
 import renderEngine.models.Model;
 import renderEngine.shaders.TerrainShader;
+import renderEngine.shadowsMapping.LightShadowShader;
+import renderEngine.shadowsMapping.ShadowFrameBuffer;
 import renderEngine.terrains.Terrain;
 import renderEngine.utils.Matrix;
 import renderEngine.utils.TerrainTexture;
@@ -24,6 +26,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class TerrainRenderer {
  
     private TerrainShader shader;
+    private LightShadowShader lShader;
     private int diffuseArray[];
 
     private int diffuseArraySize;
@@ -33,58 +36,81 @@ public class TerrainRenderer {
     
     public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix,ArrayList<TerrainTexture> textures) {
         this.shader = shader;
+        lShader = new LightShadowShader();
         this.wireframe = false;
         this.press = false;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextureUnits();
         shader.stop();
+        
+        lShader.start();
+        lShader.loadProjectionMatrix(projectionMatrix);
+        lShader.stop();
         diffuseArray = Loader.loadTextureAtlas(textures); 
     }
  
-    public void render(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog) {
-            prepareTerrain(terrain,heights,distanceFog);
+    public void render(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog,boolean fromLight, ShadowFrameBuffer fbo,Matrix4f shadowMatrix) {
+            prepareTerrain(terrain,heights,distanceFog,fbo,fromLight,shadowMatrix);
             loadModelMatrix(terrain);
-            if(Keyboard.isKeyDown(Keyboard.KEY_W) && !press){
-            	wireframe = !wireframe;
-            	press = true;
-            }
-            if(!Keyboard.isKeyDown(Keyboard.KEY_W))
-            	press = false;
-            if(wireframe)
-            	GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            else
-            	GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+
             GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(),
                     GL11.GL_UNSIGNED_INT, 0);
             unbindTexturedModel();
     }
  
-    private void prepareTerrain(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog) {
+	public void renderL(Terrain terrain, ArrayList<Vector4f> heights, float distanceFog, boolean fromLight,
+			ShadowFrameBuffer fbo, Matrix4f shadowMatrix,Matrix4f  light_vp_matrix) {
+		lShader.start();
         Mesh rawModel = terrain.getModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
+		 Matrix4f transformationMatrix = Matrix.createTransformationMatrix(
+	                new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1);
+		lShader.loadMvp(Matrix4f.mul(light_vp_matrix, light_vp_matrix, transformationMatrix));
+		GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(),
+                GL11.GL_UNSIGNED_INT, 0);
+        GL20.glDisableVertexAttribArray(0);
+
+        GL30.glBindVertexArray(0);
+		lShader.stop();
+		
+	}
+
+    
+    private void prepareTerrain(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog,ShadowFrameBuffer fbo, boolean fromLight,Matrix4f shadowMatrix) {
+        Mesh rawModel = terrain.getModel();
+        GL30.glBindVertexArray(rawModel.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+  
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
         GL20.glEnableVertexAttribArray(3);
         Material texture = terrain.getTexture();
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(15f, new Vector3f(0.5f,0.5f,0.5f));
-        shader.loadTextured(texture.getIsTextured());
+        shader.loadTextured(texture.IsTextured());
+       
         shader.loadHeights(heights);
         shader.loadDistanceFog(distanceFog);
         
+        shader.loadShadowMatrix(shadowMatrix);
+        
         		
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlur().getID());
-        
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlur().getTextureID());
+    
+	    GL13.glActiveTexture(GL13.GL_TEXTURE2);
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbo.getDepthTexture());
+       
         for(int i=0;i<diffuseArray.length;i++){
-        	GL13.glActiveTexture(GL13.GL_TEXTURE0+i+2);
+        	GL13.glActiveTexture(GL13.GL_TEXTURE0+i+3);
         	GL11.glBindTexture(GL11.GL_TEXTURE_2D, diffuseArray[i]);
         	shader.conectTextureDiff(i);
         }
+
     }
  
     private void unbindTexturedModel() {
@@ -100,6 +126,7 @@ public class TerrainRenderer {
                 new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1);
         shader.loadTransformationMatrix(transformationMatrix);
     }
+
 
  
 }

@@ -1,8 +1,10 @@
 package renderEngine.entities;
 
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import renderEngine.loaders.Loader;
+import renderEngine.utils.Helper;
 
 public class Turtle3D {
 
@@ -12,20 +14,26 @@ public class Turtle3D {
 	private static Object3D king;
 	private static Object3D basic;
 	private int id;
+	private int colorID;
 	private float interpolation;
 	
-	public Turtle3D(int id, boolean b){
+	public Turtle3D(int id, boolean b,int card){
 		if(b)
 			this.object3d = new Object3D(king);
 		else
 			this.object3d = new Object3D(basic);
 		this.id = id;
+		this.colorID = (255*255*255)-(id+1);
+
+		this.object3d.getModel().setColorID(Helper.IntegerToColor(colorID));//+1 avoid black
 		this.interpolation = 0;
 	}
 	
+
+	
 	public static void setUp(Loader loader){
-		basic = new Object3D("1","pion", loader,new Vector3f(150,8,150),0,0,0,0.03f);
-		king = new Object3D("1","king", loader,new Vector3f(150,8,150),0,0,0,0.03f);
+		basic = new Object3D("pion", loader,new Vector3f(150,8,150),0,0,0,0.03f);
+		king = new Object3D("king", loader,new Vector3f(150,8,150),0,0,0,0.03f);
 	}
 	
 	public float getX() {
@@ -91,6 +99,8 @@ public class Turtle3D {
 		this.interpolation += increase;
 	}
 	
-	
+	public int getColorID(){
+		return colorID;
+	}
 	
 }

@@ -16,18 +16,20 @@ public class MousePicker {
 	private static final float RAY_RANGE = 600;
 	
 	private Vector3f currentRay;
+	private Vector3f ray;
 	private Matrix4f projectionMatrix;
 	private Matrix4f viewMatrix;
 	private Camera camera;
+	private Vector3f direction;
 	
-	private Object3D object3d;
+
 	private Vector3f currentObjectPoint;
 	
-	public MousePicker(Camera camera, Matrix4f projection,Object3D object){
+	public MousePicker(Camera camera, Matrix4f projection){
 		this.camera = camera;
 		this.projectionMatrix = projection;
 		this.viewMatrix = Matrix.createViewMatrix(camera);
-		this.object3d = object;
+
 	}
 	
 	public Vector3f getCurrentObjectPoint(){
@@ -38,14 +40,20 @@ public class MousePicker {
 		return currentRay;
 	}
 	
+	public Vector3f getRay(){
+		return ray;
+	}
+	
+	public Vector3f getDirection(){
+		return (Vector3f) direction.normalise();
+	}
+	
 	public void update(){
 		viewMatrix = Matrix.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
-		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
-			currentObjectPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
-		} else {
-			currentObjectPoint = null;
-		}
+		ray = getPointOnRay(currentRay, RAY_RANGE);
+		direction = new Vector3f(ray.x-currentRay.x,ray.y-currentRay.y,ray.z-currentRay.z);
+
 	}
 	
 	private Vector3f calculateMouseRay(){
@@ -89,47 +97,10 @@ public class MousePicker {
 		return Vector3f.add(start, scaledRay, null);
 	}
 	
-	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray) {
-		float half = start + ((finish - start) / 2f);
-		if (count >= RECURSION_COUNT) {
-			Vector3f endPoint = getPointOnRay(ray, half);
-			Object3D object = getTerrain(endPoint.getX(), endPoint.getZ());
-			if (object != null) {
-				return endPoint;
-			} else {
-				return null;
-			}
-		}
-		if (intersectionInRange(start, half, ray)) {
-			return binarySearch(count + 1, start, half, ray);
-		} else {
-			return binarySearch(count + 1, half, finish, ray);
-		}
-	}
 
-	private boolean intersectionInRange(float start, float finish, Vector3f ray) {
-		Vector3f startPoint = getPointOnRay(ray, start);
-		Vector3f endPoint = getPointOnRay(ray, finish);
-		if (!isUnderGround(startPoint) && isUnderGround(endPoint)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
-	private boolean isUnderGround(Vector3f testPoint) {
-		Object3D object = getTerrain(testPoint.getX(), testPoint.getZ());
-		float height = 0;
 
-		if (testPoint.y < height) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
-	private Object3D getTerrain(float worldX, float worldZ) {
-		return object3d;
-	}
 	
+
 }

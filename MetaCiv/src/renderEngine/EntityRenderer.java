@@ -7,9 +7,11 @@ import renderEngine.entities.Object3D;
 import renderEngine.materials.Material;
 import renderEngine.models.Mesh;
 import renderEngine.models.Model;
+import renderEngine.models.Models;
 import renderEngine.shaders.StaticShader;
 import renderEngine.utils.Matrix;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -20,18 +22,22 @@ import org.lwjgl.util.vector.Matrix4f;
 public class EntityRenderer {
  
     private StaticShader shader;
+    private float hS = 0.0f;
  
     public EntityRenderer(StaticShader shader,Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
+        shader.connectTextureUnits();
         shader.stop();
     }
 
 
 
-    public void render(Map<Model, List<Object3D>> entities) {
+    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2) {
         for (Model model : entities.keySet()) {
+        	
+        	
             prepareTexturedModel(model);
             List<Object3D> batch = entities.get(model);
             for (Object3D entity : batch) {
@@ -41,21 +47,49 @@ public class EntityRenderer {
             }
             unbindTexturedModel();
         }
+
     }
  
+    
     private void prepareTexturedModel(Model model) {
         Mesh rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
+        GL20.glEnableVertexAttribArray(3);
         Material texture = model.getTexture();
+        shader.loadDispMapped(false);
+        shader.loadTextured(false);
+        shader.loadNormalMapped(false);
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
-    	if(model.getTexture().getIsTextured()){
-    		shader.loadTextured(texture.getIsTextured());
+        shader.loadColorID(model.getColorID());
+        if(Keyboard.isKeyDown(Keyboard.KEY_A)){
+        	hS+=0.01;
+        	
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_I)){
+        	hS-=0.01;
+        	
+        }
+        
+        shader.loadHeightScale(-hS/100);
+
+    	if(model.getTexture().IsTextured()){
+    		shader.loadTextured(texture.IsTextured());
     		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+    	}
+    	if(model.getTexture().IsNormalMapped()){
+    		shader.loadNormalMapped(true);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalID());
+    	}
+    	if(model.getTexture().IsDispMapped()){
+    		shader.loadDispMapped(true);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getDispID());
     	}
     }
  
@@ -63,6 +97,7 @@ public class EntityRenderer {
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);
+        GL20.glDisableVertexAttribArray(3);
         GL30.glBindVertexArray(0);
     }
  

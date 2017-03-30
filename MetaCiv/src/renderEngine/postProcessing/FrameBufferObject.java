@@ -2,11 +2,14 @@
 package renderEngine.postProcessing;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 public class FrameBufferObject {
@@ -20,12 +23,15 @@ public class FrameBufferObject {
 
 	private int frameBuffer;
 
+	private boolean multisample = false;
+	
 	private int colourTexture;
+	
 	private int depthTexture;
 
 	private int depthBuffer;
 	private int colourBuffer;
-
+	private int colourBuffer2;
 
 	public FrameBufferObject(int width, int height, int depthBufferType) {
 		this.width = width;
@@ -33,6 +39,12 @@ public class FrameBufferObject {
 		initialiseFrameBuffer(depthBufferType);
 	}
 
+	public FrameBufferObject(int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.multisample = true;
+		initialiseFrameBuffer(DEPTH_RENDER_BUFFER);
+	}
 
 	public void cleanUp() {
 		GL30.glDeleteFramebuffers(frameBuffer);
@@ -40,6 +52,7 @@ public class FrameBufferObject {
 		GL11.glDeleteTextures(depthTexture);
 		GL30.glDeleteRenderbuffers(depthBuffer);
 		GL30.glDeleteRenderbuffers(colourBuffer);
+		GL30.glDeleteRenderbuffers(colourBuffer2);
 	}
 
 
@@ -54,14 +67,6 @@ public class FrameBufferObject {
 		GL11.glViewport(0, 0, Display.getWidth(), Display.getHeight());
 	}
 
-
-	public void bindToRead() {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
-		GL11.glReadBuffer(GL30.GL_COLOR_ATTACHMENT0);
-	}
-
-
 	public int getColourTexture() {
 		return colourTexture;
 	}
@@ -71,10 +76,31 @@ public class FrameBufferObject {
 		return depthTexture;
 	}
 
-
+	public void resolveToFbo(int readBuffer,FrameBufferObject fbo){
+		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, fbo.frameBuffer);
+		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, this.frameBuffer);
+		GL11.glReadBuffer(readBuffer);
+		GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, fbo.width, fbo.height, GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
+		this.unbindFrameBuffer();
+	}
+	
+	public void resolveToScreen(){
+		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
+		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, this.frameBuffer);
+		GL11.glDrawBuffer(GL11.GL_BACK);
+		GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, Display.getWidth(), Display.getHeight(), GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT, GL11.GL_NEAREST);
+		this.unbindFrameBuffer();		
+	}
+	
 	private void initialiseFrameBuffer(int type) {
 		createFrameBuffer();
-		createTextureAttachment();
+		if(multisample){
+			colourBuffer = createMultisampleColourAttachment(GL30.GL_COLOR_ATTACHMENT0);
+			colourBuffer2 = createMultisampleColourAttachment(GL30.GL_COLOR_ATTACHMENT1);
+		}else{
+			createTextureAttachment();
+		}
+		
 		if (type == DEPTH_RENDER_BUFFER) {
 			createDepthBufferAttachment();
 		} else if (type == DEPTH_TEXTURE) {
@@ -87,9 +113,18 @@ public class FrameBufferObject {
 	private void createFrameBuffer() {
 		frameBuffer = GL30.glGenFramebuffers();
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-		GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
+		determineDrawBuffers();
 	}
 
+	private void determineDrawBuffers(){
+		IntBuffer drawBuffers = BufferUtils.createIntBuffer(2);
+		drawBuffers.put(GL30.GL_COLOR_ATTACHMENT0);
+		if(multisample)
+			drawBuffers.put(GL30.GL_COLOR_ATTACHMENT1);
+		drawBuffers.flip();
+		GL20.glDrawBuffers(drawBuffers);
+	}
+	
 
 	private void createTextureAttachment() {
 		colourTexture = GL11.glGenTextures();
@@ -115,13 +150,38 @@ public class FrameBufferObject {
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture, 0);
 	}
 
+	private int  createMultisampleColourAttachment(int attachement){
+		int colourBuffer = GL30.glGenRenderbuffers();
+		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, colourBuffer);
+		GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER,4, GL11.GL_RGBA8, width, height);
+		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER,attachement, GL30.GL_RENDERBUFFER,
+				colourBuffer);
+		return colourBuffer;
+	}
+	
 
 	private void createDepthBufferAttachment() {
 		depthBuffer = GL30.glGenRenderbuffers();
 		GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
-		GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
+		if(!multisample)
+			GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
+		else
+			GL30.glRenderbufferStorageMultisample(GL30.GL_RENDERBUFFER,4, GL14.GL_DEPTH_COMPONENT24, width, height);
 		GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER,
 				depthBuffer);
 	}
 
+	public ByteBuffer ReadPixel(int x,int y)
+	{
+		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, this.frameBuffer);
+		GL11.glReadBuffer(GL30.GL_COLOR_ATTACHMENT0);
+
+
+		ByteBuffer pixels = BufferUtils.createByteBuffer(3);
+	    GL11.glReadPixels(x, y, 1, 1, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, pixels);
+
+
+	    return pixels;
+	} 
+	
 }

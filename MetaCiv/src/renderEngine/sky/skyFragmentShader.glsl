@@ -3,7 +3,8 @@
 in vec2 textureCoords;
 in vec3 cameraVector;
 in vec3 lightVector;
-out vec4 out_Color;
+layout (location = 0) out vec4 FragmentColor0;
+layout (location = 1) out vec4 FragmentColor1;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D alphaMap;
@@ -33,13 +34,14 @@ void main(void){
 	float dist =  sqrt(dot(uv, uv));
 
 	//out_Color = mix(Zenith,Horizon,textureCoords.y*2-0.6)*1.2;
-    out_Color += texture(diffuseMap, vec2(textureCoords.x+angle/6,textureCoords.y*1.8)) ;
+	FragmentColor0 += texture(diffuseMap, vec2(textureCoords.x+angle/6,textureCoords.y*1.8)) ;
 
-    out_Color += CloudColor* max(texture(alphaMap, vec2(textureCoords.x+angle,textureCoords.y*1.8)).r - cloudDensity*2,0);
+	FragmentColor0 += CloudColor* max(texture(alphaMap, vec2(textureCoords.x+angle,textureCoords.y*1.8)).r - cloudDensity*2,0);
 
     //out_Color += mix(vec4(1,1,1,1),out_Color,textureCoords.y/30);
-    out_Color = mix(Horizon,out_Color,textureCoords.y);
+	FragmentColor0 = mix(Horizon,FragmentColor0,textureCoords.y);
     //out_Color = mix(fog_color,out_Color,textureCoords.y);
    /* if ( (dist < (0.005)) )
     	 out_Color = vec4(1,0.8,0.4,1);*/
+	FragmentColor1 = vec4(0,0,0,1);
 }

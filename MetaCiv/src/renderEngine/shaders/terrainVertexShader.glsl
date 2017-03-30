@@ -18,6 +18,7 @@ out VS_OUT
 	vec3 normal;
 	vec3 tangent;
 	vec3 viewDir;
+	vec4 shadow_coord;
 }vs_out;
 
 uniform mat4 transformationMatrix;
@@ -25,9 +26,14 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
 uniform vec3 cameraPos;
+uniform mat4 shadow_matrix;
+
+const mat4 scale_bias_matrix = mat4(0.5f, 0.0f, 0.0f, 0.0f,
+                                    0.0f, 0.5f, 0.0f, 0.0f,
+                                    0.0f, 0.0f, 0.5f, 0.0f,
+									0.5f, 0.5f, 0.5f, 1.0f);
 
 void main(void){
-
 
 
 	vs_out.tangent = tangent;
@@ -64,6 +70,6 @@ void main(void){
 	vs_out.world_coord =  vec3(projectionMatrix) * vec3(viewMatrix) * worldPosition.xyz;
 	vs_out.eye_coord = Peye.xyz ;
 	vs_out.viewDir =  ( cameraPos -  worldPosition.xyz);
-
+	vs_out.shadow_coord = shadow_matrix * transformationMatrix * vec4(position,1.0);
 
 }

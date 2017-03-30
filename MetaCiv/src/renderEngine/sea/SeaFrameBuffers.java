@@ -19,11 +19,11 @@ import org.lwjgl.opengl.GL42;
  
 public class SeaFrameBuffers {
  
-    protected static final int REFLECTION_WIDTH = 800;
-    private static final int REFLECTION_HEIGHT = 480;
+    protected static final int REFLECTION_WIDTH = 360;
+    private static final int REFLECTION_HEIGHT = 200;
      
-    protected static final int REFRACTION_WIDTH = 800;
-    private static final int REFRACTION_HEIGHT = 480;
+    protected static final int REFRACTION_WIDTH = 360;
+    private static final int REFRACTION_HEIGHT = 200;
  
     private int reflectionFrameBuffer;
     private int reflectionTexture;

@@ -12,10 +12,13 @@ import renderEngine.entities.Object3D;
 import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Model;
+import renderEngine.models.Models;
 import renderEngine.shaders.StaticShader;
 import renderEngine.shaders.TerrainShader;
 import renderEngine.shaders.TerrainTessShader;
+import renderEngine.shadowsMapping.ShadowFrameBuffer;
 import renderEngine.terrains.Terrain;
+import renderEngine.utils.Helper;
 import renderEngine.utils.TerrainTexture;
 
 import org.lwjgl.opengl.Display;
@@ -44,6 +47,7 @@ public class MasterRenderer {
     private TerrainTessShader terrainTessShader = new TerrainTessShader();
      
     private Map<Model,List<Object3D>> entities = new HashMap<Model,List<Object3D>>();
+    private Map<Models,List<Object3D>> entities2 = new HashMap<Models,List<Object3D>>();
     private Terrain terrain;
     
     private boolean terrainInit;
@@ -60,15 +64,15 @@ public class MasterRenderer {
         terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<Vector4f>());
     }
      
-    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow){
+    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer fbo,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
         prepare();
         shader.start();
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
-        renderer.render(entities);
+        renderer.render(entities,entities2);
         shader.stop();
 
-  
+        if(!fromLight){
             terrainShader.start();
             terrainShader.loadLights(sun);
             if(invertPitch)
@@ -76,21 +80,26 @@ public class MasterRenderer {
             terrainShader.loadViewMatrix(camera);
             terrainShader.loadCameraPos(camera.getPosition());
             
-        	terrainRenderer.render(terrain,heights,distanceFog);
+        	terrainRenderer.render(terrain,heights,distanceFog,fromLight,fbo, shadowMatrix);
         	terrainShader.stop();
             if(invertPitch)
             	camera.invertPitch();
+        }else{
+        	terrainRenderer.renderL(terrain,heights,distanceFog,fromLight,fbo, shadowMatrix, light_vp_matrix);
+        }
         
        //terrainTessRenderer.render(camera,terrain,sun,heights,clipPlane,distanceFog,invertPitch,forceLow);
         
         
         entities.clear();
+        entities2.clear();
     }
      
 
      
-    public void processEntity(Object3D entity){
-        Model entityModel = entity.getModel();
+    public void processEntity(Object3D entity, int i){
+        Model entityModel = new Model(entity.getModel());
+        entityModel.setColorID(Helper.IntegerToColor(i));
         List<Object3D> batch = entities.get(entityModel);
         if(batch!=null){
             batch.add(entity);
@@ -100,7 +109,21 @@ public class MasterRenderer {
             entities.put(entityModel, newBatch);        
         }
     }
-     
+   
+    public void processMultiEntity(Object3D entity, int i){
+        Models entityModels = entity.getModels();
+        for(Model entityModel:entityModels.getModels()){
+	        List<Object3D> batch = entities.get(entityModel);
+	        if(batch!=null){
+	            batch.add(entity);
+	        }else{
+	            List<Object3D> newBatch = new ArrayList<Object3D>();
+	            newBatch.add(entity);
+	            entities.put(entityModel, newBatch);        
+	        }
+       }
+    }
+    
     public void cleanUp(){
         shader.cleanUp();
         terrainShader.cleanUp();

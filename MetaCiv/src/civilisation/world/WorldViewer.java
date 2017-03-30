@@ -402,6 +402,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		}
 		else if(t.isPlayingRole(DefineConstants.Role_Facility)){
 			paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
+			game.drawFacility(x,y);
 			((Amenagement)t).dessiner(g, x,y, this.getCellSize());
 			
 		}
