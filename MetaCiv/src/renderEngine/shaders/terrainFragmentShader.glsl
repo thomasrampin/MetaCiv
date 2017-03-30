@@ -29,7 +29,7 @@ uniform sampler2DShadow shadowMap;
 	uniform sampler2D gSampler[MAX_TERRAIN_TYPE];
 #endif
 
-uniform vec4 fog_color = vec4(0.4f, 0.6f, 0.9f, 0f);
+uniform vec4 fog_color = vec4(0.4, 0.6, 0.9, 0);
 
 uniform bool forceLow;
 

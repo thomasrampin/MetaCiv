@@ -8,7 +8,7 @@ layout (location = 1) out vec4 FragmentColor1;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D alphaMap;
-uniform vec4 fog_color = vec4(0.4f, 0.6f, 0.9f, 0f);
+uniform vec4 fog_color = vec4(0.4, 0.6, 0.9, 0);
 uniform float angle;
 uniform float cloudDensity;
 

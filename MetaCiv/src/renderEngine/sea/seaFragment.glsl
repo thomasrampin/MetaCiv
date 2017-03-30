@@ -26,7 +26,7 @@ uniform vec3 lightColour;
 
 uniform float moveFactor;
 
-uniform vec4 fog_color = vec4(0.4f, 0.6f, 0.9f, 0f);
+uniform vec4 fog_color = vec4(0.4, 0.6, 0.9, 0);
 uniform float distanceFog;
 
 uniform float waveStrenght;

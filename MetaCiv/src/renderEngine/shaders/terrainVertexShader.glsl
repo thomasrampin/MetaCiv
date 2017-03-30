@@ -28,10 +28,10 @@ uniform vec3 lightPosition;
 uniform vec3 cameraPos;
 uniform mat4 shadow_matrix;
 
-const mat4 scale_bias_matrix = mat4(0.5f, 0.0f, 0.0f, 0.0f,
-                                    0.0f, 0.5f, 0.0f, 0.0f,
-                                    0.0f, 0.0f, 0.5f, 0.0f,
-									0.5f, 0.5f, 0.5f, 1.0f);
+const mat4 scale_bias_matrix = mat4(0.5, 0.0, 0.0, 0.0,
+                                    0.0, 0.5, 0.0, 0.0,
+                                    0.0, 0.0, 0.5, 0.0,
+									0.5, 0.5, 0.5, 1.0);
 
 void main(void){
 
