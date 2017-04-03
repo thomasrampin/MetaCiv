@@ -173,7 +173,9 @@ pour touts : groupes/roles affichage part type ou instances
 
 
 	private void loadDefaultDesktop() {
-		createEmptyTab("default tab");
+		createDefaultSimpleTab();
+		createDefaultCompleteTab();
+		createEmptyTab("Personal Tab");
 	}
 
 	public void observe(){
@@ -335,16 +337,16 @@ pour touts : groupes/roles affichage part type ou instances
 		
 		if(cont != null)
 		{
-		System.out.println("adding widget");
-		for(JInternalFrame intF: d.getAllFrames())
-		{
-			if(intF.equals(cont))
-				return;
-		}
-		System.out.println(cont.getTitle());
-		d.add(cont);
-	    cont.setVisible(true);
-		System.out.println("widget added");
+			System.out.println("adding widget");
+			for(JInternalFrame intF: d.getAllFrames())
+			{
+				if(intF.equals(cont))
+					return;
+			}
+			System.out.println(cont.getTitle());
+			d.add(cont);
+		    cont.setVisible(true);
+			System.out.println("widget added");
 		}
 		else
 		{
@@ -356,6 +358,36 @@ pour touts : groupes/roles affichage part type ou instances
 	{
 		JDesktopPane result = new JDesktopPane();
 		tabs.add(title, result);
+		return result;
+	}
+	
+	/**
+	 * Creation d'un panel simple avec les Probs classiques
+	 * @return
+	 */
+	public JDesktopPane createDefaultSimpleTab()
+	{
+		JDesktopPane result = new JDesktopPane();
+		addWidgetToTab(new ObjectProbeWidget(), result);
+		addWidgetToTab(new PopulationProbeWidget(), result);
+		addWidgetToTab(new PlanProbeWidget(), result);
+		tabs.add("Default Simple Tab", result);
+		return result;
+	}
+	
+	/**
+	 * Création d'un panel plus complet avec toutes les probs possibles
+	 * @return
+	 */
+	public JDesktopPane createDefaultCompleteTab()
+	{
+		JDesktopPane result = new JDesktopPane();
+		addWidgetToTab(new ObjectProbeWidget(), result);
+		addWidgetToTab(new PopulationProbeWidget(), result);
+		addWidgetToTab(new PlanProbeWidget(), result);
+		addWidgetToTab(new AttributeProbeWidget(), result);
+		addWidgetToTab(new CognitonProbeWidget(), result);
+		tabs.add("Default Complete Tab", result);
 		return result;
 	}
 }
