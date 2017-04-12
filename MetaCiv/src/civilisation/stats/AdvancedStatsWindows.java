@@ -55,10 +55,12 @@ import civilisation.inspecteur.simulation.dialogues.DialogEditGroupOptions;
 import com.keypoint.PngEncoder;
 
 public class AdvancedStatsWindows extends TKDefaultViewer {
+	int width = 1280;
+	int height = 720;
 
 	JTabbedPane tabs = new JTabbedPane();
-	
-	/*menu items*/
+
+	/* menu items */
 	JMenuItem MI_PROB_PLAN = new JMenuItem("Create Plan Probe");
 	JMenuItem MI_PROB_COG = new JMenuItem("Create Cogniton Probe");
 	JMenuItem MI_PROB_FAC = new JMenuItem("Create Facility Probe");
@@ -73,241 +75,213 @@ public class AdvancedStatsWindows extends TKDefaultViewer {
 	JMenuItem MI_TAB_SALL = new JMenuItem("Save all Tab Models");
 	JMenuItem MI_TAB_DEL = new JMenuItem("Delete current Tab Model");
 
-	
 	public void setupFrame(JFrame frame) {
-		
+
 		/*
 		 * création d'un dashbord paramétrable avec des "objets"(widget)
-
-objet plan weights : options grph/camembert
-
-objet cognitons weights : options grph/camembert
-
-objet corbes quantités aménagement : par société / par groupes / moyennes agent
-
-objet courbes objets (baies/outils/viande) : par société / par groupes / moyennes agent / en stock dans aménagements
-
-objet courbes attributs agent : par société / par groupes / moyennes agent / roles
-
-objet courbes population : civ/groupes/roles
-
-pour touts : groupes/roles affichage part type ou instances
-
+		 * 
+		 * objet plan weights : options grph/camembert
+		 * 
+		 * objet cognitons weights : options grph/camembert
+		 * 
+		 * objet corbes quantités aménagement : par société / par groupes /
+		 * moyennes agent
+		 * 
+		 * objet courbes objets (baies/outils/viande) : par société / par
+		 * groupes / moyennes agent / en stock dans aménagements
+		 * 
+		 * objet courbes attributs agent : par société / par groupes / moyennes
+		 * agent / roles
+		 * 
+		 * objet courbes population : civ/groupes/roles
+		 * 
+		 * pour touts : groupes/roles affichage part type ou instances
+		 * 
 		 */
+		frame.setSize(width, height + 60);
+		frame.setLocation(320, 180);
 
-	    JMenuBar mb = new JMenuBar();
-	    frame.setJMenuBar(mb);
-	    JMenu fm = new JMenu("Menu");
-	    mb.add(fm);
-	   
-	    JMenu mTabs = new JMenu("Manage Tabs");
-	    mb.add(mTabs);
-	    
-	    ASWListener listener = new ASWListener(this);
-	    
-	    MI_TAB_NEW.addActionListener(listener);
-	    mTabs.add(MI_TAB_NEW);
-	    MI_TAB_RNAM.addActionListener(listener);
-	    mTabs.add(MI_TAB_RNAM);
-	    MI_TAB_LOAD.addActionListener(listener);
-	    mTabs.add(MI_TAB_LOAD);
-	    MI_TAB_SAVE.addActionListener(listener);
-	    mTabs.add(MI_TAB_SAVE);
-	    MI_TAB_SALL.addActionListener(listener);
-	    mTabs.add(MI_TAB_SALL);
-	    MI_TAB_DEL.addActionListener(listener);
-	    mTabs.add(MI_TAB_DEL);
-	    
-	    JMenu mProb = new JMenu("Add probe");
-	    mb.add(mProb);
+		JMenuBar mb = new JMenuBar();
+		frame.setJMenuBar(mb);
+		JMenu fm = new JMenu("Menu");
+		mb.add(fm);
 
-	    MI_PROB_PLAN.addActionListener(listener);
-	    mProb.add(MI_PROB_PLAN);
-	    MI_PROB_COG.addActionListener(listener);
-	    mProb.add(MI_PROB_COG);
-	    MI_PROB_ATT.addActionListener(listener);
-	    mProb.add(MI_PROB_ATT);
-	    MI_PROB_FAC.addActionListener(listener);
-	    mProb.add(MI_PROB_FAC);
-	    MI_PROB_OBJ.addActionListener(listener);
-	    mProb.add(MI_PROB_OBJ);
-	    MI_PROB_POP.addActionListener(listener);
-	    mProb.add(MI_PROB_POP);
+		JMenu mTabs = new JMenu("Manage Tabs");
+		mb.add(mTabs);
 
-	    frame.setContentPane(tabs);
+		ASWListener listener = new ASWListener(this);
 
-	   loadDesktop(new File(DefinePath.pathToRessource+"/"+DefinePath.ADVStatsRootDirectory));
+		MI_TAB_NEW.addActionListener(listener);
+		mTabs.add(MI_TAB_NEW);
+		MI_TAB_RNAM.addActionListener(listener);
+		mTabs.add(MI_TAB_RNAM);
+		MI_TAB_LOAD.addActionListener(listener);
+		mTabs.add(MI_TAB_LOAD);
+		MI_TAB_SAVE.addActionListener(listener);
+		mTabs.add(MI_TAB_SAVE);
+		MI_TAB_SALL.addActionListener(listener);
+		mTabs.add(MI_TAB_SALL);
+		MI_TAB_DEL.addActionListener(listener);
+		mTabs.add(MI_TAB_DEL);
+
+		JMenu mProb = new JMenu("Add probe");
+		mb.add(mProb);
+
+		MI_PROB_PLAN.addActionListener(listener);
+		mProb.add(MI_PROB_PLAN);
+		MI_PROB_COG.addActionListener(listener);
+		mProb.add(MI_PROB_COG);
+		MI_PROB_ATT.addActionListener(listener);
+		mProb.add(MI_PROB_ATT);
+		MI_PROB_FAC.addActionListener(listener);
+		mProb.add(MI_PROB_FAC);
+		MI_PROB_OBJ.addActionListener(listener);
+		mProb.add(MI_PROB_OBJ);
+		MI_PROB_POP.addActionListener(listener);
+		mProb.add(MI_PROB_POP);
+
+		frame.setContentPane(tabs);
+
+		loadDesktop(new File(DefinePath.pathToRessource + "/" + DefinePath.ADVStatsRootDirectory));
 	}
 
-
 	private void loadDesktop(File folder) {
-		if(folder.exists())
-		{
-			File [] tabFiles = folder.listFiles();
-			if(tabFiles != null && tabFiles.length >0)
-			{
-				for(File tab : tabFiles)
-				{
+		if (folder.exists()) {
+			File[] tabFiles = folder.listFiles();
+			if (tabFiles != null && tabFiles.length > 0) {
+				for (File tab : tabFiles) {
 					JDesktopPane jdp = createEmptyTab(tab.getName());
-					loadTabFromFile(jdp , tab);
+					loadTabFromFile(jdp, tab);
 				}
-			}
-			else
+			} else
 				loadDefaultDesktop();
-		}
-		else
+		} else
 			loadDefaultDesktop();
 	}
 
-
 	private void loadTabFromFile(JDesktopPane jdp, File tab) {
-		File [] wFiles = tab.listFiles();
-		if(wFiles != null && wFiles.length >0)
-		{
-			for(File widget : wFiles)
-			{
-				addWidgetToTab(ADVSWidgetFactory.loadWidgetFromFile(widget),  jdp);
+		File[] wFiles = tab.listFiles();
+		if (wFiles != null && wFiles.length > 0) {
+			for (File widget : wFiles) {
+				addWidgetToTab(ADVSWidgetFactory.loadWidgetFromFile(widget), jdp);
 			}
 		}
 	}
-
 
 	private void loadDefaultDesktop() {
 		createDefaultSimpleTab();
 		createDefaultCompleteTab();
 		createEmptyTab("Personal Tab");
+		/**
+		 * sauvegarde des tabs par defaut pour eviter la creation des objets à chaque fois
+		 */
+		System.out.println("save all tabs");
+
+		for (int i = 0; i < tabs.getTabCount(); i++) {
+			saveTab(tabs.getTitleAt(i), (JDesktopPane) tabs.getComponentAt(i));
+		}
 	}
 
-	public void observe(){
-		
+	public void observe() {
+
 	}
-	
-	private class ASWListener implements ActionListener
-	{
+
+	private class ASWListener implements ActionListener {
 		AdvancedStatsWindows win;
-		
+
 		public ASWListener(AdvancedStatsWindows inwin) {
 			win = inwin;
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JMenuItem source = (JMenuItem)e.getSource();
-				
-			if(source.equals(MI_PROB_ATT))
-			{
+			JMenuItem source = (JMenuItem) e.getSource();
+
+			if (source.equals(MI_PROB_ATT)) {
 				System.out.println("create attribute probe");
 				AttributeProbeWidget p = new AttributeProbeWidget();
-				DialogStatOptions d = new DialogStatOptions(win , true,p);
+				DialogStatOptions d = new DialogStatOptions(win, true, p);
 				d.setVisible(true);
-			}
-			else if(source.equals(MI_PROB_COG))
-			{
+			} else if (source.equals(MI_PROB_COG)) {
 				System.out.println("create cogniton probe");
 				CognitonProbeWidget p = new CognitonProbeWidget();
-				DialogStatOptions d = new DialogStatOptions(win , true,p);
+				DialogStatOptions d = new DialogStatOptions(win, true, p);
 				d.setVisible(true);
-			}
-			else if(source.equals(MI_PROB_FAC))
-			{
+			} else if (source.equals(MI_PROB_FAC)) {
 				System.out.println("MI_PROB_FAC");
-			
-			}
-			else if(source.equals(MI_PROB_OBJ))
-			{
+
+			} else if (source.equals(MI_PROB_OBJ)) {
 				System.out.println("create object probe");
 				ObjectProbeWidget p = new ObjectProbeWidget();
-				DialogStatOptions d = new DialogStatOptions(win , true,p);
+				DialogStatOptions d = new DialogStatOptions(win, true, p);
 				d.setVisible(true);
-			}
-			else if(source.equals(MI_PROB_PLAN))
-			{
+			} else if (source.equals(MI_PROB_PLAN)) {
 				System.out.println("create plan probe");
 				PlanProbeWidget p = new PlanProbeWidget();
-				DialogStatOptions d = new DialogStatOptions(win , true,p);
+				DialogStatOptions d = new DialogStatOptions(win, true, p);
 				d.setVisible(true);
-			}
-			else if(source.equals(MI_PROB_POP))
-			{
+			} else if (source.equals(MI_PROB_POP)) {
 				System.out.println("create population probe");
 				PopulationProbeWidget p = new PopulationProbeWidget();
-				DialogStatOptions d = new DialogStatOptions(win , true,p);
+				DialogStatOptions d = new DialogStatOptions(win, true, p);
 				d.setVisible(true);
-			}
-			else if(source.equals(MI_TAB_NEW))
-			{
+			} else if (source.equals(MI_TAB_NEW)) {
 				System.out.println("create new tab");
-				String s = (String)JOptionPane.showInputDialog(win.getFrame(),
-	                    "create new tab",
-	                    "enter a name for the tab", JOptionPane.PLAIN_MESSAGE,
-	                    null,
-	                    null, null);
-				if(s != null)
-				{
-					if(win.checkIfTabExists(s))
-						s+= "_"+tabs.getTabCount();
+				String s = (String) JOptionPane.showInputDialog(win.getFrame(), "create new tab",
+						"enter a name for the tab", JOptionPane.PLAIN_MESSAGE, null, null, null);
+				if (s != null) {
+					if (win.checkIfTabExists(s))
+						s += "_" + tabs.getTabCount();
 					createEmptyTab(s);
 				}
-				
-			}
-			else if(source.equals(MI_TAB_SAVE))
-			{
+
+			} else if (source.equals(MI_TAB_SAVE)) {
 				System.out.println("save selected tab");
-				saveTab(tabs.getTitleAt(tabs.getSelectedIndex()),(JDesktopPane) tabs.getComponentAt(tabs.getSelectedIndex()));
-			}
-			else if(source.equals(MI_TAB_SALL))
-			{
+				saveTab(tabs.getTitleAt(tabs.getSelectedIndex()),
+						(JDesktopPane) tabs.getComponentAt(tabs.getSelectedIndex()));
+			} else if (source.equals(MI_TAB_SALL)) {
 				System.out.println("save all tabs");
-				
-				for(int i = 0 ; i < tabs.getTabCount(); i++)
-				{
-					saveTab(tabs.getTitleAt(i),(JDesktopPane) tabs.getComponentAt(i));
+
+				for (int i = 0; i < tabs.getTabCount(); i++) {
+					saveTab(tabs.getTitleAt(i), (JDesktopPane) tabs.getComponentAt(i));
 				}
-				
-			}
-			else if(source.equals(MI_TAB_LOAD))
-			{
+
+			} else if (source.equals(MI_TAB_LOAD)) {
 				System.out.println("MI_TAB_LOAD");
-			}
-			else if(source.equals(MI_TAB_RNAM))
-			{
+			} else if (source.equals(MI_TAB_RNAM)) {
 				System.out.println("MI_TAB_RNAM");
-			
-			}else if(source.equals(MI_TAB_DEL))
-			{
-				if(win.tabs.getTabCount() > 0)
-				{
-					File tabFile = new File(DefinePath.pathToRessource+"/"+DefinePath.ADVStatsRootDirectory+"/"+win.tabs.getTitleAt(win.tabs.getSelectedIndex()));
+
+			} else if (source.equals(MI_TAB_DEL)) {
+				if (win.tabs.getTabCount() > 0) {
+					File tabFile = new File(DefinePath.pathToRessource + "/" + DefinePath.ADVStatsRootDirectory + "/"
+							+ win.tabs.getTitleAt(win.tabs.getSelectedIndex()));
 					deleteFolderRec(tabFile);
 					win.tabs.remove(win.tabs.getSelectedIndex());
-					if(win.tabs.getTabCount() > 0)
+					if (win.tabs.getTabCount() > 0)
 						win.tabs.setSelectedIndex(0);
 				}
 			}
 		}
-		
+
 	}
 
-	public void saveTab(String title, JDesktopPane p)
-	{
-		File root = new File(DefinePath.pathToRessource+"/"+DefinePath.ADVStatsRootDirectory);
+	public void saveTab(String title, JDesktopPane p) {
+		File root = new File(DefinePath.pathToRessource + "/" + DefinePath.ADVStatsRootDirectory);
 		root.mkdirs();
-		File tabFolder = new File(DefinePath.pathToRessource+"/"+DefinePath.ADVStatsRootDirectory+"/"+title);
-		if(tabFolder.exists()){
+		File tabFolder = new File(DefinePath.pathToRessource + "/" + DefinePath.ADVStatsRootDirectory + "/" + title);
+		if (tabFolder.exists()) {
 			deleteFolderRec(tabFolder);
 		}
 		tabFolder.mkdirs();
 
-		for(JInternalFrame widget : p.getAllFrames())
-		{
-			((AbstractProbeWidget)widget).toFile(tabFolder);
+		for (JInternalFrame widget : p.getAllFrames()) {
+			((AbstractProbeWidget) widget).toFile(tabFolder);
 		}
 	}
-	
+
 	private void deleteFolderRec(File tabFolder) {
-		for(File f :tabFolder.listFiles())
-		{
-			if(f.isFile())
+		for (File f : tabFolder.listFiles()) {
+			if (f.isFile())
 				f.delete();
 			else
 				deleteFolderRec(f);
@@ -315,78 +289,108 @@ pour touts : groupes/roles affichage part type ou instances
 		tabFolder.delete();
 	}
 
-
 	public boolean checkIfTabExists(String s) {
-		
-		for(int i = 0 ; i < tabs.getTabCount(); i++)
-		{
-			if(tabs.getTitleAt(i).equals(s))
+
+		for (int i = 0; i < tabs.getTabCount(); i++) {
+			if (tabs.getTitleAt(i).equals(s))
 				return true;
 		}
 		return false;
 	}
 
-
-	public void addWidgetToCurrentTab(AbstractProbeWidget cont)
-	{
+	public void addWidgetToCurrentTab(AbstractProbeWidget cont) {
 		JDesktopPane d = (JDesktopPane) tabs.getSelectedComponent();
-		addWidgetToTab(cont,d);
+		addWidgetToTab(cont, d);
 	}
-	
-	public void addWidgetToTab(AbstractProbeWidget cont , JDesktopPane d) {
-		
-		if(cont != null)
-		{
+
+	public void addWidgetToTab(AbstractProbeWidget cont, JDesktopPane d) {
+
+		if (cont != null) {
 			System.out.println("adding widget");
-			for(JInternalFrame intF: d.getAllFrames())
-			{
-				if(intF.equals(cont))
+			for (JInternalFrame intF : d.getAllFrames()) {
+				if (intF.equals(cont))
 					return;
 			}
 			System.out.println(cont.getTitle());
 			d.add(cont);
-		    cont.setVisible(true);
+			cont.setVisible(true);
 			System.out.println("widget added");
-		}
-		else
-		{
+		} else {
 			System.out.println("widget is null");
 		}
 	}
-	
-	public JDesktopPane createEmptyTab(String title)
-	{
+
+	public JDesktopPane createEmptyTab(String title) {
 		JDesktopPane result = new JDesktopPane();
 		tabs.add(title, result);
 		return result;
 	}
-	
+
 	/**
 	 * Creation d'un panel simple avec les Probs classiques
+	 * 
 	 * @return
 	 */
-	public JDesktopPane createDefaultSimpleTab()
-	{
+	public JDesktopPane createDefaultSimpleTab() {
+		int widthProb = width / 2 - 30;
+		int heightProb = height / 2 - 30;
+
+		AbstractProbeWidget obj = new ObjectProbeWidget();
+		AbstractProbeWidget pop = new PopulationProbeWidget();
+		AbstractProbeWidget pla = new PlanProbeWidget();
+		obj.setSize(widthProb, heightProb);
+		pop.setSize(widthProb, heightProb);
+		pla.setSize(widthProb, heightProb);
+
+		pla.setLocation(15, 15);
+		int pos = widthProb + 15;
+		pop.setLocation(pos, 15);
+		pos = heightProb + 15;
+		obj.setLocation(15 + widthProb / 2, pos);
+
 		JDesktopPane result = new JDesktopPane();
-		addWidgetToTab(new ObjectProbeWidget(), result);
-		addWidgetToTab(new PopulationProbeWidget(), result);
-		addWidgetToTab(new PlanProbeWidget(), result);
+		addWidgetToTab(obj, result);
+		addWidgetToTab(pop, result);
+		addWidgetToTab(pla, result);
 		tabs.add("Default Simple Tab", result);
 		return result;
 	}
-	
+
 	/**
 	 * Création d'un panel plus complet avec toutes les probs possibles
+	 * 
 	 * @return
 	 */
-	public JDesktopPane createDefaultCompleteTab()
-	{
+	public JDesktopPane createDefaultCompleteTab() {
+		int widthProb = width / 3 - 30;
+		int heightProb = height / 2 - 30;
+
+		AbstractProbeWidget obj = new ObjectProbeWidget();
+		AbstractProbeWidget pop = new PopulationProbeWidget();
+		AbstractProbeWidget pla = new PlanProbeWidget();
+		AbstractProbeWidget att = new AttributeProbeWidget();
+		AbstractProbeWidget cog = new CognitonProbeWidget();
+		obj.setSize(widthProb, heightProb);
+		pop.setSize(widthProb, heightProb);
+		pla.setSize(widthProb, heightProb);
+		att.setSize(widthProb, heightProb);
+		cog.setSize(widthProb, heightProb);
+
+		pla.setLocation(15, 15);
+		int pos = widthProb + 15;
+		pop.setLocation(pos, 15);
+		pos += widthProb;
+		obj.setLocation(pos, 15);
+		pos = heightProb + 15;
+		att.setLocation(widthProb / 2 + 15, pos);
+		cog.setLocation(widthProb + widthProb / 2 + 15, pos);
+
 		JDesktopPane result = new JDesktopPane();
-		addWidgetToTab(new ObjectProbeWidget(), result);
-		addWidgetToTab(new PopulationProbeWidget(), result);
-		addWidgetToTab(new PlanProbeWidget(), result);
-		addWidgetToTab(new AttributeProbeWidget(), result);
-		addWidgetToTab(new CognitonProbeWidget(), result);
+		addWidgetToTab(obj, result);
+		addWidgetToTab(pop, result);
+		addWidgetToTab(pla, result);
+		addWidgetToTab(att, result);
+		addWidgetToTab(cog, result);
 		tabs.add("Default Complete Tab", result);
 		return result;
 	}
