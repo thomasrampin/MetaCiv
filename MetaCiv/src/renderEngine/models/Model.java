@@ -14,11 +14,13 @@ public class Model {
 	private Material texture;
 	private BoundingBox box;
 	private Vector4f colorID;
+	private Vector3f colorAction;
 	
 	public Model(Mesh mesh, Material texture){
 		this.mesh = mesh;
 		this.texture = texture;
-		this.colorID =new Vector4f(0,0,0,0);
+		this.colorID = new Vector4f(0,0,0,0);
+		this.colorAction = new Vector3f(-1,-1,-1);
 	}
 
 	public Model( Material texture) {
@@ -50,5 +52,17 @@ public class Model {
 	
 	public Vector4f getColorID(){
 		return colorID;
+	}
+
+	public void setColorAction(Vector3f colorAction) {
+		this.colorAction = colorAction;
+	}
+	
+	public Vector3f getColorAction(){
+		return this.colorAction;
+	}
+
+	public void setBoundingBox(BoundingBox box) {
+		this.box = box;
 	}
 }

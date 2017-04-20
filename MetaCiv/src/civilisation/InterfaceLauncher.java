@@ -72,7 +72,7 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 		civkraftSuperPanel = new JPanel(new GridBagLayout());
 		
 		
-		civkraftBoutonSolo = new JButton(I18nList.CheckLang("Solo 3D / Editeur"));
+		//civkraftBoutonSolo = new JButton(I18nList.CheckLang("Solo 3D / Editeur"));
 		civkraftButonSolo3DFree  = new JButton(I18nList.CheckLang("Solo / Editeur")); 
 		civkraftBoutonHeberger = new JButton(I18nList.CheckLang("Heberger une partie"));
 		civkraftBoutonRejoindre = new JButton(I18nList.CheckLang("Rejoindre une partie"));
@@ -228,7 +228,7 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 		{
 			I18nList.infoLang = langBox.getSelectedItem().toString();
 			
-			civkraftBoutonSolo.setText(I18nList.CheckLang("Solo 3D / Editeur"));
+			//civkraftBoutonSolo.setText(I18nList.CheckLang("Solo 3D / Editeur"));
 			civkraftButonSolo3DFree.setText(I18nList.CheckLang("Solo / Editeur"));
 			civkraftBoutonHeberger.setText(I18nList.CheckLang("Heberger une partie"));
 			civkraftBoutonRejoindre.setText(I18nList.CheckLang("Rejoindre une partie"));

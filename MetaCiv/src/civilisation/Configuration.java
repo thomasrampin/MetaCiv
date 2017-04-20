@@ -291,6 +291,21 @@ public class Configuration{
 		return null;
 	}
 	
+	public static TypeAmenagement getAmenagementsByNameFor3D(String nom) {
+		if(true)
+		for (int i = 0 ; i < amenagements.size(); i++){
+			if (amenagements.get(i).getNom().equals(nom)){
+				return(amenagements.get(i));
+			}
+		}
+
+		return null;
+	}
+	
+	public static ArrayList<TypeAmenagement> getAllAmenagementFor3D(){
+		return amenagements;
+	}
+	
 	/**
 	 * Ajout civkraft v0.1 
 	 */

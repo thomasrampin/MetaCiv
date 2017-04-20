@@ -21,12 +21,11 @@ public class StaticShader extends ShaderProgram{
 	private int location_projectionMatrix;
 	private int location_viewMatrix;
 	private int location_diffuse;
-	private int location_lightPosition[];
-	private int location_lightColour[];
+	private int location_lightPosition;
+	private int location_lightColour;
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_textured;
-	private int location_toShadowMapSpace;
 	private int location_shadowMap;
 	private int location_diffuseMap;
 	private int location_normalMap;
@@ -37,6 +36,16 @@ public class StaticShader extends ShaderProgram{
 	private int location_dispMapped;
 	private int location_viewPos;
 	private int location_heightScale;
+	private int location_roughnessMap;
+	private int location_reflexion;
+	private int location_reflexion_blur;
+	private int location_skyAngle;
+	
+	private int location_reflMapped;
+
+	private int location_metalMapped;
+
+	private int location_colorAction;
 	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -59,32 +68,42 @@ public class StaticShader extends ShaderProgram{
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_textured = super.getUniformLocation("textured");
 		location_diffuse = super.getUniformLocation("diffuseColour");
-		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
 		location_shadowMap = super.getUniformLocation("shadowMap"); 
 		location_diffuseMap = super.getUniformLocation("diffuseMap"); 
 		location_reciveShadow = super.getUniformLocation("reciveShadow");
 		location_colorID = super.getUniformLocation("colorID");
 		location_normalMap = super.getUniformLocation("normalMap");
 		location_normalMapped = super.getUniformLocation("normalMapped");
+		location_roughnessMap = super.getUniformLocation("roughnessMap");
 		location_dispMap = super.getUniformLocation("dispMap");
 		location_dispMapped = super.getUniformLocation("dispMapped");
 		location_viewPos = super.getUniformLocation("viewPos");
 		location_heightScale = super.getUniformLocation("height_scale");
+		location_reflexion = super.getUniformLocation("reflexion");
+		location_reflMapped = super.getUniformLocation("reflMapped");
+		location_reflexion_blur = super.getUniformLocation("reflexion_blur");
+		location_skyAngle = super.getUniformLocation("skyAngle");
+		location_metalMapped = super.getUniformLocation("metalMapped");
+		location_colorAction = super.getUniformLocation("colorAction");
+
+
+		location_lightPosition = super.getUniformLocation("lightPosition");
+		location_lightColour = super.getUniformLocation("lightColour");
 		
-		location_lightPosition = new int[MAX_LIGHTS];
-		location_lightColour = new int[MAX_LIGHTS];
-		for(int i=0;i<MAX_LIGHTS;i++){
-			location_lightPosition[i] = super.getUniformLocation("lightPosition["+i+"]");
-			location_lightColour[i] = super.getUniformLocation("lightColour["+i+"]");
-		}
+	}
+	
+	public void loadSkyAngle(float skyAngle){
+		super.loadFloat(location_skyAngle, skyAngle);
 	}
 	
 	public void connectTextureUnits(){
-		super.loadInt(location_diffuseMap, 0);
-		super.loadInt(location_normalMap, 1);
-		super.loadInt(location_dispMap, 2);
-		super.loadInt(location_shadowMap, 3);
-		
+		super.loadInt(location_reflexion, 0);
+		super.loadInt(location_reflexion_blur, 1);
+		super.loadInt(location_diffuseMap, 2);
+		super.loadInt(location_normalMap, 3);
+		super.loadInt(location_dispMap, 4);
+		super.loadInt(location_roughnessMap, 5);
+		super.loadInt(location_shadowMap, 6);
 	}
 	
 	public void loadHeightScale(float hS){
@@ -95,16 +114,10 @@ public class StaticShader extends ShaderProgram{
 		super.loadVector(location_diffuse, diffuse);
 	}
 	
-	public void loadLights(List<Light> lights){
-		for(int i=0;i<MAX_LIGHTS;i++){
-			if(i<lights.size()){
-				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
-				super.loadVector(location_lightColour[i], lights.get(i).getColour());
-			}else{	// Shader get static array, make sure we don't have empty information
-				super.loadVector(location_lightPosition[i], new Vector3f(0,0,0));
-				super.loadVector(location_lightColour[i], new Vector3f(0,0,0));				
-			}
-		}
+	public void loadLights(Light light){
+		super.loadVector(location_lightPosition, light.getPosition());
+		super.loadVector(location_lightColour, light.getColour());
+		
 	}
 	
 	public void loadDispMapped(boolean dispMapped){
@@ -145,9 +158,19 @@ public class StaticShader extends ShaderProgram{
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 		super.loadVector(location_viewPos, camera.getPosition());
 	}
-	
-	public void loadToShadowSpaceMatrix(Matrix4f matrix){
-		super.loadMatrix(location_toShadowMapSpace, matrix);
+
+	public void loadReflMapped(boolean b) {
+		super.loadBoolean(location_reflMapped, b);
 	}
 
+	public void loadMetalMapped(boolean b) {
+		super.loadBoolean(location_metalMapped, b);
+	}
+
+	public void loadColorAction(Vector3f colorAction) {
+		super.loadVector(location_colorAction, colorAction);
+	}
+
+	
+	
 }

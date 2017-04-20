@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import renderEngine.entities.Object3D;
+import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Mesh;
 import renderEngine.models.Model;
 import renderEngine.models.Models;
+import renderEngine.sea.SeaFrameBuffers;
 import renderEngine.shaders.StaticShader;
+import renderEngine.sky.SkyRenderer;
 import renderEngine.utils.Matrix;
 
 import org.lwjgl.input.Keyboard;
@@ -22,23 +25,26 @@ import org.lwjgl.util.vector.Matrix4f;
 public class EntityRenderer {
  
     private StaticShader shader;
+    private int envTexture_level1,envTexture_level2,envTexture_level3,envTexture_level4;//temp
     private float hS = 0.0f;
  
-    public EntityRenderer(StaticShader shader,Matrix4f projectionMatrix) {
+    public EntityRenderer(Loader loader,StaticShader shader,Matrix4f projectionMatrix) {
         this.shader = shader;
+        envTexture_level1 = loader.loadTexture("reflect/level1.png");
+
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
-        shader.connectTextureUnits();
+        //shader.connectTextureUnits();
         shader.stop();
     }
 
 
 
-    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2) {
+    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2,SeaFrameBuffers fbos) {
         for (Model model : entities.keySet()) {
         	
         	
-            prepareTexturedModel(model);
+            prepareTexturedModel(model,fbos);
             List<Object3D> batch = entities.get(model);
             for (Object3D entity : batch) {
                 prepareInstance(entity);
@@ -51,7 +57,7 @@ public class EntityRenderer {
     }
  
     
-    private void prepareTexturedModel(Model model) {
+    private void prepareTexturedModel(Model model,SeaFrameBuffers fbos) {
         Mesh rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -60,36 +66,51 @@ public class EntityRenderer {
         GL20.glEnableVertexAttribArray(3);
         Material texture = model.getTexture();
         shader.loadDispMapped(false);
+        shader.loadSkyAngle(SkyRenderer.angle);
         shader.loadTextured(false);
         shader.loadNormalMapped(false);
+        shader.loadReflMapped(false);
+        shader.loadMetalMapped(false);
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
         shader.loadColorID(model.getColorID());
+        shader.loadColorAction(model.getColorAction());
         if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-        	hS+=0.01;
+        	hS+=0.1;
         	
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_I)){
-        	hS-=0.01;
+        	hS-=0.1;
         	
         }
         
-        shader.loadHeightScale(-hS/100);
-
+        shader.loadHeightScale(hS/100.0f);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, envTexture_level1);
     	if(model.getTexture().IsTextured()){
     		shader.loadTextured(texture.IsTextured());
-    		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE1);
     		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
     	}
     	if(model.getTexture().IsNormalMapped()){
     		shader.loadNormalMapped(true);
-    		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE2);
     		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalID());
     	}
     	if(model.getTexture().IsDispMapped()){
     		shader.loadDispMapped(true);
-    		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE3);
     		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getDispID());
+    	}
+    	if(model.getTexture().IsReflMapped()){
+    		shader.loadReflMapped(true);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE4);
+    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getReflID());
+    	}
+    	if(model.getTexture().IsMetalMapped()){
+    		shader.loadMetalMapped(true);
+    		GL13.glActiveTexture(GL13.GL_TEXTURE5);
+    		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getMetalID());
     	}
     }
  

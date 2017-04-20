@@ -74,8 +74,8 @@ public class Matrix {
 	}
 	
 	public static Matrix4f frustum(float left, float right, float bottom, float top, float n, float f){
-		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity();
+		Matrix4f matrix = identity();
+		
 		
 	    if ((right == left) ||
 	            (top == bottom) ||
@@ -112,18 +112,29 @@ public class Matrix {
 	    return translate(v.x, v.y, v.z);
 	}
 	
-	public static Matrix4f lookat(Vector3f eye, Vector3f center,Vector3f up)
-	{
-		Vector3f f = Helper.Normalize(new Vector3f(center.x - eye.x,center.y - eye.y,center.z - eye.z));
-		Vector3f upN = Helper.Normalize(up);
-		Vector3f s = Helper.Vectoriel(f, upN);
-		Vector3f u = Helper.Vectoriel(s, f);
-	    Matrix4f M = createMatrix(s.x, u.x, -f.x, 0,
-	                              s.y, u.y, -f.y, 0,
-	                              s.z, u.z, -f.z, 0,
-	                              0, 0, 0, 1);
+	public static Matrix4f lookAt(Vector3f eye, Vector3f center, Vector3f up) {
+        Vector3f forward = new Vector3f(0, 0, 0);
+             Vector3f.sub(center, eye, forward);
+             forward.normalise();
+      
+        Vector3f side = new Vector3f(0, 0, 0);
+        Vector3f.cross(forward, up, side);
+        side.normalise();
+       
+        Vector3f.cross(side, forward, up);
 
-	    return Matrix4f.mul(M , translate(new Vector3f(-eye.x,-eye.y,-eye.z)),M);
-	}
-	
+        Matrix4f matrix = new Matrix4f();
+        matrix.m00 = side.x;
+        matrix.m01 = side.y;
+        matrix.m02 = side.z;
+        matrix.m10 = up.x;
+        matrix.m11 = up.y;
+        matrix.m12 = up.z;
+        matrix.m20 = -forward.x;
+        matrix.m21 = -forward.y;
+        matrix.m22 = -forward.z;
+        matrix.invert();
+       
+        return matrix;
+     }
 }

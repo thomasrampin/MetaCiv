@@ -23,6 +23,7 @@ public class Window {
 			Display.create();
 			Display.setTitle("MetaCiv 3D view");
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
+			//Display.setVSyncEnabled(true);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}

@@ -133,7 +133,7 @@ void main(void) {
 	nDotl = dot(normalize(vec3(0,1,0)),normalize(fs_in.toLightVector));
 	float brightness5 = max(nDotl,0.0);
 
-	float fresnelFactor = dot(viewVector,vec3(0,1,0));
+	float fresnelFactor = min(max(dot(viewVector,normal),0.3),1.0);
 
 	vec4 lighting =  vec4(brightness * lightColour ,1.0);
 	vec4 lighting2 =  vec4(brightness2 * lightColour ,1.0);
@@ -141,7 +141,7 @@ void main(void) {
 	vec4 lighting4 =  vec4(brightness4 * lightColour ,1.0);
 	vec4 lighting5 =  vec4(brightness5 * lightColour ,1.0);
 
-	vec4 depthTexture = mix(vec4(0.0,0.3,1.0,1.0),texture(refractionMap,coords2),(1-texture(depthMap,coords2).r));
+	vec4 depthTexture = mix(vec4(0.2,0.5,1.0,1.0),texture(refractionMap,coords2),(1-texture(depthMap,coords2).r));
 	//out_Color = texture(diffuseMap,modifyTexCoords);
 	out_Color = mix(texture(diffuseMap,coords), depthTexture,fresnelFactor);
 	out_Color = (mix(out_Color,vec4(1.0,1.0,1.0,1.0),fs_in.height));

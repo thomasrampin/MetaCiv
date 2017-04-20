@@ -86,6 +86,7 @@ public class CivLauncher extends TKLauncher {
 	
 
 	private static int choix;
+	public static int choix3D;
 	private static String cuda = "false";
 	private static String desktop = "false";
 	private static String fastRendering = "true";
@@ -223,6 +224,7 @@ public class CivLauncher extends TKLauncher {
 					e.printStackTrace();
 				}
 				choix = inter.getChoix();
+				choix3D = inter.getChoix3D();
 				if(choix == 2 || choix == 3){
 					network = "true";
 					if(choix == 2){

@@ -1,11 +1,21 @@
 #version 420 core
 
+in vec3 position;
+
 uniform mat4 mvp;
+uniform mat4 viewMatrix;
+uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 
-layout (location = 0) in vec3 position;
+
 
 void main(void)
 {
-    gl_Position = mvp * projectionMatrix * vec4(position,1.0);
+	vec4 worldPosition =  transformationMatrix *  vec4(position,1.0);
+
+	vec4 Peye =  mvp *  worldPosition;
+
+
+	gl_Position = Peye;
+   // gl_Position = projectionMatrix  * viewMatrix * transformationMatrix * vec4(position,1.0);
 }

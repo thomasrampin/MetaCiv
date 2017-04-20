@@ -9,15 +9,18 @@ import java.util.Map;
 import renderEngine.entities.Camera;
 import renderEngine.entities.Light;
 import renderEngine.entities.Object3D;
+import renderEngine.instanced.InstancedRenderer;
 import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Model;
 import renderEngine.models.Models;
+import renderEngine.postProcessing.FrameBufferObject;
+import renderEngine.sea.SeaFrameBuffers;
 import renderEngine.shaders.StaticShader;
-import renderEngine.shaders.TerrainShader;
-import renderEngine.shaders.TerrainTessShader;
 import renderEngine.shadowsMapping.ShadowFrameBuffer;
 import renderEngine.terrains.Terrain;
+import renderEngine.terrains.TerrainShader;
+import renderEngine.terrains.TerrainTessShader;
 import renderEngine.utils.Helper;
 import renderEngine.utils.TerrainTexture;
 
@@ -33,13 +36,14 @@ public class MasterRenderer {
      
     public static final float FOV = 45;
     public static final float NEAR_PLANE = 0.1f;
-    public static final float FAR_PLANE = 1000;
+    public static final float FAR_PLANE = 20000;
      
-    private Matrix4f projectionMatrix;
+    public static Matrix4f projectionMatrix;
      
     private StaticShader shader = new StaticShader();
     private EntityRenderer renderer;
-     
+    private InstancedRenderer irenderer; 
+    
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
  
@@ -47,32 +51,37 @@ public class MasterRenderer {
     private TerrainTessShader terrainTessShader = new TerrainTessShader();
      
     private Map<Model,List<Object3D>> entities = new HashMap<Model,List<Object3D>>();
+    private Map<Model,List<Object3D>> entitiesInstanced = new HashMap<Model,List<Object3D>>();
     private Map<Models,List<Object3D>> entities2 = new HashMap<Models,List<Object3D>>();
     private Terrain terrain;
     
     private boolean terrainInit;
      
-    public MasterRenderer(Loader loader,ArrayList<TerrainTexture> textures){
+    public MasterRenderer(Loader loader,ArrayList<TerrainTexture> textures,Object3D instancedObject){
 		/*GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);*/
 
         createProjectionMatrix();
+        irenderer = new InstancedRenderer(loader,instancedObject,projectionMatrix);
         terrainInit = false;
-        renderer = new EntityRenderer(shader,projectionMatrix);
+        renderer = new EntityRenderer(loader,shader,projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures);
         terrainTessRenderer = new TerrainTessRenderer(loader,terrainTessShader,loader.loadTexture("heightmap.png"),loader.loadTexture("heightmap_NRM.png"),loader.loadTexture("forest/forest_DISP.png"),loader.loadTexture("forest/forest_NRM.png"),projectionMatrix,textures);
         terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<Vector4f>());
     }
      
-    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer fbo,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
+    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
         prepare();
         shader.start();
-        shader.loadLights(lights);
+        shader.loadLights(sun);
         shader.loadViewMatrix(camera);
-        renderer.render(entities,entities2);
+        renderer.render(entities,entities2,fbos);
         shader.stop();
 
+        
+        
         if(!fromLight){
+        
             terrainShader.start();
             terrainShader.loadLights(sun);
             if(invertPitch)
@@ -80,26 +89,37 @@ public class MasterRenderer {
             terrainShader.loadViewMatrix(camera);
             terrainShader.loadCameraPos(camera.getPosition());
             
-        	terrainRenderer.render(terrain,heights,distanceFog,fromLight,fbo, shadowMatrix);
+        	terrainRenderer.render(terrain,heights,distanceFog,fromLight,shadowsTexture, shadowMatrix);
+        	
         	terrainShader.stop();
             if(invertPitch)
             	camera.invertPitch();
+          
+            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+        	GL11.glPolygonOffset(-1.0f,-1.0f);
+            irenderer.render(entitiesInstanced, camera);
+            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+            
         }else{
-        	terrainRenderer.renderL(terrain,heights,distanceFog,fromLight,fbo, shadowMatrix, light_vp_matrix);
+        	terrainRenderer.renderL(terrain,heights,distanceFog,fromLight,shadowsTexture, shadowMatrix, light_vp_matrix,camera);
         }
         
        //terrainTessRenderer.render(camera,terrain,sun,heights,clipPlane,distanceFog,invertPitch,forceLow);
-        
+
+
         
         entities.clear();
         entities2.clear();
+        entitiesInstanced.clear();
     }
      
 
+    
      
-    public void processEntity(Object3D entity, int i){
+    public void processEntity(Object3D entity, int i, Vector3f colorAction){
         Model entityModel = new Model(entity.getModel());
         entityModel.setColorID(Helper.IntegerToColor(i));
+        entityModel.setColorAction(colorAction);
         List<Object3D> batch = entities.get(entityModel);
         if(batch!=null){
             batch.add(entity);
@@ -109,11 +129,24 @@ public class MasterRenderer {
             entities.put(entityModel, newBatch);        
         }
     }
+    
+    public void processInstancedEntity(Object3D entity){
+        Model entityModel = new Model(entity.getModel());
+        List<Object3D> batch = entitiesInstanced.get(entityModel);
+        if(batch!=null){
+            batch.add(entity);
+        }else{
+            List<Object3D> newBatch = new ArrayList<Object3D>();
+            newBatch.add(entity);
+            entitiesInstanced.put(entityModel, newBatch);        
+        }
+    }
    
-    public void processMultiEntity(Object3D entity, int i){
+    public void processMultiEntity(Object3D entity, int i, Vector3f color){
         Models entityModels = entity.getModels();
         for(Model entityModel:entityModels.getModels()){
 	        List<Object3D> batch = entities.get(entityModel);
+	        entityModel.setColorAction(color);
 	        if(batch!=null){
 	            batch.add(entity);
 	        }else{
@@ -128,12 +161,14 @@ public class MasterRenderer {
         shader.cleanUp();
         terrainShader.cleanUp();
         terrainTessRenderer.cleanUp();
+        irenderer.cleanUp();
     }
      
     public void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
+
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        
+
         GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
     }
      
@@ -170,5 +205,7 @@ public class MasterRenderer {
 		terrainTessRenderer.setTessLevel(tessLevel);
 		
 	}
+
+
  
 }

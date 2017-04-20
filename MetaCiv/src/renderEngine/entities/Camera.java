@@ -31,7 +31,7 @@ public class Camera {
 		
 		if(Mouse.isButtonDown(0)){
 			float pitchChange = Mouse.getDY() * 0.3f;
-			if(pitch - pitchChange >0 && pitch - pitchChange <85)
+			//if(pitch - pitchChange >0 && pitch - pitchChange <85)
 				pitch -= pitchChange;
 			float angleChange = Mouse.getDX() * 0.3f;
 			angleAroundPivot -= angleChange;

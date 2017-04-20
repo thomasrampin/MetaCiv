@@ -18,10 +18,10 @@ public class FrameBufferObject {
 	public static final int DEPTH_TEXTURE = 1;
 	public static final int DEPTH_RENDER_BUFFER = 2;
 
-	private final int width;
-	private final int height;
+	public final int width;
+	public final int height;
 
-	private int frameBuffer;
+	public int frameBuffer;
 
 	private boolean multisample = false;
 	

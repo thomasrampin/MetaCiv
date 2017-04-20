@@ -28,7 +28,7 @@ public class SkyRenderer {
 	private int texture;
 	private int alpha;
 	private SkyShader shader;
-	private float angle = 0;
+	public static float angle = 0;
 	private float density = 0.01f;
 	private static final float CLOUD_SPEED = 0.00002f;
 	private static float DENSITY_VARIATION = 0.000001f;
@@ -70,7 +70,8 @@ public class SkyRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, alpha);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
+        GL11.glDrawElements(GL11.GL_TRIANGLES, cube.getVertexCount(),
+                GL11.GL_UNSIGNED_INT, 0);
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL30.glBindVertexArray(0);

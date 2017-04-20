@@ -11,6 +11,7 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 
 		  static final Object[][] contents = { 
 			  {"Annuler","Annuler"},
+			  {"Solo 3D/ Editeur","Solo 3D/ Editeur"},
 			  {"Solo / Editeur","Solo / Editeur"},
 			  {"Solo", "Solo"}, 
 			  {"Editeur", "Editeur"},
@@ -152,7 +153,7 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 	  			{"Edit influence links","Editer influence des liens"},
 	  			{"Edit conditional links","Editer liens conditionnelles"},
 	  			{"Edit triggering attributes","Editer declenchement attributs"},
-	  			{"Display Custom colors", "Afficher couleurs personnalisées"},
+	  			{"Display Custom colors", "Afficher couleurs personnalisï¿½es"},
 	  			{"Display Type colors","Afficher couleurs par type"},
 	  		//civilisation.inspecteur.simulation.amenagement
 	  			//PanelAmenagement.java
@@ -224,7 +225,7 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 	  			{"Starting cogniton","Lancer cogniton"},
 	  			{"Give this cogniton to new agents?","Donnez ce cogniton Ã  de nouveaux agents?"},
 	  			{"Starting apparition chance :","Debuter apparition par chance :"},
-	  			{"Cogniton custom color : ","Teinte personnalisée Cogniton : "},
+	  			{"Cogniton custom color : ","Teinte personnalisï¿½e Cogniton : "},
 	  			{"Editer un cogniton","Editer un cogniton"},
 	  			//DialogueEditerLiensConditionnels.java
 	  			{"Conditionned plan :","Plan conditionnelle :"},
@@ -235,7 +236,7 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 	  			{"Birth-Plan","Plan-Naissance"},
 	  			{"Every agents will run this plan at birth.","Tous les agents seront exÃ©cuter sur ce plan de la naissance."},
 	  			{"Edite plan","Editer plan"},
-	  			{"Plan custom color : ","Teinte personnalisée Plan : "},
+	  			{"Plan custom color : ","Teinte personnalisï¿½e Plan : "},
 	  			//DialogueEditerTerrain.java
 	  			{"Editer le terrain","Editer le terrain"},
 	  			{"Passability :","Passabilitie :"},

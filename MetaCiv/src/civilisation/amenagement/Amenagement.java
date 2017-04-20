@@ -74,6 +74,10 @@ public class Amenagement extends Turtle implements Serializable {
 		}
 	}
 	
+	public Color getColorType(){
+		return type.getColor();
+	}
+	
 	public void Utiliser()
 	{
 	//	System.out.println("Utiliser Amenagement size effet "+type.effets.size());

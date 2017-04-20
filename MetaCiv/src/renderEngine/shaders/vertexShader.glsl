@@ -6,70 +6,59 @@ in vec2 textureCoords;
 in vec3 normal;
 in vec3 tangents;
 
-out vec2 pass_textureCoords;
-out vec3 surfaceNormal;
-out vec3 toLightVector[N_LIGHTS];
-out vec3 toLightVectorTangent[N_LIGHTS];
-out vec3 toCameraVector;
-out vec3 toCameraVectorTangent;
-out vec3 tangent;
-out vec3 tangentViewPos;
-out vec3 tangentFragPos;
+out VS_OUT{
+	vec2 pass_textureCoords;
+	vec3 surfaceNormal;
+	vec3 toLightVector;
+	vec3 toLightVectorTangent;
+	vec3 toCameraVector;
+	vec3 toCameraVectorTangent;
+	vec3 tangent;
+	vec3 tangentViewPos;
+	vec3 tangentFragPos;
+	vec3 TangentLightPos;
+	vec3 TangentViewPos;
+	vec3 TangentFragPos;
+}vs_out;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[N_LIGHTS];
+uniform vec3 lightPosition;
 uniform vec3 viewPos;
 
-uniform mat4 toShadowMapSpace;
 
 
-const float shadowDistance = 220.0;
-const float transitionDistance = 80.0;
 
 void main(void){
-	surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
+	vs_out.surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
 	vec4 worldPosition = transformationMatrix * vec4(position,1.0);
-	vec3 norm = normalize(surfaceNormal);
-	vec3 tang = normalize(vec3(  (viewMatrix) * transformationMatrix * vec4(tangents,0.0)));
-	vec3 bitang = normalize(cross(norm,tang));
-
-	mat3 toTangentSpace = mat3(
-		tang.x, bitang.x, norm.x,
-		tang.y, bitang.y, norm.y,
-		tang.z, bitang.z, norm.z
-	);
 
 
 
+    mat3 normalMatrix = transpose(inverse(mat3(transformationMatrix)));
+    vec3 T = normalize(normalMatrix * tangents);
+    vec3 N = normalize(normalMatrix * normal);
+    vec3 B = normalize(cross(N,T));
+    mat3 TBN = transpose(mat3(T, B, N));
 
-	
+    vs_out.TangentLightPos = TBN * lightPosition;
+    vs_out.TangentViewPos  = TBN * viewPos;
+    vs_out.TangentFragPos  = TBN * worldPosition.xyz;
+
+
 	gl_Position = projectionMatrix * viewMatrix * worldPosition;
-	pass_textureCoords = textureCoords;
+	vs_out.pass_textureCoords = textureCoords;
 
-	
 
-	for(int i=0; i<N_LIGHTS;i++){
-		toLightVector[i] =  (lightPosition[i] - worldPosition.xyz);
-		toLightVectorTangent[i] =  toTangentSpace * (lightPosition[i] - worldPosition.xyz);
-	}
 
-	toCameraVector = ((inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz);
-	toCameraVectorTangent = toTangentSpace * ((inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz);
 
-	 norm = normalize(surfaceNormal);
-	 tang = normalize(vec3(  (viewMatrix) * transformationMatrix * vec4(tangents,0.0)));
-	 bitang = normalize(cross(norm,tang));
+	vs_out.toLightVector =  (lightPosition - worldPosition.xyz);
+	vs_out.toCameraVector = ((inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz);
 
-	 toTangentSpace = mat3(
-		tang.x, bitang.x, norm.x,
-		tang.y, bitang.y, norm.y,
-		tang.z, bitang.z, norm.z
-	);
 
-	tangent = tangents;
-	tangentViewPos = toTangentSpace * (viewPos - worldPosition.xyz);
 
-	tangentFragPos = toTangentSpace * worldPosition.xyz;
+
+	vs_out.tangent = tangents;
+
 }

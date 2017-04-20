@@ -32,6 +32,7 @@ import madkit.kernel.KernelAddress;
 import madkit.simulation.probe.SingleAgentProbe;
 import madkit.simulation.viewer.SwingViewer;
 import renderEngine.renderMain;
+import civilisation.CivLauncher;
 import civilisation.Civilisation;
 import civilisation.Configuration;
 import civilisation.DefineConstants;
@@ -85,7 +86,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	BufferedImage bufferedView;
 	Graphics2D g2d;
 	boolean activDebug = false;
-	renderMain game;
+	renderMain render;
 	private boolean isNotify;
 	
 	public WorldViewer()
@@ -100,10 +101,10 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	
 	protected void activate() {	
 		super.activate();
-		if(!bufferedView_activate){
+		if(!bufferedView_activate && CivLauncher.choix3D==1){
 			bufferedView = new BufferedImage(this.getWidth()*this.getCellSize(),this.getHeight()*this.getCellSize(),BufferedImage.TYPE_INT_ARGB);
-			game = new renderMain(bufferedView); 
-			Thread t = new Thread(game);
+			render = new renderMain(bufferedView); 
+			Thread t = new Thread(render);
 			g2d = bufferedView.createGraphics();
 	        t.start();
 	        bufferedView_activate = true;
@@ -187,8 +188,9 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				g.fillRect(x,y,this.getCellSize(),this.getCellSize());
 				if(bufferedView_activate)
 					g2d.fillRect(x,y,this.getCellSize(),this.getCellSize());
-				if(!isNotify && y == 0 && x/this.getCellSize() == this.getWidth()-1){
-					game.notifyShaderTerrain(this.getWidth(),this.getHeight());
+				if(!isNotify && y == 0 && x/this.getCellSize() == this.getWidth()-1 && bufferedView_activate){
+					
+					render.notifyShaderTerrain(this.getWidth(),this.getHeight());
 					isNotify = true;
 				}
 	
@@ -231,6 +233,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				{
 					Amenagement mark = (Amenagement) p.getMark("Route");
 					mark.dessiner(g, x, y, this.getCellSize());
+					if(bufferedView_activate)
+						render.drawRoad(x,y,cellSize);
 					p.dropMark("Route", mark);
 				}
 		/*
@@ -261,8 +265,9 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	
 	@Override
 	public void paintTurtle(Graphics g,Turtle t,int x,int y) {
-		paintOneTurtle( g, t, x, y, true);
-		game.paintOneTurtle(t,x,y,selectedAgent);
+		Color c = paintOneTurtle( g, t, x, y, true);
+		if(bufferedView_activate)
+			render.paintOneTurtle(t,x,y,c,getCellSize());
 
 	}
 
@@ -270,11 +275,11 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	/**
 	 * paint every turtle on the viewer
 	 */
-	private void paintOneTurtle(Graphics g,Turtle t,int x,int y, boolean first)
+	private Color paintOneTurtle(Graphics g,Turtle t,int x,int y, boolean first)
     {
 		int size;
 		int dx , dy;
-		
+		Color c = null;
 		if(t.isPlayingRole(DefineConstants.Role_Human)){
 				
 			
@@ -311,14 +316,17 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			
 			if ((planVisible == null || planVisible == e.getPlanEnCours().getPlan() ))
 			{	
+				c = humain;
 				//System.out.println(getSelectedAgent().getName());
 				if(t==selectedAgent){
 					g.setColor(Color.BLUE);
+				
 					g.fillRect(dx-2,dy-2,size +4,size +4);
 				}
 				//Color square
 				if(getCellSize() > 4) {
 					g.setColor(t.getPatch().getColor());
+					
 					g.fillRect(dx,dy,size,size);
 					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
@@ -329,6 +337,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				else 
 				{
 					g.setColor(t.getColor());
+					
 					g.fillRect(dx,dy,size,size);
 				}
 
@@ -336,6 +345,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				if (e.getHumain().isShowGroup)
 				{	
 					g.setColor(Color.DARK_GRAY);
+				
 					g.drawLine(dx+size -1, dy, dx+size -1, dy+size -1);
 					g.drawLine(dx, dy+size -1, dx+size -1, dy+size -1);
 					g.drawLine(dx, dy, dx, dy+size -1);
@@ -351,6 +361,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			{
 				paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
 				g.setColor(t.getColor());
+
 				g.fillRect(dx+3,dy+3,size - 6,size - 6);
 			}
 
@@ -365,6 +376,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			g.fillRect(x+1,y+1,this.getCellSize() -1,this.getCellSize() -1);
 			
 			g.setColor(Color.DARK_GRAY);
+
 			g.drawLine(x+this.getCellSize() -1, y, x+this.getCellSize() -1, y+this.getCellSize() -1);
 			g.drawLine(x, y+this.getCellSize() -1, x+this.getCellSize() -1, y+this.getCellSize() -1);
 			g.drawLine(x, y, x, y+this.getCellSize() -1);
@@ -402,7 +414,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		}
 		else if(t.isPlayingRole(DefineConstants.Role_Facility)){
 			paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
-			game.drawFacility(x,y);
+			render.drawFacility(x,y,((Amenagement) t).getColorType(),t.getID(),getCellSize());
 			((Amenagement)t).dessiner(g, x,y, this.getCellSize());
 			
 		}
@@ -410,12 +422,14 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			//All other turtles used in simulation are invisible
 			paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
 		}
+		return c;
 	}
 	
 	private void paintDebugMessage(Graphics g, Human agent, int x, int y) {
 		agent.setDebugString(agent.getEsprit().getPlanEnCours().planToString());
 		if(!agent.getDebugString().equals("")){
 			String msg = agent.getDebugString();
+			render.renderMsg(msg,x,y,cellSize);
 			//System.out.println(msg);
 			int distanceBubbleFromAgent = 20;
 			int padding = 2;

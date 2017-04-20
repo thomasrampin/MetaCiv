@@ -11,9 +11,9 @@ import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Mesh;
 import renderEngine.models.Model;
-import renderEngine.shaders.TerrainShader;
-import renderEngine.shaders.TerrainTessShader;
 import renderEngine.terrains.Terrain;
+import renderEngine.terrains.TerrainShader;
+import renderEngine.terrains.TerrainTessShader;
 import renderEngine.utils.Matrix;
 import renderEngine.utils.TerrainTexture;
 

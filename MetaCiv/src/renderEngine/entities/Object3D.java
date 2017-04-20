@@ -1,7 +1,10 @@
 package renderEngine.entities;
 
+import java.util.ArrayList;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import renderEngine.loaders.Loader;
 import renderEngine.loaders.OBJLoader;
@@ -18,9 +21,15 @@ public class Object3D {
 	private String label;
 	private Models models;
 	private boolean multiObj;
+	
+	private ArrayList<Vector4f> positionOverWrite; // Road only
 
 	public Object3D(Object3D object3d){
-		this.model = object3d.getModel();
+		if(!object3d.isMultiObj())
+			this.model = object3d.getModel();
+		else
+			this.models = object3d.getModels();
+		this.multiObj = object3d.isMultiObj();
 		this.position = new Vector3f(object3d.getPosition());
 		this.rotX = object3d.getRotX();
 		this.rotY = object3d.getRotY();
@@ -28,6 +37,10 @@ public class Object3D {
 		this.scale = object3d.getScale();
 		}
 	
+	private boolean isMultiObj() {
+		return multiObj;
+	}
+
 	public Object3D(Model model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 
 		this.model = model;
@@ -58,8 +71,8 @@ public class Object3D {
 		this.scale = scale;
 	}
 
-	public Object3D(String objFilename, Loader loader,boolean multiObj) {
-		this.models = OBJLoader.loadObjModels(objFilename, loader);
+	public Object3D(String objFilename,String path, Loader loader,boolean multiObj) {
+		this.models = OBJLoader.loadObjModels(objFilename,false,path, loader);
 		this.multiObj = multiObj;
 		this.position = new Vector3f(0,0,0);
 		this.rotX = 0;
@@ -69,8 +82,8 @@ public class Object3D {
 
 	}
 	
-	public Object3D(String objFilename, Loader loader,boolean multiObj,Vector3f position, float rotX, float rotY, float rotZ, float scale ) {
-		this.models = OBJLoader.loadObjModels(objFilename, loader);
+	public Object3D(String objFilename,String path, Loader loader,boolean multiObj,Vector3f position, float rotX, float rotY, float rotZ, float scale ) {
+		this.models = OBJLoader.loadObjModels(objFilename,false,path, loader);
 		this.multiObj = multiObj;
 		this.position = new Vector3f(position);
 		this.rotX = rotX;
@@ -89,6 +102,16 @@ public class Object3D {
 		return mouseRay.x>min.x && mouseRay.x<max.x && mouseRay.y>min.y && mouseRay.y<max.y && mouseRay.z>min.z && mouseRay.z<max.z;
 	}*/
 	
+	public Object3D(String objFilename,String path, Loader loader,boolean multiObj,boolean c,Vector3f position, float rotX, float rotY, float rotZ, float scale ){
+		this.models = OBJLoader.loadObjModels(objFilename,true,path, loader);
+		this.multiObj = multiObj;
+		this.position = new Vector3f(position);
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+	}
+
 	public void increasePosition(float dx, float dy, float dz){
 		this.position.x+=dx;
 		this.position.y+=dy;
@@ -158,10 +181,15 @@ public class Object3D {
 	}
 
 	public Models getModels() {
-		// TODO Auto-generated method stub
 		return models;
 	}
-	
-	
+
+	public ArrayList<Vector4f> getPositionOverWrite() {
+		return positionOverWrite;
+	}
+
+	public void setPositionOverWrite(ArrayList<Vector4f> positionOverWrite) {
+		this.positionOverWrite = positionOverWrite;
+	}
 
 }

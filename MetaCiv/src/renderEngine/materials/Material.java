@@ -7,9 +7,13 @@ public class Material {
 	private int textureID;
 	private int normalID;
 	private int dispID;
+	private int reflID;
+	private int metalID;
 	private boolean normalMapped=false;
 	private boolean textured=false;
 	private boolean dispMapped=false;
+	private boolean reflMapped=false;
+	private boolean metalMapped=false;
 	private float shineDamper = 1;
 	private Vector3f reflectivity = new Vector3f(0,0,0);
 	private Vector3f diffuse = new Vector3f(1,1,1);
@@ -88,6 +92,10 @@ public class Material {
 		return normalMapped;
 	}
 	
+	public boolean IsReflMapped(){
+		return reflMapped;
+	}
+	
 	public boolean IsTextured(){
 		return textured;
 	}
@@ -118,6 +126,43 @@ public class Material {
 
 	public boolean IsDispMapped() {
 		return dispMapped;
+	}
+
+	public boolean IsMetalMapped(){
+		return metalMapped;
+	}
+	
+	public int getReflID() {
+		return reflID;
+	}
+
+	public int getMetalID(){
+		return metalID;
+	}
+	
+	public void setReflID(int reflID) {
+		this.reflID = reflID;
+		this.reflMapped = true;
+	}
+
+	public void setTextureID(int textureID) {
+		this.textureID = textureID;
+		this.textured = true;
+	}
+
+	public void setNormalID(int normalID) {
+		this.normalID = normalID;
+		this.normalMapped = true;
+	}
+
+	public void setDispID(int dispID) {
+		this.dispID = dispID;
+		this.dispMapped = true;
+	}
+
+	public void setMetalID(int metalID) {
+		this.metalID = metalID;
+		this.metalMapped = true;
 	}
 	
 	

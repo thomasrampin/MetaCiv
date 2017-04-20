@@ -3,9 +3,12 @@ package renderEngine.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import renderEngine.utils.BoundingBox;
+
 public class Models {
 	
 	private List<Model> models;
+	private BoundingBox box;
 	
 	public Models(){
 		this.models = new ArrayList<Model>();
@@ -22,4 +25,13 @@ public class Models {
 	public void add(Model model){
 		this.models.add(model);
 	}
+
+	public void setBoundingBox(BoundingBox box) {
+		this.box = box;
+	}
+	
+	public BoundingBox getBox(){
+		return box;
+	}
+	
 }

@@ -8,5 +8,5 @@ void main(void)
 {
     float d = texelFetch(tex_depth, ivec2(gl_FragCoord.xy * 3.0) + ivec2(850, 1050), 0).r;
     d = (d - 0.95) * 15.0;
-    color = vec4(d);
+    color = vec4(0.5);
 }

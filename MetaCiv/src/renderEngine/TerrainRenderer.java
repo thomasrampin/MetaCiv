@@ -3,14 +3,16 @@ package renderEngine;
 import java.util.ArrayList;
 import java.util.List;
 
+import renderEngine.entities.Camera;
 import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Mesh;
 import renderEngine.models.Model;
-import renderEngine.shaders.TerrainShader;
+import renderEngine.postProcessing.FrameBufferObject;
 import renderEngine.shadowsMapping.LightShadowShader;
 import renderEngine.shadowsMapping.ShadowFrameBuffer;
 import renderEngine.terrains.Terrain;
+import renderEngine.terrains.TerrainShader;
 import renderEngine.utils.Matrix;
 import renderEngine.utils.TerrainTexture;
 
@@ -50,24 +52,30 @@ public class TerrainRenderer {
         diffuseArray = Loader.loadTextureAtlas(textures); 
     }
  
-    public void render(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog,boolean fromLight, ShadowFrameBuffer fbo,Matrix4f shadowMatrix) {
-            prepareTerrain(terrain,heights,distanceFog,fbo,fromLight,shadowMatrix);
+    public void render(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog,boolean fromLight, ShadowFrameBuffer shadowsTexture,Matrix4f shadowMatrix) {
+            prepareTerrain(terrain,heights,distanceFog,shadowsTexture,fromLight,shadowMatrix);
             loadModelMatrix(terrain);
 
             GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(),
                     GL11.GL_UNSIGNED_INT, 0);
             unbindTexturedModel();
     }
+    
  
 	public void renderL(Terrain terrain, ArrayList<Vector4f> heights, float distanceFog, boolean fromLight,
-			ShadowFrameBuffer fbo, Matrix4f shadowMatrix,Matrix4f  light_vp_matrix) {
+			ShadowFrameBuffer shadowsTexture, Matrix4f shadowMatrix,Matrix4f  light_vp_matrix,Camera camera) {
+		
 		lShader.start();
         Mesh rawModel = terrain.getModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
-		 Matrix4f transformationMatrix = Matrix.createTransformationMatrix(
+		Matrix4f transformationMatrix = Matrix.createTransformationMatrix(
 	                new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1);
-		lShader.loadMvp(Matrix4f.mul(light_vp_matrix, light_vp_matrix, transformationMatrix));
+		//Matrix4f.mul(light_vp_matrix, transformationMatrix, light_vp_matrix);
+		lShader.loadMvp(light_vp_matrix);
+		lShader.loadViewMatrix(camera);
+
+        lShader.loadTransformationMatrix(transformationMatrix);
 		GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(),
                 GL11.GL_UNSIGNED_INT, 0);
         GL20.glDisableVertexAttribArray(0);
@@ -78,7 +86,7 @@ public class TerrainRenderer {
 	}
 
     
-    private void prepareTerrain(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog,ShadowFrameBuffer fbo, boolean fromLight,Matrix4f shadowMatrix) {
+    private void prepareTerrain(Terrain terrain,ArrayList<Vector4f> heights, float distanceFog,ShadowFrameBuffer shadowsTexture, boolean fromLight,Matrix4f shadowMatrix) {
         Mesh rawModel = terrain.getModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -94,7 +102,7 @@ public class TerrainRenderer {
         shader.loadHeights(heights);
         shader.loadDistanceFog(distanceFog);
         
-        shader.loadShadowMatrix(shadowMatrix);
+        //shader.loadShadowMatrix(shadowMatrix);
         
         		
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -102,8 +110,13 @@ public class TerrainRenderer {
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlur().getTextureID());
     
-	    GL13.glActiveTexture(GL13.GL_TEXTURE2);
-	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, fbo.getDepthTexture());
+        if(shadowsTexture!=null){
+        	GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        	GL11.glBindTexture(GL11.GL_TEXTURE_2D, shadowsTexture.getDepthTexture());
+        }else{
+        	GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        	GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());       	
+        }
        
         for(int i=0;i<diffuseArray.length;i++){
         	GL13.glActiveTexture(GL13.GL_TEXTURE0+i+3);
@@ -126,6 +139,8 @@ public class TerrainRenderer {
                 new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1);
         shader.loadTransformationMatrix(transformationMatrix);
     }
+
+
 
 
  

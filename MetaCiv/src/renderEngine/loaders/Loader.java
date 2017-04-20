@@ -33,6 +33,7 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -64,17 +65,18 @@ public class Loader {
 	 * |   |
 	 * |   |
 	 *  -------------------------------
-	 * @param tangents 
+	 * 
+	 *
 	 */
 	
 	
 	public Mesh loadToVAO(float[] positions, float[] textureCoords,float[] normals,int[] indices, float[] tangents){
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0,3,positions);
-		storeDataInAttributeList(1,3,textureCoords);
-		storeDataInAttributeList(2,3,normals);
-		storeDataInAttributeList(3,3,normals);
+		storeDataInAttributeList(0,3,positions,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(1,3,textureCoords,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(2,3,normals,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(3,3,tangents,GL15.GL_STATIC_DRAW);
 		unbindVAO();
 		return new Mesh(vaoID,indices.length);
 	}
@@ -82,28 +84,51 @@ public class Loader {
 	public Mesh loadToVAO(float[] vertices, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0,3,vertices);
-		storeDataInAttributeList(1,3,textureCoords);
-		storeDataInAttributeList(2,3,normals);
-		storeDataInAttributeList(3,3,tangents);
+		storeDataInAttributeList(0,3,vertices,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(1,3,textureCoords,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(2,3,normals,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(3,3,tangents,GL15.GL_STATIC_DRAW);
+
 		unbindVAO();
 		return new Mesh(vaoID,indices.length);
 	}
 
+	public int loadToVAO(float[] positions, float[] textureCoords) {
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 2, positions,GL15.GL_STATIC_DRAW);
+		storeDataInAttributeList(1, 2, textureCoords,GL15.GL_STATIC_DRAW);
+		unbindVAO();
+		return vaoID;
+	}
+	
+	public int loadFontTextureAtlas(String fileName) {
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("Assets/Font/" + fileName + ".png"));
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Tried to load font " + fileName + ".png , didn't work");
+			System.exit(-1);
+		}
+		textures.add(texture.getTextureID());
+		return texture.getTextureID();
+	}
 	
 	public Mesh loadToVAO(float[] positions ,int dimensions){
 		int vaoID = createVAO();
-		storeDataInAttributeList(0,dimensions,positions);
+		storeDataInAttributeList(0,dimensions,positions,GL15.GL_STATIC_DRAW);
 		unbindVAO();
 		return new Mesh(vaoID,positions.length/dimensions);
 	}
 	
 	public int loadTexture(String fileName){
 		Texture texture = null;
+		
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("Assets/Texture/"+fileName));
-		} catch (FileNotFoundException e) {
-			System.out.println("file :"+fileName+" not found.");
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS,0);
@@ -113,10 +138,13 @@ public class Loader {
 			}else{
 				System.out.println("Not supported anisotropic filtering");
 			}
-			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			System.out.println("file :"+fileName+" not found.");
+
+			//e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			//System.out.println(e.getMessage());
+			//e.printStackTrace();
 		}
 		int textureID = texture.getTextureID();
 		textures.add(textureID);
@@ -448,6 +476,8 @@ public class Loader {
 		    
 		    buffer.flip();
 		    
+
+		    
 		    textureTerrainDiffID = GL11.glGenTextures(); //Generate texture ID
 		    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureTerrainDiffID);
 	
@@ -458,7 +488,12 @@ public class Loader {
 		    //Setup texture scaling filtering
 		    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-	
+		    if(GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic){
+				float quantity = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+				GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, quantity);
+			}else{
+				System.out.println("Not supported anisotropic filtering");
+			}		
 		    //Send texel data to OpenGL
 		    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth() */, imageDiff.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		    texturesAtlas[iterator] = textureTerrainDiffID;
@@ -469,6 +504,34 @@ public class Loader {
 	}
 
 
+	public int createEmptyVbo(int floatCount){
+		int vbo = GL15.glGenBuffers();
+		vbos.add(vbo);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatCount * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		return vbo;
+	}
+	
+	public void addAttribute(int vao, int vbo, int attribute,int dataSize,int dataLength,int offset){
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL30.glBindVertexArray(vao);
+		GL20.glVertexAttribPointer(attribute, dataSize, GL11.GL_FLOAT, false, dataLength * 4, offset * 4);
+		GL33.glVertexAttribDivisor(attribute, 1);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		GL30.glBindVertexArray(0);
+		
+	}
+	
+	public void updateVbo(int vbo, float[] data, FloatBuffer buffer){
+		buffer.clear();
+		buffer.put(data);
+		buffer.flip();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	}
 	
 	private int createVAO(){
 		int vaoID = GL30.glGenVertexArrays();
@@ -491,7 +554,7 @@ public class Loader {
 		GL11.glDeleteTextures(textureTerrainID);
 	}
 	
-	private void storeDataInAttributeList(int attributeNumber,int coordinateSize, float[] data){
+	private void storeDataInAttributeList(int attributeNumber,int coordinateSize, float[] data,int usage){
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);

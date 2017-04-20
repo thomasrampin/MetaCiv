@@ -2,6 +2,7 @@ package renderEngine.utils;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -105,6 +106,11 @@ public class Helper {
 	    return vec;
 	}
 
+	public static float getAngle(Vector3f a,Vector3f b, Vector3f c){
+		Vector3f AB = new Vector3f(b.x-a.x,b.y-a.y,b.z-a.z);
+		Vector3f AC = new Vector3f(c.x-a.x,c.y-a.y,c.z-a.z);
+		return (float) Math.toDegrees(Math.acos(Vector3f.dot(AB, AC)/(Helper.Norme(AB)*Helper.Norme(AC))));
+	}
 	
 	public static Vector3f projectOnPlan(Vector3f Point,Vector3f PointOnPlane,Vector3f NormalOfPlane){
 	    Vector3f MA = new Vector3f(Point.getX()-PointOnPlane.getX(),Point.getY()-PointOnPlane.getY(),Point.getZ()-PointOnPlane.getZ());
@@ -115,5 +121,25 @@ public class Helper {
 	    return Project;
 	}
 	
+	public static int storeMatrixData(Matrix4f matrix, float[] data,int pointer){
+		int newPointer = pointer;
+		data[newPointer++] = matrix.m00;
+		data[newPointer++] = matrix.m01;
+		data[newPointer++] = matrix.m02;
+		data[newPointer++] = matrix.m03;
+		data[newPointer++] = matrix.m10;
+		data[newPointer++] = matrix.m11;
+		data[newPointer++] = matrix.m12;
+		data[newPointer++] = matrix.m13;
+		data[newPointer++] = matrix.m20;
+		data[newPointer++] = matrix.m21;
+		data[newPointer++] = matrix.m22;
+		data[newPointer++] = matrix.m23;
+		data[newPointer++] = matrix.m30;
+		data[newPointer++] = matrix.m31;
+		data[newPointer++] = matrix.m32;
+		data[newPointer++] = matrix.m33;
+		return newPointer;
+	}
 	
 }

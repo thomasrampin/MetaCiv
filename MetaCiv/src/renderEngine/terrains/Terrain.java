@@ -30,13 +30,13 @@ public class Terrain {
 	private static final float MAX_HEIGHT = 10;
 	private static final float MAX_PIXEL_COLOUR = 256 * 256 *256;
 	private float textureCoordsOffsetX;
-	
+	private static  float[] vertices;
 	private Vector2f gridSize;
 	
 	private float x;
 	private float z;
 	
-	private int VERTEX_COUNT; 
+	private static int VERTEX_COUNT; 
 	
 	private Mesh model;
 	private Material texture;
@@ -61,7 +61,41 @@ public class Terrain {
 		this.blur = new Material(Loader.loadTextureBlur(image));
 	}
 	
+	public static Vector3f getHeightByTab(int x,int y){
+		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x-1)*3],vertices[((y-1)*VERTEX_COUNT+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT+x-1)*3+2]);
+		Vector3f position = new Vector3f((position1.x+position2.x)/2.0f,(position1.y+position2.y)/2.0f,(position1.z+position2.z)/2.0f);
+		return position;
+	}
+	
+	public static ArrayList<Vector4f> getAllHeightOnePoly(int x,int y){
+		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x)*3],vertices[((y-1)*VERTEX_COUNT+x)*3+1],vertices[((y-1)*VERTEX_COUNT+x)*3+2]);
+		Vector3f position3 = new Vector3f(vertices[(y*VERTEX_COUNT+x-1)*3],vertices[(y*VERTEX_COUNT+x-1)*3+1],vertices[(y*VERTEX_COUNT+x-1)*3+2]);
+		Vector3f position4 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x-1)*3],vertices[((y-1)*VERTEX_COUNT+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT+x-1)*3+2]);
+		ArrayList<Vector4f> positions = new ArrayList<>();
+		positions.add(new Vector4f(position1.x,position1.y,position1.z,1.0f));
+		positions.add(new Vector4f(position2.x,position2.y,position2.z,1.0f));
+		positions.add(new Vector4f(position3.x,position3.y,position3.z,1.0f));
+		positions.add(new Vector4f(position4.x,position4.y,position4.z,1.0f));
+		return positions;
+	}
+	
+	public static float getRoll(int x,int y){
+		Vector3f position = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[(y*VERTEX_COUNT+x-1)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x-1)*3+2]);
+		Vector3f position3 = new Vector3f(vertices[(y*VERTEX_COUNT+x-1)*3],vertices[(y*VERTEX_COUNT+x-1)*3+1],vertices[(y*VERTEX_COUNT+x-1)*3+2]);
 
+		return (position3.y<position.y)?Helper.getAngle(position, position2, position3):360-Helper.getAngle(position, position2, position3);
+	}
+	
+	public static float getPitch(int x,int y){
+		Vector3f position = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[((y-1)*VERTEX_COUNT+x)*3+2]);
+		Vector3f position3 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x)*3],vertices[((y-1)*VERTEX_COUNT+x)*3+1],vertices[((y-1)*VERTEX_COUNT+x)*3+2]);
+
+		return (position3.y>position.y)?Helper.getAngle(position, position2, position3):360-Helper.getAngle(position, position2, position3);
+	}
 	
 	private Mesh generateTerrain(Loader loader , BufferedImage image,BufferedImage image2,ArrayList<Vector4f> heights){
 		System.out.println("Generate Terrain...");
@@ -73,7 +107,7 @@ public class Terrain {
 		SIZE_Z = image.getHeight();
 		
         int count = VERTEX_COUNT * VERTEX_COUNT;
-        float[] vertices = new float[count * 3];
+        vertices = new float[count * 3];
         float[] normals = new float[count * 3];
         float[] textureCoords = new float[count*3];
         float[] tangents = new float[count*3];
@@ -107,19 +141,12 @@ public class Terrain {
                 
                 pos[vertexPointer] = new Vector3f(vertices[vertexPointer*3],vertices[vertexPointer*3+1],vertices[vertexPointer*3+2]);
                 ver.add(new Vector3f(vertices[vertexPointer*3],vertices[vertexPointer*3+1],vertices[vertexPointer*3+2]));
-                Vector3f normal = calculateNormal2(jj,ii,image,heights);
-               if(normal.equals(new Vector3f(0,1,0)) || true){
-	            	Vector3f normal2 = calculateNormal(jj%image2.getHeight(),ii%image2.getWidth(),image2);
-	                normals[vertexPointer*3] = 0;
-	                normals[vertexPointer*3+1] = 0;
-	                normals[vertexPointer*3+2] = 0;
-	                norm.add(new Vector3f (normal2.x, normal2.y, normal2.z));
-               }
-               else{
-	                normals[vertexPointer*3] = normal.x;
-	                normals[vertexPointer*3+1] = normal.y;
-	                normals[vertexPointer*3+2] = normal.z;
-                }
+
+				normals[vertexPointer*3] = 0;
+				normals[vertexPointer*3+1] = 0;
+				normals[vertexPointer*3+2] = 0;
+
+  
        
                
                
@@ -140,22 +167,27 @@ public class Terrain {
 
         
         //Compute tangents
+        /*int k = 0;
         for(int i=0;i<count-3;i++){
-	        Vector3f deltaPos1 = Helper.soustrate(pos[i+1], pos[i]);
-	        Vector3f deltaPos2 = Helper.soustrate(pos[i+2], pos[i]);
+	        Vector3f deltaPos1 = Vector3f.sub(pos[i+1], pos[i],null);
+	        Vector3f deltaPos2 = Vector3f.sub(pos[i+2], pos[i],null);
 	
 	        
-	        Vector3f deltaUv1 = Helper.soustrate(Uv[i+1], Uv[i]);
-	        Vector3f deltaUv2 = Helper.soustrate(Uv[i+2], Uv[i]);
+	        Vector3f deltaUv1 = Vector3f.sub(Uv[i+1], Uv[i],null);
+	        Vector3f deltaUv2 = Vector3f.sub(Uv[i+2], Uv[i],null);
 
 	        float r = 1f/(deltaUv1.x * deltaUv2.y - deltaUv1.y * deltaUv2.x);
 	        
-	        Vector3f t = Helper.multiply(Helper.soustrate(Helper.multiply(deltaPos1, deltaUv2.y),Helper.multiply(deltaPos2, deltaUv1.y)),r);
 	        
-	        tangents[i*3] = r * (deltaUv2.y * deltaPos1.x - deltaUv1.y * deltaPos2.x);
-	        tangents[i*3+1] = r * (deltaUv2.y * deltaPos1.y - deltaUv1.y * deltaPos2.y);
-	        tangents[i*3+2] =  r * (deltaUv2.y * deltaPos1.z - deltaUv1.y * deltaPos2.z);
-        }
+	        deltaPos1.scale(deltaUv2.y);
+	        deltaPos2.scale(deltaUv1.y);
+			Vector3f tangent = Vector3f.sub(deltaPos1, deltaPos2, null);
+			tangent.scale(r);
+	        tangents[k] = 0;
+	        tangents[k+1] = 0;
+	        tangents[k+2] =  1;
+	        k+=3;
+        }*/
         
         int pointer = 0;
         int k=0;
@@ -235,13 +267,13 @@ public class Terrain {
                    
     	}
     	
-    	for(int i=0;i<count*3;i+=3){
+    	/*for(int i=0;i<count*3;i+=3){
     		float norme = (float) Math.sqrt((normals[i]*normals[i])+(normals[i+1]*normals[i+1])+(normals[i+2]*normals[i+2]));
     		normals[i] /= norme;
     		normals[i+1] /= norme;
     		normals[i+2] /= norme;
     	
-    	}
+    	}*/
     	
     	System.out.println("Task done");
         return loader.loadToVAO(vertices, textureCoords, normals,tangents, indices);

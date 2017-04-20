@@ -43,6 +43,7 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 	private JPanel civkraftPanelMulti;
 	private JPanel choixLang;
 	private JButton civkraftBoutonSolo;
+	private JButton civkraftBoutonSoloWith3D;
 	private JButton civkraftBoutonHeberger;
 	private JButton civkraftBoutonRejoindre;
 	private JLabel civkraftTextSolo;
@@ -50,7 +51,7 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 	private JPanel civkraftSuperPanel;
 	private Semaphore sema;
 	private int choix;
-	
+	private int choix3D;
 
 	
 	protected JComboBox langBox;
@@ -72,6 +73,7 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 		
 		
 		civkraftBoutonSolo = new JButton(I18nList.CheckLang("Solo / Editeur"));
+		civkraftBoutonSoloWith3D = new JButton(I18nList.CheckLang("Solo 3D/ Editeur"));
 		civkraftBoutonHeberger = new JButton(I18nList.CheckLang("Heberger une partie"));
 		civkraftBoutonRejoindre = new JButton(I18nList.CheckLang("Rejoindre une partie"));
 		//valider = new JButton("Valider");
@@ -111,12 +113,14 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 
 		
 		civkraftBoutonSolo.addMouseListener(this);
+		civkraftBoutonSoloWith3D.addMouseListener(this);
 		civkraftBoutonHeberger.addMouseListener(this);
 		civkraftBoutonRejoindre.addMouseListener(this);
 		//valider.addMouseListener(this);
 		
 		civkraftPanelSolo.add(civkraftTextSolo, BorderLayout.NORTH);
-		civkraftPanelSolo.add(civkraftBoutonSolo, BorderLayout.SOUTH);
+		civkraftPanelSolo.add(civkraftBoutonSolo, BorderLayout.WEST);
+		civkraftPanelSolo.add(civkraftBoutonSoloWith3D, BorderLayout.EAST);
 		
 		civkraftPanelMulti.add(civkraftTextMulti, BorderLayout.NORTH);
 		
@@ -163,6 +167,16 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 			this.dispose();			
 			//this.setVisible(false);
 			setChoix(1);
+			choix3D=0;
+			sema.release();
+		}
+		if(arg0.getSource().equals(civkraftBoutonSoloWith3D)){
+			
+			
+			this.dispose();			
+			//this.setVisible(false);
+			setChoix(1);
+			choix3D=1;
 			sema.release();
 		}
 		if(arg0.getSource().equals(civkraftBoutonHeberger)){
@@ -233,6 +247,11 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 	public int getChoix() {
 		return choix;
 	}
+	
+	public int getChoix3D() {
+		return choix3D;
+	}
+	
 	public void setChoix(int choix) {
 		this.choix = choix;
 	}
@@ -244,6 +263,7 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 			I18nList.infoLang = langBox.getSelectedItem().toString();
 			
 			civkraftBoutonSolo.setText(I18nList.CheckLang("Solo / Editeur"));
+			civkraftBoutonSoloWith3D.setText(I18nList.CheckLang("Solo 3D/ Editeur"));
 			civkraftBoutonHeberger.setText(I18nList.CheckLang("Heberger une partie"));
 			civkraftBoutonRejoindre.setText(I18nList.CheckLang("Rejoindre une partie"));
 			civkraftTextMulti.setText(I18nList.CheckLang("Civkraft : Jeu multijoueur"));

@@ -1,28 +1,35 @@
 #version 430 core
 #define N_LIGHTS 4
 
-in vec2 pass_textureCoords;
-in vec3 surfaceNormal;
-in vec3 toLightVector[N_LIGHTS];
-in vec3 toLightVectorTangent[N_LIGHTS];
-in vec3 toCameraVector;
-in vec3 toCameraVectorTangent;
-
-in vec3 tangent;
-in vec3 tangentViewPos;
-in vec3 tangentFragPos;
+in VS_OUT{
+	vec2 pass_textureCoords;
+	vec3 surfaceNormal;
+	vec3 toLightVector;
+	vec3 toLightVectorTangent;
+	vec3 toCameraVector;
+	vec3 toCameraVectorTangent;
+	vec3 tangent;
+	vec3 tangentViewPos;
+	vec3 tangentFragPos;
+	vec3 TangentLightPos;
+	vec3 TangentViewPos;
+	vec3 TangentFragPos;
+}fs_in;
 
 layout (location = 0) out vec4 FragmentColor0;
 layout (location = 1) out vec4 FragmentColor1;
 
 
 
-uniform sampler2D diffuseMap;
-uniform sampler2D normalMap;
-uniform sampler2D dispMap;
-uniform sampler2D shadowMap;
+layout (binding = 1) uniform sampler2D diffuseMap;
+layout (binding = 2) uniform sampler2D normalMap;
+layout (binding = 3) uniform sampler2D dispMap;
+layout (binding = 6) uniform sampler2D shadowMap;
+layout (binding = 4) uniform sampler2D roughnessMap;
+layout (binding = 5) uniform sampler2D metalMap;
+layout (binding = 0) uniform sampler2D reflexion_map;
 
-uniform vec3 lightColour[N_LIGHTS];
+uniform vec3 lightColour;
 uniform float shineDamper;
 uniform vec3 reflectivity;
 uniform vec3 diffuseColour;
@@ -30,12 +37,20 @@ uniform bool textured;
 uniform bool normalMapped;
 uniform bool dispMapped;
 uniform bool reciveShadow;
+uniform bool reflMapped;
+uniform bool metalMapped;
 
-const float shadowOpacity = 0.4;
 
+const vec4 CloudColor = vec4(0.9,0.8,0.9,0.8);
+const vec4 Horizon = vec4(0.2,0.3,0.941,1);
 uniform vec4 colorID;
+uniform vec3 colorAction;
+uniform float skyAngle;
+uniform float height_scale;
 
-uniform float height_scale = 0.05;
+//size reflect image
+const float size_level1 = 2048.0;
+
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -80,29 +95,31 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     return finalTexCoords;
 }
 
+
 void main(void){
 
-	vec3 toLightVectorFinal[N_LIGHTS];
-	for(int i=0;i<N_LIGHTS;i++){
-		if(normalMapped){
-			toLightVectorFinal[i] = toLightVectorTangent[i];
-		}else{
-			toLightVectorFinal[i] = toLightVector[i];
-		}
+	vec3 toLightVectorFinal;
+	if(normalMapped){
+		vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+		toLightVectorFinal = lightDir;
+	}else{
+		toLightVectorFinal = fs_in.toLightVector;
 	}
 
-	vec3 viewDir = normalize(tangentViewPos);
 
-	vec2 texCoords = pass_textureCoords;
+	vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+
+	vec2 texCoords = fs_in.pass_textureCoords;
 
 	if(dispMapped)
-		texCoords = ParallaxMapping(pass_textureCoords,viewDir);
+		texCoords = ParallaxMapping(fs_in.pass_textureCoords,viewDir);
 
-	vec3 unitNormal = normalize(surfaceNormal);
-	vec3 toCameraVectorFinal = toCameraVector;
+	vec3 unitNormal = normalize(fs_in.surfaceNormal);
+	vec3 toCameraVectorFinal = fs_in.toCameraVector;
 	if(normalMapped){
 		vec4 normalValue = 2.0 * texture(normalMap,texCoords) - 1.0;
-		toCameraVectorFinal = toCameraVectorTangent;
+
+		toCameraVectorFinal = viewDir;
 		unitNormal = normalize(normalValue.rgb);
 	}
 	vec3 unitVectorToCamera = normalize(toCameraVectorFinal);
@@ -110,28 +127,28 @@ void main(void){
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
 	
-	for(int i=0;i<N_LIGHTS;i++){
-		vec3 unitLightVector = normalize(toLightVectorFinal[i]);
-		
-		float nDotl = dot(unitNormal,unitLightVector);
-		float brightness = max(nDotl,0.0);
-		
-		vec3 lightDirection = -unitLightVector;
-		vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
-		
-		float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-		specularFactor = max(specularFactor,0.0);
-		float dampedFactor = pow(specularFactor,shineDamper);
-		
-		totalSpecular += dampedFactor * reflectivity * lightColour[i];
-		totalDiffuse += brightness * lightColour[i];
-	}
+
+	vec3 unitLightVector = normalize(toLightVectorFinal);
+
+	float nDotl = dot(unitNormal,unitLightVector);
+	float brightness = max(nDotl,0.0);
+
+	vec3 lightDirection = -unitLightVector;
+	vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
+
+	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+	specularFactor = max(specularFactor,0.0);
+	float dampedFactor = pow(specularFactor,shineDamper);
+
+	totalSpecular += dampedFactor * reflectivity * lightColour;
+	totalDiffuse += brightness * lightColour;
+
 
 	// Brighter	
-	totalDiffuse = max(totalDiffuse, 0.2) * diffuseColour ;
+	totalDiffuse = max(totalDiffuse, 0.4) ;
 	
 
-	
+
 	//Check of texture is enable
 	if(textured){
 		vec4 textureColour = texture(diffuseMap,texCoords);
@@ -140,7 +157,39 @@ void main(void){
 		FragmentColor0 = vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
 	}
 	else
-		FragmentColor0 = vec4(totalDiffuse,1.0) + vec4(totalSpecular,1.0);
+		FragmentColor0 = vec4(totalDiffuse,1.0) * diffuseColour + vec4(totalSpecular,1.0);
+
+
+	if(reflMapped){
+		vec4 gloss_color;
+		float gloss = texture(roughnessMap,texCoords).r;
+		vec3 r = reflect(unitVectorToCamera,unitNormal);
+		//Compute texture coordinate based on direction
+		vec2 tc;
+
+		tc.y = r.y;
+		r.y = 0.0;
+		tc.x = normalize(r).x * 0.5;
+
+		float s = sign(r.z) * 0.5;
+		tc.s = 0.75 - s * (0.5 - tc.s);
+		tc.t = 0.5 +0.5 * tc.t;
+		gloss_color = vec4(0,0,0,1.0);
+
+		float lod = (5.0 + 5.0*sin( gloss ))*step( tc.x, tc.y );
+		gloss_color = textureLod(reflexion_map, tc,gloss*10*1.8) ;
+
+		vec4 final_gloss = FragmentColor0 * gloss_color;
+		if(metalMapped)
+			FragmentColor0 = mix(FragmentColor0,final_gloss,texture(metalMap,texCoords).r/1.4);
+
+		//FragmentColor0 += texture(reflexion_blur,tc);
+		//FragmentColor0 += mix(texture(reflexion,  vec2(tc.x+skyAngle/6,tc.y)),texture(reflexion_blur, vec2(tc.x+skyAngle/6,tc.y)),0.0);
+		//FragmentColor0 += CloudColor* max(texture(reflexion_blur, vec2(tc.x+skyAngle,tc.y)).r - 0.01*2,0)*gloss;
+		//FragmentColor0 = mix(Horizon,FragmentColor0,tc.y);
+	}
+	if(colorAction.r != -1.0)
+		FragmentColor0 *= vec4(colorAction,1.0);
 
 	FragmentColor1 = colorID;
 
