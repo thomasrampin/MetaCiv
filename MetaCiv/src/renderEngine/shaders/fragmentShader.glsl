@@ -157,7 +157,7 @@ void main(void){
 		FragmentColor0 = vec4(totalDiffuse,1.0) * textureColour + vec4(totalSpecular,1.0);
 	}
 	else
-		FragmentColor0 = vec4(totalDiffuse,1.0) * diffuseColour + vec4(totalSpecular,1.0);
+		FragmentColor0 = vec4(totalDiffuse,1.0) * vec4(diffuseColour,1.0) + vec4(totalSpecular,1.0);
 
 
 	if(reflMapped){

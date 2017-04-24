@@ -348,7 +348,7 @@ public class renderMain implements Runnable {
 					skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,100000),false);
 				}
 
-				TextMaster.render(camera);
+				//TextMaster.render(camera);
 				Window.updateDisplay();
 				
 				if(turtles.size()>0){

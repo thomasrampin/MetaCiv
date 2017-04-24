@@ -415,11 +415,12 @@ public class OBJLoader {
 		}
 
 		//Check out if any folder
-		File f = new File("Assets/texture/" + fileName);
+		File f = new File("Assets/Texture/" + fileName);
+		
 		if(f.isDirectory()){
 			
 			for (final File fileEntry : f.listFiles()) {
-
+				
 				if(fileEntry.getName().equals("Diffuse.png") || fileEntry.getName().equals("diffuse.png") || fileEntry.getName().equals("Albedo.png") || fileEntry.getName().equals("albedo.png") || fileEntry.getName().equals("Base_Color.png") || fileEntry.getName().equals("base_color.png") || fileEntry.getName().equals("Base_color.png")
 						|| fileEntry.getName().equals("base_Color.png") || fileEntry.getName().equals("BaseColor.png") || fileEntry.getName().equals("Basecolor.png") || fileEntry.getName().equals("baseColor.png") || fileEntry.getName().equals("basecolor.png")){
 					textureFile = fileName + "/" + fileEntry.getName();
