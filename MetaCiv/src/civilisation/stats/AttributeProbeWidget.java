@@ -23,95 +23,88 @@ import civilisation.DefinePath;
 import civilisation.individu.Human;
 import civilisation.world.World;
 
-public class AttributeProbeWidget extends AbstractXYChartProbeWidget{
+public class AttributeProbeWidget extends AbstractXYChartProbeWidget {
 
-    
-	public WidgetPanelAttributes AttrPanel;
 
-	public AttributeProbeWidget() {
-		super("Attribute Probe");
-		createSocialFilter();
-		createAttributeFilter();
-		createEmptyXYChart();
-	}
+    public WidgetPanelAttributes AttrPanel;
 
-	public AttributeProbeWidget(String title) {
-		super(title);
-		createSocialFilter();
-		createAttributeFilter();
-		createEmptyXYChart();
-	}
-	
-	private void createAttributeFilter() {
-		AttrPanel = new WidgetPanelAttributes();
-	}
+    public AttributeProbeWidget() {
+        super("Attribute Probe");
+        createSocialFilter();
+        createAttributeFilter();
+        createEmptyXYChart();
+    }
 
-	public JTabbedPane getOptionTab() {
-		JTabbedPane t = super.getOptionTab();
-		t.add("Social filter", getSocFilter());
-		t.add("Attribute filter", getAttrFilter());
-		return t;
-	}
+    public AttributeProbeWidget(String title) {
+        super(title);
+        createSocialFilter();
+        createAttributeFilter();
+        createEmptyXYChart();
+    }
 
-	private Component getAttrFilter() {
-		return AttrPanel;
-	}
+    private void createAttributeFilter() {
+        AttrPanel = new WidgetPanelAttributes();
+    }
 
-	public void toFile(File tabFolder)
-	{
-		super.toFile(tabFolder);
-		File widgetFolder = new File(tabFolder.getAbsolutePath()+"/"+this.getTitle());
-		AttrPanel.toFile(widgetFolder);
-		PrintWriter out;	
-		File header=null;
-		try {
-			header = new File(widgetFolder.getPath()+"/"+URLEncoder.encode(DefinePath.ADVStatsWidgetHeaderFile,"UTF-8")+Configuration.getExtension());
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		try {
-			out = new PrintWriter(new FileWriter(header.getPath(),true));
-			out.println("type : " + this.getClass());
-			out.close();
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-		}
-	
-	public void updateFromProbe(StatsWatcher statsWatcher) {
-		if(AttrPanel.check.get(statsWatcher.civ) != null)
-		{
-			for(JCheckBox ck : AttrPanel.check.get(statsWatcher.civ))
-			{
-				if(ck.isSelected())
-				{
-					XYSeries target = null;
-					for(XYSeries x : ((List<XYSeries>)dataset.getSeries()))
-					{
-						if(x.getKey().equals(statsWatcher.plotName + " - " + ck.getText()))
-							target = x;
-					}
-					if(target == null)
-					{
-						target = new XYSeries(statsWatcher.plotName+ " - " + ck.getText());
-						dataset.addSeries(target);
-					}
-					double average = 0;
-					for(Human h : statsWatcher.getAllHumans())
-					{
-						average += h.getAttr().get(ck.getText());
-					}
-					average /= statsWatcher.getAllHumans().size();
-					target.add(World.getInstance().getTick(), average);
-				}
-			}
-		}
-	}
-	@Override
-	public void applyOptions()
-	{
-		super.applyOptions();
-		generateProbesFromSocFilter();
-	}
-	
+    public JTabbedPane getOptionTab() {
+        JTabbedPane t = super.getOptionTab();
+        t.add("Social filter", getSocFilter());
+        t.add("Attribute filter", getAttrFilter());
+        return t;
+    }
+
+    public WidgetPanelAttributes getAttrFilter() {
+        return AttrPanel;
+    }
+
+    public void toFile(File tabFolder) {
+        super.toFile(tabFolder);
+        File widgetFolder = new File(tabFolder.getAbsolutePath() + "/" + this.getTitle());
+        AttrPanel.toFile(widgetFolder);
+        PrintWriter out;
+        File header = null;
+        try {
+            header = new File(widgetFolder.getPath() + "/" + URLEncoder.encode(DefinePath.ADVStatsWidgetHeaderFile, "UTF-8") + Configuration.getExtension());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            out = new PrintWriter(new FileWriter(header.getPath(), true));
+            out.println("type : " + this.getClass());
+            out.close();
+        } catch (IOException e2) {
+            e2.printStackTrace();
+        }
+    }
+
+    public void updateFromProbe(StatsWatcher statsWatcher) {
+        if (AttrPanel.check.get(statsWatcher.civ) != null) {
+            for (JCheckBox ck : AttrPanel.check.get(statsWatcher.civ)) {
+                if (ck.isSelected()) {
+                    XYSeries target = null;
+                    for (XYSeries x : ((List<XYSeries>) dataset.getSeries())) {
+                        if (x.getKey().equals(statsWatcher.plotName + " - " + ck.getText()))
+                            target = x;
+                    }
+                    if (target == null) {
+                        target = new XYSeries(statsWatcher.plotName + " - " + ck.getText());
+                        dataset.addSeries(target);
+                    }
+                    double average = 0;
+                    for (Human h : statsWatcher.getAllHumans()) {
+                        average += h.getAttr().get(ck.getText());
+                    }
+                    average /= statsWatcher.getAllHumans().size();
+                    target.add(World.getInstance().getTick(), average);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void applyOptions() {
+        super.applyOptions();
+        generateProbesFromSocFilter();
+    }
+
 }

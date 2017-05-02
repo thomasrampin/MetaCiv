@@ -27,79 +27,83 @@ import civilisation.DefinePath;
 import civilisation.inventaire.Objet;
 import civilisation.stats.WidgetPanelSocialFilter.CheckNode;
 
-public class WidgetPanelObjects extends JPanel{
-	ArrayList<JCheckBox> check;
-	JPanel pane = new JPanel();
-	
-	public WidgetPanelObjects()
-	{
-		check = new ArrayList<JCheckBox>();
-		JCheckBox box;
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		pane.add(new JLabel("Select the objects you want to track"));
-		for(Objet o : Configuration.objets)
-		{
-			box = new JCheckBox(o.getNom());
-			check.add(box);
-			pane.add(box);
-		}
-		this.add(new JScrollPane(pane));
-	}	
-	
-	public void toFile(File folder) {
-		
-		if(folder.exists() && folder.isDirectory())
-		{
-		PrintWriter out;	
-		File objList=null;
-		try {
-			objList = new File(folder.getPath()+"/"+URLEncoder.encode(DefinePath.ADVStatsWidgetObjectFilterFile,"UTF-8")+Configuration.getExtension());
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		try {
-			out = new PrintWriter(new FileWriter(objList.getPath()));
-			for(JCheckBox ck : check)
-			{
-				if(ck.isSelected())
-					out.println(ck.getText());
-			}
-			out.close();
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-		}
-	}
+public class WidgetPanelObjects extends JPanel {
+    ArrayList<JCheckBox> check;
+    JPanel pane = new JPanel();
 
-	public void loadFromFile(File folder) {
-			if(folder.exists() && folder.isDirectory())
-			{
-			File objFilter=null;
-			try {
-				objFilter = new File(folder.getPath()+"/"+URLEncoder.encode(DefinePath.ADVStatsWidgetObjectFilterFile,"UTF-8")+Configuration.getExtension());
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			if(objFilter.exists()&&objFilter.isFile())
-			{
-				 Scanner scanner = null;
-				try {
-					scanner = new Scanner(new FileReader(objFilter));
-					 String str;
-					 while (scanner.hasNextLine()) {
-					     str = scanner.nextLine();
-						for(JCheckBox ck : check)
-						{
-							if(ck.getText().equals(str))
-								ck.setSelected(true);
-						}
-					 }			
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} finally{
-				scanner.close();
-				}
-			}
-		}	
-		}
+    public WidgetPanelObjects() {
+        check = new ArrayList<JCheckBox>();
+        JCheckBox box;
+        pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+        pane.add(new JLabel("Select the objects you want to track"));
+        /**
+         box = new JCheckBox("All");
+         check.add(box);
+         pane.add(box);
+         **/
+        for (Objet o : Configuration.objets) {
+            box = new JCheckBox(o.getNom());
+            check.add(box);
+            pane.add(box);
+        }
+        this.add(new JScrollPane(pane));
+    }
+
+    public void toFile(File folder) {
+
+        if (folder.exists() && folder.isDirectory()) {
+            PrintWriter out;
+            File objList = null;
+            try {
+                objList = new File(folder.getPath() + "/" + URLEncoder.encode(DefinePath.ADVStatsWidgetObjectFilterFile, "UTF-8") + Configuration.getExtension());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                out = new PrintWriter(new FileWriter(objList.getPath()));
+                for (JCheckBox ck : check) {
+                    if (ck.isSelected())
+                        out.println(ck.getText());
+                }
+                out.close();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public void loadFromFile(File folder) {
+        if (folder.exists() && folder.isDirectory()) {
+            File objFilter = null;
+            try {
+                objFilter = new File(folder.getPath() + "/" + URLEncoder.encode(DefinePath.ADVStatsWidgetObjectFilterFile, "UTF-8") + Configuration.getExtension());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (objFilter.exists() && objFilter.isFile()) {
+                Scanner scanner = null;
+                try {
+                    scanner = new Scanner(new FileReader(objFilter));
+                    String str;
+                    while (scanner.hasNextLine()) {
+                        str = scanner.nextLine();
+                        for (JCheckBox ck : check) {
+                            if (ck.getText().equals(str))
+                                ck.setSelected(true);
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    scanner.close();
+                }
+            }
+        }
+    }
+
+    public void checkAllObjects(){
+        for (JCheckBox jc : check){
+            jc.setSelected(true);
+        }
+    }
 }
