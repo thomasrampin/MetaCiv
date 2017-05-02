@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.lwjgl.util.vector.Vector3f;
 
 import civilisation.Configuration;
+import civilisation.amenagement.Amenagement;
 import civilisation.amenagement.TypeAmenagement;
 import renderEngine.loaders.Loader;
 import renderEngine.utils.BoundingBox;
@@ -28,8 +29,9 @@ public class Facility3D {
 	private boolean steelDraw;
 	private int countDown;
 	private boolean main;
+	private Amenagement a;
 	
-	public Facility3D(Color c, Vector3f position,int ID,boolean main){
+	public Facility3D(Color c, Vector3f position,int ID,boolean main, Amenagement a){
 		
 		/*Color color = Configuration.getAmenagementsByNameFor3D("Setlement").getColor();
 		if(color.getBlue() == c.getBlue() &&color.getGreen() == c.getGreen() && color.getRed() == c.getRed()){
@@ -44,7 +46,7 @@ public class Facility3D {
 			this.object3d = new Object3D(ferme);
 			this.c = c;
 		}*/
-		
+		this.a = a;
 		for(ObjectFacility3D object:objects3d){
 			if(c.equals(object.color)){
 				this.object3d = new Object3D(object.object3d);
@@ -125,6 +127,18 @@ public class Facility3D {
 	public boolean isMain(){
 		return main;
 	}
+
+
+	public Amenagement getA() {
+		return a;
+	}
+
+
+	public void setA(Amenagement a) {
+		this.a = a;
+	}
+	
+	
 	
 }
 

@@ -28,6 +28,7 @@ import I18n.I18nList;
 
 import civilisation.Configuration;
 import civilisation.world.Terrain;
+import renderEngine.renderMain;
 
 public class DialogueEditerTerrain extends JDialog implements ActionListener, PropertyChangeListener{
 	
@@ -38,6 +39,10 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
     JLabel name;
     JLabel passability;
     JSpinner passabilite;
+    JSpinner jSpinnerHeight;
+    JSpinner jSpinnerErosion;
+    JSpinner jSpinnerTiling;
+    JTextField textureFile;
     JCheckBox infranchissable;
     ArrayList<Object> selectors = new ArrayList<Object>();
     ArrayList<JSpinner> startPh = new ArrayList<JSpinner>();
@@ -123,7 +128,44 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 			
 		}
 		
+		/*3D Part*/
+		Box boxHeight = Box.createHorizontalBox();
+		boxHeight.add(new JLabel(I18nList.CheckLang("Height : ")));
+		spinModel = new SpinnerNumberModel(terrain.getHeight(), -1000, 1000, 0.1);
+		jSpinnerHeight = new JSpinner(spinModel);
+		boxHeight.add(jSpinnerHeight);
 		
+		Box boxErosion = Box.createHorizontalBox();
+		spinModel = new SpinnerNumberModel(terrain.getErosion(), 1, 1000, 1);
+		boxErosion.add(new JLabel(I18nList.CheckLang("Erosion : ")));
+		jSpinnerErosion = new JSpinner(spinModel);
+		boxErosion.add(jSpinnerErosion);
+
+		Box boxTexture = Box.createHorizontalBox();
+		boxTexture.add(new JLabel(I18nList.CheckLang("Textures Folder : ")));
+		textureFile = new JTextField(terrain.getTexture());
+		boxTexture.add(textureFile);
+		
+		Box boxTiling = Box.createHorizontalBox();
+		boxTiling.add(new JLabel(I18nList.CheckLang("Tiling : ")));
+		spinModel = new SpinnerNumberModel(terrain.getTiling(), 0, 1000, 0.1);
+		jSpinnerTiling = new JSpinner(spinModel);
+		boxTiling.add(jSpinnerTiling);
+		
+		Box box = Box.createVerticalBox();
+		box.add(boxHeight);
+		box.add(boxErosion);
+		box.add(boxTexture);
+		box.add(boxTiling);
+		
+
+
+		/**/
+		
+		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "3D Part");
+		border.setTitleJustification(TitledBorder.LEFT);
+		box.setBorder(border);
+		selectors.add(box);
 	    Object[] array = selectors.toArray();
 	    Object[] options = {"OK" , "Cancel"};
 	 
@@ -149,6 +191,11 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 				terrain.setNom(nom.getText());
 				terrain.setPassabilite((Integer)passabilite.getValue());
 				terrain.setInfranchissable(infranchissable.isSelected());
+				terrain.setHeight( (double) jSpinnerHeight.getValue());
+				terrain.setErosion((Integer) jSpinnerErosion.getValue());
+				terrain.setTexture(textureFile.getText());
+				terrain.setTiling((double) jSpinnerTiling.getValue());
+				renderMain.updateTerrain();
 				terrain.clearPheromones();		
 				for (int i = 0 ; i < Configuration.itemsPheromones.size() ; i++) {
 					if ((Double)startPh.get(i).getValue() != 0 || (Double)growthPh.get(i).getValue() != 0) {

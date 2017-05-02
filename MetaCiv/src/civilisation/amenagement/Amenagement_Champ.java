@@ -2,6 +2,7 @@ package civilisation.amenagement;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import civilisation.individu.Human;
 
@@ -18,7 +19,7 @@ public class Amenagement_Champ extends Amenagement{
 	}
 	
 	@Override
-	public void dessiner(Graphics g,int x,int y,int cellS)
+	public void dessiner(Graphics g,Graphics2D g2d,int x,int y,int cellS)
 	{
 		g.setColor(Color.yellow);
 		for (int i = 0; i < cellS; i++)

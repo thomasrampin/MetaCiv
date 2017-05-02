@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import renderEngine.loaders.Loader;
 import renderEngine.utils.Helper;
+import turtlekit.kernel.Turtle;
 
 public class Turtle3D {
 
@@ -19,8 +20,9 @@ public class Turtle3D {
 	private int colorID;
 	private Vector3f colorAction;
 	private float interpolation;
+	private Turtle t;
 	
-	public Turtle3D(int id,int card){
+	public Turtle3D(int id,int card, Turtle t){
 
 		this.object3d = new Object3D(basic);
 		this.id = id;
@@ -29,9 +31,12 @@ public class Turtle3D {
 		this.object3d.getModel().setColorID(Helper.IntegerToColor(colorID));//+1 avoid black
 		this.interpolation = 0;
 		colorAction = new Vector3f(-1,-1,-1);
+		this.t = t;
 	}
 	
-
+	public Turtle getTurlte(){
+		return t;
+	}
 	
 	public static void setUp(Loader loader){
 		basic = new Object3D("turtle", loader,new Vector3f(150,8,150),0,0,0,0.03f);

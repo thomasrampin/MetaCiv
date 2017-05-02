@@ -342,6 +342,35 @@ public class Initialiseur {
 		       		t.setInfranchissable(false);
 		       	}
 		       	
+		       	String[] height = getChamp("Hauteur",file);
+		       	if(height!=null){
+		       		t.setHeight((double)Float.parseFloat(height[0]));
+		       	}else{
+		       		t.setHeight(1.0);
+		       	}
+
+		       	String[] Erosion = getChamp("Erosion",file);
+		       	if(Erosion!=null){
+		       		t.setErosion(Integer.parseInt(Erosion[0]));
+		       	}else{
+		       		t.setErosion(1);
+		       	}
+		       	
+		       	String[] Texture = getChamp("Texture",file);
+		       	if(Erosion!=null){
+		       		t.setTexture(Texture[0]);
+		       	}else{
+		       		t.setTexture(nom);
+		       	}
+		       		
+		       	String[] Tiling = getChamp("Tiling",file);
+		       	if(Tiling!=null){
+		       		t.setTiling((double)Float.parseFloat(Tiling[0]));
+		       	}else{
+		       		t.setTiling(1);
+		       	}
+		       	
+		       	
 		       	couleurs_terrains.put(t.getCouleur(), t);
 		    }
 		    }

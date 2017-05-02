@@ -76,7 +76,7 @@ public class TerrainTessRenderer {
         this.handle = new long[textures.size()];
         diffuseArraySize=0;
         if(!bindless){
-        	diffuseArray = Loader.loadTextureAtlas(textures);       
+        	   
         	
         }
         else{

@@ -32,7 +32,7 @@ void main(void){
 	vec3 light = vec3(-2,-1,1);
 	 uv -= vec2(sunPosition.xy/15000);
 	float dist =  sqrt(dot(uv, uv));
-
+	FragmentColor0 = vec4(0,0,0,1.0);
 	//out_Color = mix(Zenith,Horizon,textureCoords.y*2-0.6)*1.2;
 	FragmentColor0 += texture(diffuseMap, vec2(textureCoords.x+angle/6,textureCoords.y*1.8)) ;
 

@@ -85,7 +85,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	JPopupMenu popup;
 	BufferedImage bufferedView;
 	Graphics2D g2d;
-	boolean activDebug = false;
+	public boolean activDebug = false;
 	renderMain render;
 	private boolean isNotify;
 	
@@ -103,7 +103,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		super.activate();
 		if(!bufferedView_activate && CivLauncher.choix3D==1){
 			bufferedView = new BufferedImage(this.getWidth()*this.getCellSize(),this.getHeight()*this.getCellSize(),BufferedImage.TYPE_INT_ARGB);
-			render = new renderMain(bufferedView); 
+			render = new renderMain(bufferedView,this); 
 			Thread t = new Thread(render);
 			g2d = bufferedView.createGraphics();
 	        t.start();
@@ -186,13 +186,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 						g2d.setColor(new Color (255 - (int)v, 255 - (int)v, 255));
 				}
 				g.fillRect(x,y,this.getCellSize(),this.getCellSize());
-				if(bufferedView_activate)
-					g2d.fillRect(x,y,this.getCellSize(),this.getCellSize());
-				if(!isNotify && y == 0 && x/this.getCellSize() == this.getWidth()-1 && bufferedView_activate){
-					
-					render.notifyShaderTerrain(this.getWidth(),this.getHeight());
-					isNotify = true;
-				}
+
 	
 			/*	if (this.frontieresVisibles)
 				{
@@ -232,9 +226,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 				if (p.isMarkPresent("Route"))
 				{
 					Amenagement mark = (Amenagement) p.getMark("Route");
-					mark.dessiner(g, x, y, this.getCellSize());
-					if(bufferedView_activate)
-						render.drawRoad(x,y,cellSize);
+					mark.dessiner(g,g2d, x, y, this.getCellSize());
+	
 					p.dropMark("Route", mark);
 				}
 		/*
@@ -261,6 +254,16 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					mark.dessiner(g, x, y, this.getCellSize());
 					p.dropMark(Amenagement.class.getName(), mark);
 				}*/
+				if(bufferedView_activate)
+
+					g2d.fillRect((int) (x/(cellSize/5.0)),(int) (y/(cellSize/5.0)),5,5);
+				if(!isNotify && y == 0 && x/this.getCellSize() == this.getWidth()-1 && bufferedView_activate){
+					
+					render.notifyShaderTerrain(this.getWidth(),this.getHeight());
+					isNotify = true;
+				}else if( y == 0 && x/this.getCellSize() == this.getWidth()-1 && bufferedView_activate){
+					render.setBufferedImage(bufferedView);
+				}
 	}
 	
 	@Override
@@ -331,7 +334,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					g.setColor(humain);
 					g.fillRect(dx+1,dy+1,size - 2,size - 2);
 					if(activDebug){
-						paintDebugMessage(g, h, dx+size, dy+size);
+						paintDebugMessage(g, h,t, dx, dy);
 					}
 				}
 				else 
@@ -414,8 +417,9 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		}
 		else if(t.isPlayingRole(DefineConstants.Role_Facility)){
 			paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
-			render.drawFacility(x,y,((Amenagement) t).getColorType(),t.getID(),getCellSize());
-			((Amenagement)t).dessiner(g, x,y, this.getCellSize());
+			render.drawFacility(x,y,((Amenagement) t).getColorType(),t.getID(),getCellSize(),((Amenagement) t));
+			
+			((Amenagement)t).dessiner(g,null, x,y, this.getCellSize());
 			
 		}
 		else {
@@ -425,11 +429,12 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		return c;
 	}
 	
-	private void paintDebugMessage(Graphics g, Human agent, int x, int y) {
+	private void paintDebugMessage(Graphics g, Human agent, Turtle t, int x, int y) {
 		agent.setDebugString(agent.getEsprit().getPlanEnCours().planToString());
 		if(!agent.getDebugString().equals("")){
 			String msg = agent.getDebugString();
-			render.renderMsg(msg,x,y,cellSize);
+			if(bufferedView_activate)
+				render.renderMsg(msg,x,y,cellSize,t.getID());
 			//System.out.println(msg);
 			int distanceBubbleFromAgent = 20;
 			int padding = 2;

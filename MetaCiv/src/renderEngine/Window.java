@@ -1,5 +1,8 @@
 package renderEngine;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -69,6 +72,9 @@ public class Window {
 		System.out.println("OpneGL version: " + GL11.glGetString(GL11.GL_VERSION));
 		System.out.println("GLSL version: " + GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION));
 		System.out.println("Is ARB bindless texture is supported : " + Window.IsExtensionSupported("GL_ARB_bindless_texture"));
+		/*IntBuffer o = BufferUtils.createIntBuffer(16);
+		GL11.glGetInteger(GL20.GL_MAX_TEXTURE_IMAGE_UNITS, o);
+		System.err.println("GL_MAX_TEXTURE_SIZE: " + o.get());*/
 	}
 
 	public static boolean checkGlVersion() {

@@ -65,12 +65,12 @@ public class MasterRenderer {
         irenderer = new InstancedRenderer(loader,instancedObject,projectionMatrix);
         terrainInit = false;
         renderer = new EntityRenderer(loader,shader,projectionMatrix);
-        terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures);
+        terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures,loader);
         terrainTessRenderer = new TerrainTessRenderer(loader,terrainTessShader,loader.loadTexture("heightmap.png"),loader.loadTexture("heightmap_NRM.png"),loader.loadTexture("forest/forest_DISP.png"),loader.loadTexture("forest/forest_NRM.png"),projectionMatrix,textures);
-        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<Vector4f>());
+        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),"cliff/cliff",new ArrayList<TerrainTexture>());
     }
      
-    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
+    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<TerrainTexture> textures,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
         prepare();
         shader.start();
         shader.loadLights(sun);
@@ -89,7 +89,7 @@ public class MasterRenderer {
             terrainShader.loadViewMatrix(camera);
             terrainShader.loadCameraPos(camera.getPosition());
             
-        	terrainRenderer.render(terrain,heights,distanceFog,fromLight,shadowsTexture, shadowMatrix);
+        	terrainRenderer.render(terrain,textures,distanceFog,fromLight,shadowsTexture, shadowMatrix);
         	
         	terrainShader.stop();
             if(invertPitch)
@@ -101,7 +101,7 @@ public class MasterRenderer {
             GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
             
         }else{
-        	terrainRenderer.renderL(terrain,heights,distanceFog,fromLight,shadowsTexture, shadowMatrix, light_vp_matrix,camera);
+        	terrainRenderer.renderL(terrain,textures,distanceFog,fromLight,shadowsTexture, shadowMatrix, light_vp_matrix,camera);
         }
         
        //terrainTessRenderer.render(camera,terrain,sun,heights,clipPlane,distanceFog,invertPitch,forceLow);
@@ -191,8 +191,8 @@ public class MasterRenderer {
 		terrainTessRenderer.setDispTex(id,idDiffuse);
 	}
 
-	public void notifyTerrain(Loader loader,BufferedImage image, Vector2f gridSize,ArrayList<Vector4f> heights) {
-		terrain.notifyHeightMap(loader, image,gridSize,heights);
+	public void notifyTerrain(Loader loader,BufferedImage image, Vector2f gridSize,ArrayList<TerrainTexture> textures) {
+		terrain.notifyHeightMap(loader, image,gridSize,textures);
 		terrainInit = true;
 	}
 

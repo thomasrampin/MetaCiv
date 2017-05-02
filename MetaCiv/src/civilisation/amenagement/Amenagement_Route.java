@@ -2,6 +2,7 @@ package civilisation.amenagement;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -12,6 +13,7 @@ import turtlekit.kernel.Patch;
 public class Amenagement_Route extends AmenagementPublic implements Serializable{
 	static String[] cognitonsLies = {};
 	boolean[] roadDirection = new boolean[4];
+	Color roadColor = new Color(0.0f,0.0f,0.0f);
 	Patch p;
 		//0 -> rigth
 		//1 -> down
@@ -38,25 +40,38 @@ public class Amenagement_Route extends AmenagementPublic implements Serializable
 	}
 	
 	@Override
-	public void dessiner(Graphics g,int x,int y,int cellS)
+	public void dessiner(Graphics g,Graphics2D g2d,int x,int y,int cellS)
 	{
 		g.setColor(Color.GRAY);
+		g2d.setColor(roadColor);
 		
 		if (roadDirection[2]) {
 			g.drawLine(x, y+(cellS/2)    , x+(cellS-1)/2, y+(cellS/2)    );
 			g.drawLine(x, y+(cellS/2) + 1, x+(cellS-1)/2, y+(cellS/2) + 1);
+			
+			g2d.drawLine((int) (x/(cellS/5.0)), (int) (y/(cellS/5.0))+(5/2)    , (int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2)    );
+			g2d.drawLine((int) (x/(cellS/5.0)), (int) (y/(cellS/5.0))+(5/2) + 1, (int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2) + 1);
 		} 
 		if (roadDirection[3]) {
 			g.drawLine(x+(cellS/2)    , y+((cellS-1)/2), x+(cellS/2)    , y+cellS-1);
 			g.drawLine(x+(cellS/2) + 1, y+((cellS-1)/2), x+(cellS/2) + 1, y+cellS-1);
+			
+			g2d.drawLine((int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0))+((5-1)/2), (int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0))+5-1);
+			g2d.drawLine((int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0))+((5-1)/2), (int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0))+5-1);
 		} 
 		if (roadDirection[0]) {
 			g.drawLine(x+(cellS-1)/2, y+(cellS/2)    , x+cellS-1, y+(cellS/2)    );
 			g.drawLine(x+(cellS-1)/2, y+(cellS/2) + 1, x+cellS-1, y+(cellS/2) + 1);
+			
+			g2d.drawLine((int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2)    , (int) (x/(cellS/5.0))+5-1, (int) (y/(cellS/5.0))+(5/2)    );
+			g2d.drawLine((int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2) + 1, (int) (x/(cellS/5.0))+5-1, (int) (y/(cellS/5.0))+(5/2) + 1);
 		} 
 		if (roadDirection[1]) {
 			g.drawLine(x+(cellS/2)    , y, x+(cellS/2)    , y+((cellS-1)/2));
 			g.drawLine(x+(cellS/2) + 1, y, x+(cellS/2) + 1, y+((cellS-1)/2));
+			
+			g2d.drawLine((int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0)), (int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0))+((5-1)/2));
+			g2d.drawLine((int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0)), (int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0))+((5-1)/2));
 		}
 		
 

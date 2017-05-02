@@ -14,6 +14,8 @@ in VS_OUT{
 	vec3 TangentLightPos;
 	vec3 TangentViewPos;
 	vec3 TangentFragPos;
+	mat3 RM;
+	mat3 TBN;
 }fs_in;
 
 layout (location = 0) out vec4 FragmentColor0;
@@ -163,7 +165,8 @@ void main(void){
 	if(reflMapped){
 		vec4 gloss_color;
 		float gloss = texture(roughnessMap,texCoords).r;
-		vec3 r = reflect(unitVectorToCamera,unitNormal);
+		float fresnelFactor = max(1-dot(unitVectorToCamera,unitNormal),0.8);
+		vec3 r = reflect(normalize(fs_in.toCameraVector),normalize(fs_in.RM * (unitNormal * fs_in.TBN)));
 		//Compute texture coordinate based on direction
 		vec2 tc;
 
@@ -177,11 +180,11 @@ void main(void){
 		gloss_color = vec4(0,0,0,1.0);
 
 		float lod = (5.0 + 5.0*sin( gloss ))*step( tc.x, tc.y );
-		gloss_color = textureLod(reflexion_map, tc,gloss*10*1.8) ;
+		gloss_color = textureLod(reflexion_map, tc,gloss*10*2.5) ;
 
 		vec4 final_gloss = FragmentColor0 * gloss_color;
 		if(metalMapped)
-			FragmentColor0 = mix(FragmentColor0,final_gloss,texture(metalMap,texCoords).r/1.4);
+			FragmentColor0 = mix(FragmentColor0,final_gloss,(fresnelFactor)*texture(metalMap,texCoords).r);
 
 		//FragmentColor0 += texture(reflexion_blur,tc);
 		//FragmentColor0 += mix(texture(reflexion,  vec2(tc.x+skyAngle/6,tc.y)),texture(reflexion_blur, vec2(tc.x+skyAngle/6,tc.y)),0.0);

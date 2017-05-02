@@ -53,6 +53,7 @@ public class Loader {
 	
 	private static int textureTerrainID = -1;
 	private static int textureTerrainDiffID = -1;
+	private static int textureTerrainDiffAtlasID = -1;
 	private static int texturesAtlas[];
 	private static int textureTerrainBlurID = -1;
 	
@@ -151,7 +152,7 @@ public class Loader {
 		return textureID;
 	}
 	
-	  public static BufferedImage blur(BufferedImage image) {
+	public static BufferedImage blur(BufferedImage image) {
 
 		  	float value =  1f/1f;
 		    Kernel kernel = new Kernel(6, 6, new float[] { value, value, value,value, value, value,value, value, value,
@@ -164,6 +165,40 @@ public class Loader {
 		    image = op.filter(image, null);
 		    return image;
 		  }
+	
+	public static void updateData(BufferedImage image) {
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureTerrainID);
+	    int pixels[] = new int[image.getWidth() * image.getHeight()];
+	    image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+	    ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); // <-- 4 for RGBA, 3 for RGB
+
+	    for(int y = 0; y < image.getHeight(); y++){
+	        for(int x = 0; x < image.getWidth(); x++){
+	      
+	            int pixel = pixels[y*image.getHeight()+x];            
+	            
+	            buffer.put((byte) ((pixel >>16 ) & 0xFF));
+	            buffer.put((byte)  ((pixel >>8) & 0xFF));
+	            buffer.put((byte)  ((pixel) & 0xFF));
+	            
+	            buffer.put((byte)  ((pixel >>24 ) & 0xFF));
+	        }
+	    }
+
+	    buffer.flip();
+	    //Setup texture scaling filtering
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+	    if(GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic){
+			float quantity = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, quantity);
+		}else{
+			System.out.println("Not supported anisotropic filtering");
+		}	
+
+	    GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, image.getWidth(), image.getHeight(), GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+	    
+	}
 	
 	public static int loadTexture(BufferedImage image){
 		/*BufferedImage bufferedView = new BufferedImage(60,60,BufferedImage.TYPE_INT_ARGB);
@@ -421,11 +456,93 @@ public class Loader {
 	    return textureTerrainDiffID;
 	 }	
 
+	public int loadTextureAtlas(String cliffFile) {
+		
+
+		BufferedImage imageDiff = null;
+		try {
+			imageDiff = ImageIO.read(new File("Assets/Texture/"+cliffFile+".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			 
+		BufferedImage imageNrm = null;
+		try {
+			imageNrm = ImageIO.read(new File("Assets/Texture/"+cliffFile+"_NRM.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		BufferedImage imageDisp = null;
+		try {
+			imageDisp = ImageIO.read(new File("Assets/Texture/"+cliffFile+"_DISP.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		int pixelsDiff[] = new int[imageDiff.getWidth() * imageDiff.getHeight()];
+		imageDiff.getRGB(0, 0, imageDiff.getWidth(), imageDiff.getHeight(), pixelsDiff, 0, imageDiff.getWidth());
+	    ByteBuffer buffer = BufferUtils.createByteBuffer((imageDiff.getWidth()*2+imageNrm.getWidth()*2/*+imageDisp.getWidth() */) * (imageDiff.getHeight()) * 4); // <-- 4 for RGBA, 3 for RGB
+
+	    int pixelsNrm[] = new int[imageNrm.getWidth() * imageNrm.getHeight()];
+	    imageNrm.getRGB(0, 0, imageNrm.getWidth(), imageNrm.getHeight(), pixelsNrm, 0, imageNrm.getWidth());
+	    
+	    int pixelsDisp[] = new int[imageDisp.getWidth() * imageDisp.getHeight()];
+	    imageDisp.getRGB(0, 0, imageDisp.getWidth(), imageDisp.getHeight(), pixelsDisp, 0, imageDisp.getWidth());
+	    
+	    for(int y = 0; y < imageDiff.getHeight(); y++){
+	        for(int x = 0; x < imageDiff.getWidth()*2+imageNrm.getWidth()*2/*+imageDisp.getWidth()*/ ; x++){
+	        	int pixel;
+	        	if(x<imageDiff.getWidth())
+	        		pixel = pixelsDiff[y*imageDiff.getHeight()+x];
+	        	else if(x<imageDiff.getWidth()*2)
+	        		pixel = pixelsDiff[y*imageDiff.getHeight()+x- imageDiff.getWidth()];
+	        	else if(x<imageDiff.getWidth()*2+imageNrm.getWidth())
+	        		pixel = pixelsNrm[y*imageNrm.getHeight()+(x- imageDiff.getWidth()*2)];
+	        	else
+	        		pixel = pixelsNrm[y*imageNrm.getHeight()+(x- imageDiff.getWidth()*2- imageNrm.getWidth())];
+	        	/*else
+	        		pixel = pixelsDisp[y*imageDisp.getHeight()+(x- imageNrm.getWidth()- imageDiff.getWidth())];*/
+	            buffer.put((byte) ((pixel >>16 ) & 0xFF));
+	            buffer.put((byte)  ((pixel >>8) & 0xFF));
+	            buffer.put((byte)  ((pixel) & 0xFF));
+	            
+	            buffer.put((byte)  ((pixel >>24 ) & 0xFF));
+	        }
+	    }
+	    
+	    buffer.flip();
+	    
+
+	    
+	    textureTerrainDiffID = GL11.glGenTextures(); //Generate texture ID
+	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureTerrainDiffID);
+
+	    // Setup wrap mode
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+
+	    //Setup texture scaling filtering
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+	    if(GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic){
+			float quantity = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, quantity);
+		}else{
+			System.out.println("Not supported anisotropic filtering");
+		}		
+	    //Send texel data to OpenGL
+	    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, imageDiff.getWidth()*2+imageNrm.getWidth()*2/*+imageDisp.getWidth()*/ , imageDiff.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+	  
+
+	    return textureTerrainDiffID;
+	}
+
 	public static int[] loadTextureAtlas(ArrayList<TerrainTexture> textures){
 	    int iterator = 0;
 	    texturesAtlas = new int[textures.size()];
 		for(TerrainTexture t : textures){
-
+	
 			BufferedImage imageDiff = null;
 			try {
 				imageDiff = ImageIO.read(new File("Assets/Texture/"+t.getTexture()+".png"));
@@ -449,7 +566,7 @@ public class Loader {
 			
 			int pixelsDiff[] = new int[imageDiff.getWidth() * imageDiff.getHeight()];
 			imageDiff.getRGB(0, 0, imageDiff.getWidth(), imageDiff.getHeight(), pixelsDiff, 0, imageDiff.getWidth());
-		    ByteBuffer buffer = BufferUtils.createByteBuffer((imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth()*/ ) * (imageDiff.getHeight()) * 4); // <-- 4 for RGBA, 3 for RGB
+		    ByteBuffer buffer = BufferUtils.createByteBuffer((imageDiff.getWidth()*2+imageNrm.getWidth()*2/*+imageDisp.getWidth() */) * (imageDiff.getHeight()) * 4); // <-- 4 for RGBA, 3 for RGB
 
 		    int pixelsNrm[] = new int[imageNrm.getWidth() * imageNrm.getHeight()];
 		    imageNrm.getRGB(0, 0, imageNrm.getWidth(), imageNrm.getHeight(), pixelsNrm, 0, imageNrm.getWidth());
@@ -458,12 +575,16 @@ public class Loader {
 		    imageDisp.getRGB(0, 0, imageDisp.getWidth(), imageDisp.getHeight(), pixelsDisp, 0, imageDisp.getWidth());
 		    
 		    for(int y = 0; y < imageDiff.getHeight(); y++){
-		        for(int x = 0; x < imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth()*/ ; x++){
+		        for(int x = 0; x < imageDiff.getWidth()*2+imageNrm.getWidth()*2/*+imageDisp.getWidth()*/ ; x++){
 		        	int pixel;
 		        	if(x<imageDiff.getWidth())
 		        		pixel = pixelsDiff[y*imageDiff.getHeight()+x];
-		        	else //if(x<imageDiff.getWidth()+imageNrm.getWidth())
-		        		pixel = pixelsNrm[y*imageNrm.getHeight()+(x- imageDiff.getWidth())];
+		        	else if(x<imageDiff.getWidth()*2)
+		        		pixel = pixelsDiff[y*imageDiff.getHeight()+x- imageDiff.getWidth()];
+		        	else if(x<imageDiff.getWidth()*2+imageNrm.getWidth())
+		        		pixel = pixelsNrm[y*imageNrm.getHeight()+(x- imageDiff.getWidth()*2)];
+		        	else
+		        		pixel = pixelsNrm[y*imageNrm.getHeight()+(x- imageDiff.getWidth()*2- imageNrm.getWidth())];
 		        	/*else
 		        		pixel = pixelsDisp[y*imageDisp.getHeight()+(x- imageNrm.getWidth()- imageDiff.getWidth())];*/
 		            buffer.put((byte) ((pixel >>16 ) & 0xFF));
@@ -495,7 +616,7 @@ public class Loader {
 				System.out.println("Not supported anisotropic filtering");
 			}		
 		    //Send texel data to OpenGL
-		    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, imageDiff.getWidth()+imageNrm.getWidth()/*+imageDisp.getWidth() */, imageDiff.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, imageDiff.getWidth()*2+imageNrm.getWidth()*2/*+imageDisp.getWidth()*/ , imageDiff.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		    texturesAtlas[iterator] = textureTerrainDiffID;
 		   
 		    iterator++;
@@ -589,6 +710,7 @@ public class Loader {
 		buffer.flip();// prepare for reading
 		return buffer;
 	}
+
 
 
 }

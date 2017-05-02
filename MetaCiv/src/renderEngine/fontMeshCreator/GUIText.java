@@ -18,12 +18,15 @@ public class GUIText {
 
 	private int textMeshVao;
 	private int vertexCount;
-	private Vector3f colour = new Vector3f(0f, 0f, 0f);
+	private Vector3f colour = new Vector3f(1f, 1f, 1f);
 
 	private Vector3f position;
 	private float lineMaxSize;
 	private int numberOfLines;
-
+	private int id;
+	private boolean fix;
+	private boolean visible=true;
+	
 	private FontType font;
 
 	private boolean centerText = false;
@@ -52,14 +55,17 @@ public class GUIText {
 	 *            the line, based on this line length value.
 	 * @param centered
 	 *            - whether the text should be centered or not.
+	 * @param fix 
 	 */
-	public GUIText(String text, float fontSize, FontType font, Vector3f position, float maxLineLength, boolean centered) {
+	public GUIText(String text, float fontSize, FontType font, Vector3f position, float maxLineLength, boolean centered,int id, boolean fix) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = font;
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+		this.id = id;
+		this.fix = fix;
 		TextMaster.loadText(this);
 	}
 
@@ -179,11 +185,15 @@ public class GUIText {
 	protected float getMaxLineSize() {
 		return lineMaxSize;
 	}
+	
+	public void setTextString(String textString) {
+		this.textString = textString;
+	}
 
 	/**
 	 * @return The string of text.
 	 */
-	protected String getTextString() {
+	public String getTextString() {
 		return textString;
 	}
 
@@ -191,4 +201,30 @@ public class GUIText {
 		this.position = position;
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public boolean isFix() {
+		return fix;
+	}
+
+	public void setFix(boolean fix) {
+		this.fix = fix;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	
+	
 }

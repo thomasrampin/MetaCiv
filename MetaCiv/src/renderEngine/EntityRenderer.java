@@ -25,12 +25,12 @@ import org.lwjgl.util.vector.Matrix4f;
 public class EntityRenderer {
  
     private StaticShader shader;
-    private int envTexture_level1,envTexture_level2,envTexture_level3,envTexture_level4;//temp
+    private int envTexture_level;
     private float hS = 0.0f;
  
     public EntityRenderer(Loader loader,StaticShader shader,Matrix4f projectionMatrix) {
         this.shader = shader;
-        envTexture_level1 = loader.loadTexture("reflect/level1.png");
+        envTexture_level = loader.loadTexture("test.png");
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -86,7 +86,7 @@ public class EntityRenderer {
         
         shader.loadHeightScale(hS/100.0f);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, envTexture_level1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, envTexture_level);
     	if(model.getTexture().IsTextured()){
     		shader.loadTextured(texture.IsTextured());
     		GL13.glActiveTexture(GL13.GL_TEXTURE1);

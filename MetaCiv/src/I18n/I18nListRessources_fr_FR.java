@@ -9,7 +9,11 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 
 		  //tableau des mots cl�s et des valeurs 
 
-		  static final Object[][] contents = { 
+		  static final Object[][] contents = {
+			  {"Tiling : ","Repetition : "},
+			  {"Textures Folder : ","Dossier des textures : "},
+			  {"Height : ","Hauteur : "},
+			  {"Erosion : ","Erosion : "},
 			  {"Annuler","Annuler"},
 			  {"Solo 3D/ Editeur","Solo 3D/ Editeur"},
 			  {"Solo / Editeur","Solo / Editeur"},

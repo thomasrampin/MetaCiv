@@ -17,8 +17,10 @@ layout (location = 1) out vec4 FragmentColor1;
 
 
 uniform sampler2D blendMap;
-uniform sampler2D blurMap;
+uniform sampler2D reflexion;
 uniform sampler2D shadowMap;
+uniform sampler2D cliffMap;
+uniform sampler2D roadMap;
 
 #if GL_ARB_bindless_texture_is_supported
 	layout(binding = 5, std140) uniform TEXTURE_BLOCK
@@ -47,6 +49,10 @@ in VS_OUT
 	vec3 TangentLightPos;
 	vec3 TangentViewPos;
 	vec3 TangentFragPos;
+	float height;
+	mat3 RM;
+	mat3 TBN;
+	vec3 Pos;
 }fs_in;
 
 
@@ -71,31 +77,6 @@ uniform bool textured;
 
 
 
-int getIndice(float red, float green, float blue);
-
-int foundCloseOne(float red,float green,float blue){
-	float redClose=heights[0].r,greenClose=heights[0].g,blueClose=heights[0].b;
-	int indice = -1;
-	for(int i=1;i<heights_size;i++){
-		if(abs(redClose-red)>abs(heights[i].r - red) && abs(greenClose-green)>abs(heights[i].g - green) && abs(blueClose-blue)>abs(heights[i].b - blue)){
-			redClose = heights[i].r;
-			greenClose = heights[i].g;
-			blueClose = heights[i].b;
-			indice = i;
-		}
-	}
-	return indice;
-}
-
-int getIndice(float red, float green, float blue){
-
-	for(int i=0;i<heights_size;i++){
-		if(heights[i].r == red && heights[i].g == green && heights[i].b == blue )
-			return i;
-	}
-	return -1;
-}
-
 vec4 fog(vec4 c)
 {
     float z = length(fs_in.eye_coord)/distanceFog;
@@ -109,24 +90,62 @@ vec4 fog(vec4 c)
     return c * extinction + fog_color * (1.0 - inscattering);
 }
 
-float f(float x,float y){
-	return x - y * floor(x/y);
+
+
+uniform float height_scale=0.1;
+
+vec2 ParallaxMapping(int indice,vec2 texCoords, vec3 viewDir)
+{
+    // number of depth layers
+    const float minLayers = 10;
+    const float maxLayers = 20;
+    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));
+    // calculate the size of each layer
+    float layerDepth = 1.0 / numLayers;
+    // depth of current layer
+    float currentLayerDepth = 0.0;
+    // the amount to shift the texture coordinates per layer (from vector P)
+    vec2 P = viewDir.xy / viewDir.z * height_scale;
+    vec2 deltaTexCoords = P / numLayers;
+
+    // get initial values
+    vec2  currentTexCoords     = texCoords;
+    float currentDepthMapValue = texture(gSampler[indice], currentTexCoords).r;
+
+    while(currentLayerDepth < currentDepthMapValue)
+    {
+        // shift texture coordinates along direction of P
+        currentTexCoords -= deltaTexCoords;
+        // get depthmap value at current texture coordinates
+        currentDepthMapValue = texture(gSampler[indice], currentTexCoords).r;
+        // get depth of next layer
+        currentLayerDepth += layerDepth;
+    }
+
+    // -- parallax occlusion mapping interpolation from here on
+    // get texture coordinates before collision (reverse operations)
+    vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+
+    // get depth after and before collision for linear interpolation
+    float afterDepth  = currentDepthMapValue - currentLayerDepth;
+    float beforeDepth = texture(gSampler[indice], prevTexCoords).r - currentLayerDepth + layerDepth;
+
+    // interpolation of texture coordinates
+    float weight = afterDepth / (afterDepth - beforeDepth);
+    vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+
+    return finalTexCoords;
 }
 
-
-vec2 ParallaxMapping(int indice, vec2 texCoords, vec3 viewDir)
+vec3 blend(vec4 texture1, float a1, vec4 texture2, float a2)
 {
-	   // get depth for this fragment
-	   float initialHeight = texture(gSampler[indice], texCoords).r;
+    float depth = 0.2;
+    float ma = max(texture1.a + a1, texture2.a + a2) - depth;
 
-	   // calculate amount of offset for Parallax Mapping
-	   vec2 texCoordOffset = 0.1 * viewDir.xy / viewDir.z * initialHeight;
+    float b1 = max(texture1.a + a1 - ma, 0);
+    float b2 = max(texture2.a + a2 - ma, 0);
 
-	   // calculate amount of offset for Parallax Mapping With Offset Limiting
-	   texCoordOffset = 0.1 * viewDir.xy * initialHeight;
-
-	   // retunr modified texture coordinates
-	   return texCoords - texCoordOffset;
+    return (texture1.rgb * b1 + texture2.rgb * b2) / (b1 + b2);
 }
 
 void main(void){
@@ -138,43 +157,8 @@ void main(void){
 	float blue = texture(blendMap,fs_in.tc).b;
 	float green = texture(blendMap,fs_in.tc).g;
 	int indice = -1;
-
-
-
-	vec2 offset = vec2(0.006,0.006);
-	for(int i=0;i<9;i++) // loop to fix ignore point
-	{
-		indice = getIndice(red,green,blue);
-		if(indice == -1)
-		{
-			red = texture(blendMap,fs_in.tc-offset).r;
-			blue = texture(blendMap,fs_in.tc-offset).b;
-			green = texture(blendMap,fs_in.tc-offset).g;
-			offset += offset;
-		}
-		else
-			break;
-	}
-
 	int indice2 = -1;
-	float red2 = texture(blendMap,fs_in.tc).r;
-	float blue2 = texture(blendMap,fs_in.tc).b;
-	float green2 = texture(blendMap,fs_in.tc).g;
-	offset = vec2(0.006,0.006);
-		for(int i=0;i<2;i++) // loop to fix ignore point
-		{
-			indice2 = getIndice(red2,green2,blue2);
-			if(indice2 == -1 || (red == red && green == green2 && blue == blue2))
-			{
-				red2 = texture(blendMap,fs_in.tc-offset).r;
-				blue2 = texture(blendMap,fs_in.tc-offset).b;
-				green2 = texture(blendMap,fs_in.tc-offset).g;
-				offset += offset;
-			}
-			else
-				break;
-		}
-
+	bool isRoad=(red==0.0 && green==0.0 && blue==0.0);
 
 
 	vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
@@ -182,22 +166,73 @@ void main(void){
 	vec3 unitVectorToCamera = normalize(fs_in.toCameraVector);
 
 
-	float x = f(fs_in.tc.x*15,0.5);
-	vec2 parseTc = vec2(x,fs_in.tc.y*15 );
 
 
-	vec2 parseTcNrm = vec2(x,fs_in.tc.y*15 )/2.0+(0.5);
+
+	//vec2 texCoords = ParallaxMapping(indice,parseTcDisp,fs_in.viewDir);
+	float blendValue=0;
+	if(fs_in.height>=heights[0].w){
+		indice = 0;
+	}else{
+		for(int i=1;i<=heights_size;i++){
+			if(fs_in.height>=heights[i].w){
+				indice = i-1;
+				indice2 = i;
+
+				blendValue = ((fs_in.height-heights[i].w)/(heights[i-1].w-heights[i].w));
+				break;
+			}
+		}
+	}
+	if(indice==-1)
+		indice = heights_size-1;
+
+	float tiling = heights[indice].x;
+	if(isRoad)
+		tiling = 150;
+
+	float x = mod(fs_in.tc.x*tiling/2.0,0.5);
+	vec2 parseTc = vec2(x,fs_in.tc.y*tiling)/4.0+0.25;
+
+
+	vec2 parseTcNrm = vec2(x,fs_in.tc.y*tiling)/4.0+(0.75);
 
 
 	vec2 parseTcDisp = vec2(x,fs_in.tc.y*15 )/2.0+(0.666);
 
+	x = mod(fs_in.tc.x*heights[indice2].x/2.0,0.5);
+	vec2 parseTc2 = vec2(x,fs_in.tc.y*heights[indice2].x )/4.0+0.25;
 
-	vec2 texCoords = ParallaxMapping(indice,parseTcDisp,fs_in.viewDir);
+
+	vec2 parseTcNrm2 = vec2(x,fs_in.tc.y*heights[indice2].x )/4.0+(0.75);
 
 
 
-	vec3 unitNormal = normalize((texture(gSampler[indice],parseTcNrm).rbg * 2.0 - 1.0) );
 
+
+	blendValue = 1-blendValue;
+	//cliff detector
+	//Get face normal
+	vec3 X = dFdx(fs_in.Pos);
+	vec3 Y = dFdy(fs_in.Pos);
+	vec3 normal=normalize(cross(X,Y));
+	bool isCliff = normal.y<0.6 && fs_in.height>10.0;
+
+	vec3 unitNormal;
+	if(isRoad){
+		unitNormal = normalize((texture(roadMap,parseTcNrm).rbg * 2.0 - 1.0) );
+	}
+	else{
+		if(!isCliff){
+			if(indice2==-1)
+				unitNormal = normalize((texture(gSampler[indice],parseTcNrm).rbg * 2.0 - 1.0) );
+			else
+				unitNormal = normalize((mix(texture(gSampler[indice],parseTcNrm),texture(gSampler[indice2],parseTcNrm2),blendValue)).rbg * 2.0 - 1.0);
+		}else
+			unitNormal = normalize((texture(cliffMap,parseTcNrm).rbg * 2.0 - 1.0) );
+	}
+
+	vec3 unitNormalBasic = normalize(fs_in.normal);
 
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
@@ -206,7 +241,7 @@ void main(void){
 	vec3 unitLightVector = normalize(fs_in.toLightVector);
 
 	float nDotl = dot(unitNormal,unitLightVector);
-	float nDotl2 = dot(normalize(fs_in.normal),unitLightVector);
+	float nDotl2 = dot(unitNormalBasic,unitLightVector);
 	float brightness = max(nDotl,0.0);
 	float brightness2 = max(nDotl2,0.0);
 
@@ -227,25 +262,50 @@ void main(void){
 	// Brighter
 	totalDiffuse = totalDiffuse * diffuseColour;
 
-	vec2 blurTextureCoords[11];
-	for(int i=-5;i<5;i++){
-			blurTextureCoords[i+5] = parseTc + vec2(0.0,0.006 * i);
 
+
+	if(isRoad)
+		landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(roadMap,parseTc)+ vec4(specular,1.0);
+	else{
+		if(!isCliff){
+			if(indice2==-1)
+				landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(gSampler[indice],parseTc) ;
+			else
+				landscape = textureProj(shadowMap, fs_in.shadow_coord)* mix(texture(gSampler[indice],parseTc),texture(gSampler[indice2],parseTc2),blendValue);
+		}else{
+			landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(cliffMap,parseTc);
+		}
 	}
 
 
-	landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(gSampler[indice],parseTc);
 
 
 
 
 
+	landscape *= vec4(totalDiffuse,1.0)  ;//+ vec4(specular,1.0);
+	/*if(fs_in.height>50 && unitNormalBasic.y>0.9){
+		landscape = vec4(0.9 ) + vec4(specular,1.0);
+	}
+	else if(fs_in.height>20 && unitNormal.y<=(min((fs_in.height-20)/30.0,0.9))){
+		landscape = vec4(0.9) + vec4(specular,1.0);
+	}*/
+	vec3 normalReflect = normalize(fs_in.RM * (unitNormal * fs_in.TBN));
+	float fresnelFactor = max(dot(normalize(fs_in.toCameraVector),unitNormal),0.8);
+	vec3 r = reflect(normalize(fs_in.toCameraVector),unitNormal);
+	//Compute texture coordinate based on direction
+	vec2 tc;
 
+	tc.y = r.y;
+	r.y = 0.0;
+	tc.x = normalize(r).x * 0.5;
 
-	landscape *= vec4(totalDiffuse,1.0)  + vec4(specular,1.0);
+	float s = sign(r.z) * 0.5;
+	tc.s = 0.75 - s * (0.5 - tc.s);
+	tc.t = 0.5 +0.5 * tc.t;
 
 	FragmentColor0 = fog(landscape);
-
+	//FragmentColor0 = mix(textureLod(reflexion,tc,8),FragmentColor0,fresnelFactor);
 	//out_Color = vec4(fs_in.tangent,1.0);
 	FragmentColor1 = vec4(0,0,0,1);
 
