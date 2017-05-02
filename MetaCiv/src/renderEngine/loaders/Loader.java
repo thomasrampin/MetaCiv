@@ -542,8 +542,14 @@ public class Loader {
 	    int iterator = 0;
 	    texturesAtlas = new int[textures.size()];
 		for(TerrainTexture t : textures){
-	
+			
 			BufferedImage imageDiff = null;
+			try {
+				imageDiff = ImageIO.read(new File("Assets/Texture/grass/grass.png"));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				imageDiff = ImageIO.read(new File("Assets/Texture/"+t.getTexture()+".png"));
 			} catch (IOException e) {
@@ -552,12 +558,24 @@ public class Loader {
 				 
 			BufferedImage imageNrm = null;
 			try {
+				imageNrm = ImageIO.read(new File("Assets/Texture/grass/grass_NRM.png"));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
 				imageNrm = ImageIO.read(new File("Assets/Texture/"+t.getNormalMap()+".png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
 			BufferedImage imageDisp = null;
+			try {
+				imageDisp = ImageIO.read(new File("Assets/Texture/grass/grass_DISP.png"));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				imageDisp = ImageIO.read(new File("Assets/Texture/"+t.getDisplacementMap()+".png"));
 			} catch (IOException e) {

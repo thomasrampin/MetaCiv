@@ -334,11 +334,8 @@ public class renderMain implements Runnable {
 					for(int i=0;i<facilitys.size();i++){
 						if(facilitys.get(i).getA().isAlive()){
 							renderer.processMultiEntity(facilitys.get(i).getObject3D(), 0 , facilitys.get(i).getColorToVector());
-							facilitys.get(i).setSteelDraw(false);
 						}
-						if(!facilitys.get(i).getSteelDraw()){
-							facilitys.get(i).setCountDown(facilitys.get(i).getCountDown()-1);
-						}
+						
 					}
 				}
 
