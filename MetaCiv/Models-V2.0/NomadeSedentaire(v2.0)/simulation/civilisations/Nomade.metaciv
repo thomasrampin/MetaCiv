@@ -3,3 +3,5 @@ Agents : 35
 Scattered : 0
 Couleur : 0.81805557,1.0,0.9411765
 SchemaCognitif : NomadeScratch
+RouteTexture : road
+RouteTiling : 40

@@ -5,6 +5,10 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 4.0
+Erosion : 1
+Texture : roche
+Tiling : 40
 Pheromone : Gibier,2.0,0.0
 Pheromone : Metal,10.0,0.0
 Pheromone : Fertilite,10.0,0.0

@@ -2,13 +2,7 @@ Nom : ManqueResource
 Description : Un nouveau cogniton
 Type : PERCEPT
 StartChance : 100
+Couleur : -1
 Initial : 1
 Permet : Demenager
 Influence : Demenager,1
-Hue0 : 0
-Hue1 : 0
-Hue2 : 0
-Hue3 : 0
-Hue4 : 0
-Hue5 : 0
-Hue6 : 0

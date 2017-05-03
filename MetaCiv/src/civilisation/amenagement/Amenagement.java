@@ -63,13 +63,13 @@ public class Amenagement extends Turtle implements Serializable {
 	public void dessiner(Graphics g,Graphics2D g2d, int x,int y,int cellS)
 	{
 		g.setColor(type.getColor());
-		g2d.setColor(type.getColor());
+		
 		for (int i = 0; i < cellS; i++)
 		{
 			if (i%2 == 1)
 			{
 				g.drawLine(x, y+i, x+cellS-1, y+i);
-				g2d.drawLine(x, y+i, x+cellS-1, y+i);
+				
 			}
 
 		}

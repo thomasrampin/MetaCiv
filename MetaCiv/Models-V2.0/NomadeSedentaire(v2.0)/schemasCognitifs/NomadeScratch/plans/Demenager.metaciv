@@ -1,6 +1,7 @@
 Nom : Demenager
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_CompareRoleMembers,GroupToCreate(GroupAndRole Nomade:Leader),comparator(Comparator <),n(Double 1.0)
 	Action : A_CreateElectedGroup,GroupToCreate(GroupAndRole Nomade:Leader),RoleOfVoter(GroupAndRole Nomade:Follower),Cogniton(Cogniton ManqueResource),n(Integer 199)
 	Action : A_DoNothing

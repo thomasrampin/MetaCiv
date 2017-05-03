@@ -113,8 +113,8 @@ void main(void){
 
 	vec2 texCoords = fs_in.pass_textureCoords;
 
-	if(dispMapped)
-		texCoords = ParallaxMapping(fs_in.pass_textureCoords,viewDir);
+	/*if(dispMapped)
+		texCoords = ParallaxMapping(fs_in.pass_textureCoords,viewDir);*/
 
 	vec3 unitNormal = normalize(fs_in.surfaceNormal);
 	vec3 toCameraVectorFinal = fs_in.toCameraVector;

@@ -138,7 +138,7 @@ public class renderMain implements Runnable {
 			
 
 			
-			Object3D king = new Object3D("sphere", loader, new Vector3f(150, 30, 150), 0, 0, 0, 0.25f);
+			//Object3D king = new Object3D("sphere", loader, new Vector3f(150, 30, 150), 0, 0, 0, 0.25f);
 			//Object3D test = new Object3D("Settlement/settlement","", loader,true, new Vector3f(100, 20, 150), 0, 90, 0, 2.0f);
 	
 			List<Light> lights = new ArrayList<Light>();
