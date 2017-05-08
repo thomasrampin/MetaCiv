@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -70,6 +71,8 @@ public class WidgetPanelSocialFilter extends JPanel {
     JTree tree;
     CheckNode rootNode;
     CheckNode firstNode;
+    //tab des nodes de chaque civ
+    ArrayList<CheckNode> civNodes = new ArrayList<>();
     public static final String totalInWorld = "Total in world";
     public static final String totalInCiv = "Total in civilisation";
     public static final String total = "Total";
@@ -84,7 +87,9 @@ public class WidgetPanelSocialFilter extends JPanel {
         rootNode.add(firstNode);
         for (Civilisation c : Configuration.civilisations) {
             CheckNode civNode = new CheckNode(c.getNom(), true, false, CheckNode.LABEL_MODE);
-            civNode.add(new CheckNode(totalInCiv));
+            CheckNode civCn = new CheckNode(totalInCiv);
+            civNode.add(civCn);
+            civNodes.add(civCn);
             CheckNode grpTitle = new CheckNode("Groups", true, false, CheckNode.LABEL_MODE);
             civNode.add(grpTitle);
             for (GroupModel g : c.getCognitiveScheme().getGroups()) {
@@ -118,6 +123,12 @@ public class WidgetPanelSocialFilter extends JPanel {
 
     public void checkTotalInWorld(){
         this.firstNode.setSelected(true);
+    }
+    
+    public void checkTotalCiv(){
+    	for(CheckNode c : civNodes){
+    		c.setSelected(true);
+    	}
     }
 
     class NodeSelectionListener extends MouseAdapter {
