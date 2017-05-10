@@ -11,8 +11,8 @@ import renderEngine.utils.Matrix;
 
 public class SkyShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE = "src/renderEngine/sky/skyVertexShader.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/sky/skyFragmentShader.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/sky/skyVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/sky/skyFragmentShader.glsl";
 	
 	
 	private int location_projectionMatrix;

@@ -19,10 +19,10 @@ uniform vec3 cameraPosition;
 
 void main(void) {
 
-	const vec4 vertices[] = vec4[](vec4(-0.5,-1.0,-0.5,1.0),
-										vec4(0.5,-1.0,-0.5,1.0),
-										vec4(-0.5,-1.0,0.5,1.0),
-										vec4(0.5,-1.0,0.5,1.0));
+	const vec4 vertices[] = vec4[](vec4(-0.5,0.0,-0.5,1.0),
+										vec4(0.5,0.0,-0.5,1.0),
+										vec4(-0.5,0.0,0.5,1.0),
+										vec4(0.5,0.0,0.5,1.0));
 		int x = gl_InstanceID & 63;
 		int y = gl_InstanceID >> 6;
 		vec2 offs = vec2(x,y);

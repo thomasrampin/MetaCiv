@@ -12,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import civilisation.inspecteur.simulation.dialogues.DialogEditBounds;
+import civilisation.inspecteur.simulation.dialogues.DialogEditFor3D;
 import civilisation.inspecteur.simulation.dialogues.DialogEditPheromon;
 import civilisation.inspecteur.simulation.dialogues.DialogSelectEnvironmentToLoad;
 import civilisation.inspecteur.simulation.dialogues.DialogueEnregistrerEnvironnement;
@@ -102,6 +103,11 @@ public class ActionsToolBarEnvironnement implements ActionListener{
 			System.out.println("--Manage pheromons--");
 			DialogEditPheromon d = new DialogEditPheromon((Frame) p.getTopLevelAncestor() , true);
 			d.setVisible(true);		
+		}
+		else if(index == 10){
+			System.out.println("--Setting 3D--");
+			DialogEditFor3D d = new DialogEditFor3D((Frame) p.getTopLevelAncestor() , true);
+			d.setVisible(true);	
 		}
 	}
 

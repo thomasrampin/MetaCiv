@@ -66,7 +66,7 @@ public class TextMaster {
 				}
 			}
 		}
-		new GUIText(msg, 200, font2, new Vector3f(position), 200f, false,id,false);
+		new GUIText(msg, 100, font2, new Vector3f(position), 200f, false,id,false);
 	}
 
 	public static void switchButton(String button){

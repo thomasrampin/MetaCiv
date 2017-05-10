@@ -87,9 +87,6 @@ public class FabriqueCiv {
 		    	}
 		    	System.out.println(civ.getCognitiveScheme());
 		    	
-		    	/*Route pour la 3d*/
-		    	String road = Initialiseur.getChamp("RouteTexture", res)[0];
-		    	civ.setRoadTexture(road);
 		    }
 		}
     	

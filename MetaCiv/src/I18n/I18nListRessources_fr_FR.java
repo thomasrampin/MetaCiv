@@ -10,6 +10,14 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 		  //tableau des mots cl�s et des valeurs 
 
 		  static final Object[][] contents = {
+			  {"Snow","Neige"},
+			  {"Tiling","Repetition"},
+			  {"Road Tiling : ","Route Repetition : "},
+			  {"Cliff Tiling : ","Falaise Repetition : "},
+			  {"Snow Height : ","Hauteur de neige : "},
+			  {"Snow Distance Attenuation : ","Distance d'attenuation de la neige : "},
+              {"Snow Density : ","Densite de la neige : "},
+			  {"Setting 3D","Parametre 3D"},
 			  {"Tiling : ","Repetition : "},
 			  {"Textures Folder : ","Dossier des textures : "},
 			  {"Height : ","Hauteur : "},

@@ -31,7 +31,7 @@ public class PostProcessing {
 
 	public static void init(Loader loader){
 		quad = loader.loadToVAO(POSITIONS, 2);
-		contrastChanger = new ContrastBalance();
+		contrastChanger = new ContrastBalance(Display.getWidth(),Display.getHeight());
 		brightFilter = new BrightFilter(Display.getWidth()/2,Display.getHeight()/2);
 		hBlur = new HorizontalBlur(Display.getWidth()/16,Display.getHeight()/16);
 		vBlur = new VerticalBlur(Display.getWidth()/16,Display.getHeight()/16);
@@ -45,16 +45,18 @@ public class PostProcessing {
 	
 	public static void doPostProcessing(int colourTexture,int depthBuffer){
 		start();
+		
 		brightFilter.render(colourTexture);
-		hBlur.render(brightFilter.getOutputTexture());
-		vBlur.render(hBlur.getOutputTexture());
-		hBlur2.render(hBlur.getOutputTexture());
-		vBlur2.render(hBlur2.getOutputTexture());
+		hBlur.render(brightFilter.getTexture());
+		vBlur.render(hBlur.getTexture());
+		hBlur2.render(vBlur.getTexture());
+		vBlur2.render(hBlur2.getTexture());
 	
-		combineFilter.render(colourTexture,vBlur2.getOutputTexture());
+		combineFilter.render(colourTexture,vBlur2.getTexture());
 		hBlur3.render(combineFilter.getOutputTexture());
-		vBlur3.render(hBlur3.getOutputTexture());	
-		dofFilter.render(combineFilter.getOutputTexture(), vBlur3.getOutputTexture(),depthBuffer);
+		vBlur3.render(hBlur3.getTexture());
+		contrastChanger.render(combineFilter.getOutputTexture());
+		dofFilter.render(contrastChanger.getTexture(), vBlur3.getTexture(),depthBuffer);
 		end();
 	}
 	

@@ -22,7 +22,7 @@ public class SkyRenderer {
 	public static final Vector3f COLOUR = new Vector3f(0.8f,0.8f,0.8f);
 	
 
-	private static String[] TEXTURE_FILES = {"right","left","top","bottom","back","front"};
+	
 	
 	private Mesh cube;
 	private int texture;

@@ -24,6 +24,8 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+
+import civilisation.world.World;
  
 public class TerrainRenderer {
  
@@ -97,7 +99,11 @@ public class TerrainRenderer {
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(15f, new Vector3f(0.5f,0.5f,0.5f));
         shader.loadTextured(texture.IsTextured());
-       
+        shader.loadSnow(World.getSnowHeight());
+        shader.loadDistanceAttSnow(World.getSnowDistanceAtt());
+        shader.loadSnowDensity(World.getSnowDensity());
+        shader.loadCliffTiling(World.getCliffTiling());
+        shader.loadRoadTiling(World.getRoadTiling());
         shader.loadHeights(textures);
         shader.loadDistanceFog(distanceFog);
         

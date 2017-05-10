@@ -3,6 +3,7 @@ package renderEngine;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ import renderEngine.utils.InputHandler.inputType;
 import renderEngine.fontMeshCreator.FontType;
 import renderEngine.fontMeshCreator.GUIText;
 import renderEngine.utils.TerrainTexture;
-
+import turtlekit.kernel.Patch;
 import turtlekit.kernel.Turtle;
 
 
@@ -85,13 +86,16 @@ public class renderMain implements Runnable {
 	private static float FOG_INCREASE_SPEED = 0.0001f;
 
 	private ArrayList<Facility3D> facilitys;
-	private int free = 1;
+	
 	private int refresh_time = 0;
 	private boolean stopRefresh = false;
 	private boolean menuActionIsVisible = false;
 	private WorldViewer worldViewer;
+	final Patch[] grid;
+	private boolean init = true;
 	
-	public renderMain(BufferedImage bufferedView, WorldViewer worldViewer) {
+	public renderMain(BufferedImage bufferedView, WorldViewer worldViewer, Patch[] patchs) {
+		grid = patchs;
 		this.image = bufferedView;
 		isNotify = false;
 		gridSize = new Vector2f();
@@ -109,7 +113,12 @@ public class renderMain implements Runnable {
 	@Override
 	public void run() {
 
-		Window.createDislay();
+		try {
+			Window.createDislay();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		tempId = -1;
 		focusCamera = -1;
 		if(Window.checkGlVersion()){
@@ -136,10 +145,6 @@ public class renderMain implements Runnable {
 			
 			FPS.start();
 			
-
-			
-			//Object3D king = new Object3D("sphere", loader, new Vector3f(150, 30, 150), 0, 0, 0, 0.25f);
-			//Object3D test = new Object3D("Settlement/settlement","", loader,true, new Vector3f(100, 20, 150), 0, 90, 0, 2.0f);
 	
 			List<Light> lights = new ArrayList<Light>();
 			Light sun = new Light(new Vector3f(-4000,4000,-2000),new Vector3f(1,1,1));
@@ -230,25 +235,26 @@ public class renderMain implements Runnable {
 				if(isNotify){
 					int id = Loader.loadTexture(image);
 					
-					//int idDiffuse = Loader.loadMultiTexture(image, textures);
 					int idDiffuse = 0;
-					renderer.notifyShaderTerrain(id,idDiffuse);
+					//renderer.notifyShaderTerrain(id,idDiffuse);
 					renderer.notifyTerrain(loader, image,gridSize,textures);
 					
 					isNotify = false;
 				}
 
 				Loader.updateData(image);
-				//entity.increaseRotation(1, 1, 0);
-				camera.move();
-				//terrain.updateChunk(loader,-30000,50,50);
 
-				/*buttonA.update();
-				buttonB.update();*/
-				
-	       
+				camera.move();
+
+				if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4  )){
+					CivLauncher.sch.setDelay(CivLauncher.sch.getDelay()+10);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD5  )){
+					CivLauncher.sch.setDelay(CivLauncher.sch.getDelay()-10);
+				}
+
 				if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD2  ) && !pressPlus && tessLevel<16){
-	            	
+					
 					tessLevel ++;
 					renderer.notifyTessLevel(tessLevel);
 					waterRenderer.notifyTessLevel(tessLevel);
@@ -258,7 +264,6 @@ public class renderMain implements Runnable {
 	            	pressPlus = false;
 	            
 				if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1) && !pressMinus && tessLevel>1){
-	            	
 					tessLevel --;
 					renderer.notifyTessLevel(tessLevel);
 					waterRenderer.notifyTessLevel(tessLevel);
@@ -289,15 +294,7 @@ public class renderMain implements Runnable {
 	    		
 	    		
 	    		
-	            /************Render for shadow********************/
-	            shadow.update(sun.getPosition());
-	            shadowsTexture.bindFrameBuffer();
-	            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-	            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,true,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
-	            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 
-	            
-	            shadowsTexture.unbindCurrentFrameBuffer();
 	           
 	            
 	            
@@ -322,17 +319,18 @@ public class renderMain implements Runnable {
 
 			
 				if(turtles.size()>0 ){
-					free=0;
+					
 					for(int i=0;i<turtles.size();i++){
-
-		                renderer.processEntity(turtles.get(i).getObject3d(),turtles.get(i).getColorID(),turtles.get(i).getColorAction());
+						if(turtles.get(i).getTurlte().isAlive()){
+							renderer.processEntity(turtles.get(i).getObject3d(),turtles.get(i).getColorID(),turtles.get(i).getColorAction());
+						}
 		            }
-					free=1;
+					
 				}
 				if(facilitys.size()>0){
 					
 					for(int i=0;i<facilitys.size();i++){
-						if(facilitys.get(i).getA().isAlive()){
+						if(facilitys.get(i).isMain() || facilitys.get(i).getA().isAlive() ){
 							renderer.processMultiEntity(facilitys.get(i).getObject3D(), 0 , facilitys.get(i).getColorToVector());
 						}
 						
@@ -340,10 +338,7 @@ public class renderMain implements Runnable {
 				}
 
 				
-				//renderer.processMultiEntity(test, 0);
-				//renderer.processEntity(king, 0, new Vector3f(-1,-1,-1));
-				//renderer.processEntity(king, 0);
-				//sFbo.resolveToFbo(GL30.GL_COLOR_ATTACHMENT0, shadowsTexture);
+
 				if(!wireframe){
 					multisample.bindFrameBuffer();
 					
@@ -364,13 +359,12 @@ public class renderMain implements Runnable {
 					
 					skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,100000),false);
 				}
+				
 				if(menuActionIsVisible)
 					drawable.draw();
 				TextMaster.render(camera);
 				Window.updateDisplay();
-				
-				
-				
+
 				if(turtles.size()>0){
 					
 					if(InputHandler.reset(InputHandler.isButtonDown(0) == inputType.INSTANT)){
@@ -412,6 +406,8 @@ public class renderMain implements Runnable {
 		Window.closeDisplay();
 		
 	}
+	
+
 	
 	public static void updateTerrain(){
 		isNotify = true;
@@ -469,59 +465,106 @@ public class renderMain implements Runnable {
 	}
 	
 	synchronized public void paintOneTurtle(Turtle t, int x, int y, Color color, int cellSize) {
-		if(free==1){
-			Lock l = new ReentrantLock();
-			l.lock();
+		
+		Lock l = new ReentrantLock();
+		l.lock();
 
-			int cX = (int) ((x/(cellSize/5.0))/5);
-			int cY = (int) ((y/(cellSize/5.0))/5);
-			try {
-				int id = containTurtle(t.getID());
-				if(id == -1 && t.isPlayingRole(DefineConstants.Role_Human)){
-					
-					turtles.add(new Turtle3D(t.getID(),turtles.size(),t));
-					turtles.get(turtles.size()-1).setInterpolation(0);
-					turtles.get(turtles.size()-1).setColorAction(color);
+		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		try {
+			int id = containTurtle(t.getID());
+			if(id == -1 && t.isPlayingRole(DefineConstants.Role_Human)){
+				
+				turtles.add(new Turtle3D(t.getID(),turtles.size(),t));
+				turtles.get(turtles.size()-1).setInterpolation(0);
+				turtles.get(turtles.size()-1).setColorAction(color);
+				Vector3f position = Terrain.getHeightByTab(cX,cY);
+				turtles.get(turtles.size()-1).setX(position.x);
+				turtles.get(turtles.size()-1).setY(position.y);
+				turtles.get(turtles.size()-1).setZ(position.z);
+				turtles.get(turtles.size()-1).setLastX(turtles.get(turtles.size()-1).getX());
+				turtles.get(turtles.size()-1).setLastY(turtles.get(turtles.size()-1).getY());
+				turtles.get(turtles.size()-1).setLastZ(turtles.get(turtles.size()-1).getZ());
+				
+				
+			}
+			else {
+				
+				turtles.get(id).setInterpolation(0);
+				turtles.get(id).setColorAction(color);
+				turtles.get(id).setLastX(turtles.get(id).getX());
+				turtles.get(id).setLastY(turtles.get(id).getY());
+				turtles.get(id).setLastZ(turtles.get(id).getZ());
+				//turtles.get(id).getObject3d().setPosition(new Vector3f((float)x,Terrain.getHeight(x%Terrain.getImageHeight(),y%Terrain.getImageWidth()) + Terrain.getHeight(x, y, image, heights),(float)y));
+				Vector3f position = Terrain.getHeightByTab(cX,cY);
+				turtles.get(id).setX(position.x);
+				turtles.get(id).setY(position.y);
+				turtles.get(id).setZ(position.z);
+			}
+		} finally {
+		    l.unlock();
+		}
+		
+	}
+
+	synchronized private void initMainFacilitys(){
+		init = false;
+		for(int j=0;j<grid.length;j++){
+			for (int i = 0; i < Configuration.civilisations.size(); i++){
+				
+				if(grid[j].x == Configuration.civilisations.get(i).getStartX() && grid[j].y == Configuration.civilisations.get(i).getStartY()){
+					System.out.println("test" + j + " " + i);
+					int cX = (int) ((grid[j].x/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
+					int cY = (int) ((grid[j].y/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
 					Vector3f position = Terrain.getHeightByTab(cX,cY);
-					turtles.get(turtles.size()-1).setX(position.x);
-					turtles.get(turtles.size()-1).setY(position.y);
-					turtles.get(turtles.size()-1).setZ(position.z);
-					turtles.get(turtles.size()-1).setLastX(turtles.get(turtles.size()-1).getX());
-					turtles.get(turtles.size()-1).setLastY(turtles.get(turtles.size()-1).getY());
-					turtles.get(turtles.size()-1).setLastZ(turtles.get(turtles.size()-1).getZ());
-					
-					
+					facilitys.add(new Facility3D( ( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),new Vector3f(0,0,0),grid[j].getTurtles().get(0).getID(),true,( (Amenagement) grid[j].getTurtles().get(0))));
+					//drawFacility(grid[j].x,grid[j].y,( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),grid[j].getTurtles().get(0).getID(),WorldViewer.initialCellSize,( (Amenagement) grid[j].getTurtles().get(0)),true);
+					break;
 				}
-				else {
-					
-					turtles.get(id).setInterpolation(0);
-					turtles.get(id).setColorAction(color);
-					turtles.get(id).setLastX(turtles.get(id).getX());
-					turtles.get(id).setLastY(turtles.get(id).getY());
-					turtles.get(id).setLastZ(turtles.get(id).getZ());
-					//turtles.get(id).getObject3d().setPosition(new Vector3f((float)x,Terrain.getHeight(x%Terrain.getImageHeight(),y%Terrain.getImageWidth()) + Terrain.getHeight(x, y, image, heights),(float)y));
-					Vector3f position = Terrain.getHeightByTab(cX,cY);
-					turtles.get(id).setX(position.x);
-					turtles.get(id).setY(position.y);
-					turtles.get(id).setZ(position.z);
-				}
-			} finally {
-			    l.unlock();
 			}
 		}
 	}
-
-
-	synchronized  public void drawFacility(int x, int y, Color color, int id, int cellSize, Amenagement a) {
-		stopRefresh  = (refresh_time>0);
-		refresh_time  ++;
+	
+	synchronized  public void drawFacility(int x, int y, Color color, int id, int cellSize, Amenagement a, boolean Capitale) {
+		int i=-1,j=-1;
+		if(init){
+			init = false;
+			boolean found = false;
+			for(j=0;j<grid.length;j++){
+				for (i = 0; i < Configuration.civilisations.size(); i++){
+					
+					if(grid[j].x == Configuration.civilisations.get(i).getStartX() && grid[j].y == Configuration.civilisations.get(i).getStartY()){
+						
+						
+						/*Vector3f position = Terrain.getHeightByTab(cX,cY);
+						facilitys.add(new Facility3D( ( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),new Vector3f(0,0,0),grid[j].getTurtles().get(0).getID(),true,( (Amenagement) grid[j].getTurtles().get(0))));
+						*///drawFacility(grid[j].x,grid[j].y,( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),grid[j].getTurtles().get(0).getID(),WorldViewer.initialCellSize,( (Amenagement) grid[j].getTurtles().get(0)),true);
+						found = true;
+						break;
+					}
+				}
+				if(found)break;
+			}
+			
+			
+		}
 		
+		if(i!=-1 && j!=-1){
+			int cX = (int) (((grid[j].x*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
+			int cY = (int) (((grid[j].y*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
+			
+			Vector3f position = Terrain.getHeightByTab(cX,cY);
+			facilitys.add(new Facility3D(color,new Vector3f(position.x,position.y,position.z),-1,true,a));
+		}
 		int ID = containFacility(id);
-		int cX = (int) ((x/(cellSize/5.0))/5);
-		int cY = (int) ((y/(cellSize/5.0))/5);
+		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/5);
 		if(ID == -1){
 			Vector3f position = Terrain.getHeightByTab(cX,cY);
-			facilitys.add(new Facility3D(color,new Vector3f(position.x,position.y,position.z),id,facilitys.size()==0,a));
+
+			
+			facilitys.add(new Facility3D(color,new Vector3f(position.x,position.y,position.z),id,Capitale,a));
+
 		}
 
 		
@@ -549,8 +592,8 @@ public class renderMain implements Runnable {
 	}
 
 	public void renderMsg(String msg, int x, int y,int cellSize, int id) {
-		int cX = (int) ((x/(cellSize/5.0))/5);
-		int cY = (int) ((y/(cellSize/5.0))/5);
+		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/5);
 		
 		Vector3f position = Terrain.getHeightByTab(cX,cY);
 		position.y += 5;

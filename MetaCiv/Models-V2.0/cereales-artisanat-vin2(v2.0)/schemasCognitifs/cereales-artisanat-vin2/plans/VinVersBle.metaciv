@@ -1,6 +1,7 @@
 Nom : VinVersBle
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_TravelTrade,turns(Integer 200),itemToGive(Objet Vin),nItemToGive(Integer 1),itemToTake(Objet Boisseau_de_ble),nItemToTake(Integer 15),myTag(String VinVersBle),compatibleTag(String BleVersVin)
 	Action : A_EmitCogniton,Cogniton(Cogniton DemandeBle),n(Double -0.2000000000000188)
 	Action : A_EmitCogniton,Cogniton(Cogniton DemandeBle),n(Double 0.19999999999998122)

@@ -5,3 +5,7 @@ Infranchissable : true
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : -3.0
+Erosion : 1
+Texture : Mer
+Tiling : 40.0

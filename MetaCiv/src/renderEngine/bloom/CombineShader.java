@@ -4,8 +4,8 @@ import renderEngine.shaders.ShaderProgram;
 
 public class CombineShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/renderEngine/bloom/bloomVertex.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/bloom/combineFragment.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/bloom/bloomVertex.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/bloom/combineFragment.glsl";
 	
 	private int location_colourTexture;
 	private int location_highlightTexture;

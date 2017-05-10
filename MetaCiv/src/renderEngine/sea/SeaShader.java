@@ -10,10 +10,10 @@ import renderEngine.utils.Matrix;
 
 public class SeaShader extends ShaderTessProgram {
 
-	private final static String VERTEX_FILE = "src/renderEngine/sea/seaVertex.glsl";
-	private final static String FRAGMENT_FILE = "src/renderEngine/sea/seaFragment.glsl";
-	private static final String TESS_CONTROL_FILE = "src/renderEngine/sea/seatcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "src/renderEngine/sea/seatesShader.glsl";
+	private final static String VERTEX_FILE = "/renderEngine/sea/seaVertex.glsl";
+	private final static String FRAGMENT_FILE = "/renderEngine/sea/seaFragment.glsl";
+	private static final String TESS_CONTROL_FILE = "/renderEngine/sea/seatcsShader.glsl";
+	private static final String TESS_EVALUATION_FILE = "/renderEngine/sea/seatesShader.glsl";
 	private static final String GEOMETRY_FILE = "";
 	
 	

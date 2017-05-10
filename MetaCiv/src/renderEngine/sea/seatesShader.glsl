@@ -69,7 +69,7 @@ void main(void){
 	p.y += (texture(dispMap, distortion1).r)/30.0;
 	p.y += (texture(dispMap, distortion3).r)/30.0;
 
-	float height = p.y;
+	float height = p.y-1.0;
 	height += (texture(dispMap, modifyTexCoords).r)*waveStrenght*5.0 ;
 	height += (texture(dispMap, distortion2).r)*waveStrenght*5.0 ;
 	height += (texture(dispMap, distortion1).r)/5.0;

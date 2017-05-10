@@ -2,13 +2,7 @@ Nom : BaseTest
 Description : Un nouveau cogniton
 Type : MEME
 StartChance : 0
+Couleur : -1
 Initial : 0
 Permet : PlanTest
 Influence : PlanTest,3
-Hue0 : 0
-Hue1 : 0
-Hue2 : 0
-Hue3 : 0
-Hue4 : 0
-Hue5 : 0
-Hue6 : 0

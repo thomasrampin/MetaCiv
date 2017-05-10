@@ -1,6 +1,7 @@
 Nom : Produire des outils
 Birth : false
 Self : false
+Couleur : -8355712
 Action : A_AddObjectXCogniton,Changed object(Objet Outil),variation(Double 1.0999999999999812),base(Integer 1),Cogniton(Cogniton Artisan)
 Action : L_RandomPercent,n(Double 22.0)
 	Action : A_ChangeCognitonWeight,Cogniton(Cogniton Artisan),n(Double 0.09999999999998122)

@@ -10,8 +10,8 @@ import renderEngine.utils.Matrix;
 
 public class FontShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/renderEngine/fontRendering/fontVertex.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/fontRendering/fontFragment.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/fontRendering/fontVertex.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/fontRendering/fontFragment.glsl";
 
 	private int location_colour;
 	private int location_transformationMatrix;

@@ -88,6 +88,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	public boolean activDebug = false;
 	renderMain render;
 	private boolean isNotify;
+	public static int initialCellSize;
 	
 	public WorldViewer()
 	{
@@ -103,11 +104,13 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		super.activate();
 		if(!bufferedView_activate && CivLauncher.choix3D==1){
 			bufferedView = new BufferedImage(this.getWidth()*this.getCellSize(),this.getHeight()*this.getCellSize(),BufferedImage.TYPE_INT_ARGB);
-			render = new renderMain(bufferedView,this); 
+			render = new renderMain(bufferedView,this,getGrid()); 
 			Thread t = new Thread(render);
 			g2d = bufferedView.createGraphics();
 	        t.start();
 	        bufferedView_activate = true;
+	       
+	        initialCellSize = cellSize;
 		}
 		//System.out.println("WV a fini activate");
 		//this.setDisplayPane(new JScrollPane(new PanelWorldViewer((JScrollPane) this.getDisplayPane())));
@@ -185,8 +188,9 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					if(bufferedView_activate)
 						g2d.setColor(new Color (255 - (int)v, 255 - (int)v, 255));
 				}
+			
 				g.fillRect(x,y,this.getCellSize(),this.getCellSize());
-
+				
 	
 			/*	if (this.frontieresVisibles)
 				{
@@ -254,9 +258,10 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 					mark.dessiner(g, x, y, this.getCellSize());
 					p.dropMark(Amenagement.class.getName(), mark);
 				}*/
+				//System.out.println(this.getCellSize());
 				if(bufferedView_activate)
-
-					g2d.fillRect((int) (x/(cellSize/5.0)),(int) (y/(cellSize/5.0)),5,5);
+					g2d.fillRect((int) (x/(cellSize/(float)initialCellSize)),(int) (y/(cellSize/(float)initialCellSize)),initialCellSize,initialCellSize);
+				//g.fillRect(x,y,this.getCellSize(),this.getCellSize());
 				if(!isNotify && y == 0 && x/this.getCellSize() == this.getWidth()-1 && bufferedView_activate){
 					
 					render.notifyShaderTerrain(this.getWidth(),this.getHeight());
@@ -280,6 +285,8 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	 */
 	private Color paintOneTurtle(Graphics g,Turtle t,int x,int y, boolean first)
     {
+		
+
 		int size;
 		int dx , dy;
 		Color c = null;
@@ -416,8 +423,10 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			*/	
 		}
 		else if(t.isPlayingRole(DefineConstants.Role_Facility)){
+			
 			paintPatch(g, t.getPatch(),x,y,World.getInstance().get1DIndex(t.xcor(), t.ycor()));
-			render.drawFacility(x,y,((Amenagement) t).getColorType(),t.getID(),getCellSize(),((Amenagement) t));
+			if(bufferedView_activate)
+				render.drawFacility(x,y,((Amenagement) t).getColorType(),t.getID(),getCellSize(),((Amenagement) t),false);
 			
 			((Amenagement)t).dessiner(g,null, x,y, this.getCellSize());
 			

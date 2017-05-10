@@ -18,6 +18,7 @@ import civilisation.TurtleGenerator;
 import civilisation.inspecteur.animations.*;
 import civilisation.inspecteur.simulation.PanelModificationSimulation;
 import civilisation.world.Terrain;
+import civilisation.world.World;
 
 
 public class PanelEnvironnement extends JJPanel{
@@ -99,6 +100,12 @@ public class PanelEnvironnement extends JJPanel{
 				out.println("Civilisation : " + Configuration.civilisations.get(i).getNom() + "," + gCarte.getStartingPositions().get(Configuration.civilisations.get(i)).getX() + "," + gCarte.getStartingPositions().get(Configuration.civilisations.get(i)).getY());
 			}
 		}
+		out.println();
+		out.println("SnowHeight : " + World.getSnowHeight());
+		out.println("SnowDistanceAttenuation : " + World.getSnowDistanceAtt());
+		out.println("SnowDensity : " + World.getSnowDensity());
+		out.println("RoadTiling : " + World.getRoadTiling());
+		out.println("CliffTiling : " + World.getCliffTiling());
 		
 		out.println();
 		for (int i = 0;i < Configuration.terrains.size(); i++){

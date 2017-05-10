@@ -1,11 +1,14 @@
 package renderEngine.utils;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import org.lwjgl.util.vector.Vector4f;
+
+import civilisation.Configuration;
 
 public class TerrainTexture {
 
@@ -34,10 +37,25 @@ public class TerrainTexture {
 		this.r = couleur.getRed();
 		this.g = couleur.getGreen();
 		this.b = couleur.getBlue();
+		File f = new File(Configuration.pathToRessources+ "/Skin/" + texture);
+		this.texture = "";
+		this.normalMap = "";
+		this.displacementMap = "";
+		if(f.isDirectory()){
+			for (final File fileEntry : f.listFiles()) {
+				if(fileEntry.getName().equals("Diffuse.png") || fileEntry.getName().equals("diffuse.png") || fileEntry.getName().equals("Albedo.png") || fileEntry.getName().equals("albedo.png") || fileEntry.getName().equals("Base_Color.png") || fileEntry.getName().equals("base_color.png") || fileEntry.getName().equals("Base_color.png")
+						|| fileEntry.getName().equals("base_Color.png") || fileEntry.getName().equals("BaseColor.png") || fileEntry.getName().equals("Basecolor.png") || fileEntry.getName().equals("baseColor.png") || fileEntry.getName().equals("basecolor.png")){
+					this.texture = Configuration.pathToRessources+ "/Skin/" + texture + "/" + fileEntry.getName();
+				}
+				else if(fileEntry.getName().equals("normal.png") || fileEntry.getName().equals("Normal.png") || fileEntry.getName().equals("Normal_OpenGL.png")){
+					this.normalMap = Configuration.pathToRessources+ "/Skin/" + texture + "/" + fileEntry.getName();
+				}
+				else if(fileEntry.getName().equals("Height.png") || fileEntry.getName().equals("height.png") || fileEntry.getName().equals("DisplacementMap.png") || fileEntry.getName().equals("displacentMap.png") || fileEntry.getName().equals("displacentmap.png") || fileEntry.getName().equals("dispMap.png") || fileEntry.getName().equals("dispmap.png")){
+					this.displacementMap = Configuration.pathToRessources+ "/Skin/" + texture + "/" + fileEntry.getName();
+				}
 
-		this.texture = texture + "/" + texture;
-		this.normalMap = texture + "/" + texture + "_NRM";
-		this.displacementMap = texture + "/" + texture + "_DISP";
+			}
+		}
 		this.height = height;
 		this.erosion = erosion;
 		this.tiling = tiling;

@@ -77,7 +77,7 @@ void main(void){
 	vs_out.world_coord =  vec3(projectionMatrix) * vec3(viewMatrix) * worldPosition.xyz;
 	vs_out.eye_coord = Peye.xyz ;
 	vs_out.viewDir =  ( viewPos -  worldPosition.xyz);
-	vs_out.shadow_coord = shadow_matrix * transformationMatrix * vec4(position,1.0);
+	//vs_out.shadow_coord = shadow_matrix * transformationMatrix * vec4(position,1.0);
 
 	vs_out.Pos = worldPosition.xyz;
 

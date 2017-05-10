@@ -73,9 +73,11 @@ uniform float shineDamper;
 uniform vec3 reflectivity;
 uniform vec3 diffuseColour;
 uniform bool textured;
-
-
-
+uniform float snow;
+uniform float snowAttenuation;
+uniform float snowDensity;
+uniform float roadTiling;
+uniform float cliffTiling;
 
 vec4 fog(vec4 c)
 {
@@ -166,7 +168,12 @@ void main(void){
 	vec3 unitVectorToCamera = normalize(fs_in.toCameraVector);
 
 
-
+	//cliff detector
+	//Get face normal
+	vec3 X = dFdx(fs_in.Pos);
+	vec3 Y = dFdy(fs_in.Pos);
+	vec3 normal=normalize(cross(X,Y));
+	bool isCliff = normal.y<0.6 && fs_in.height>1.0;
 
 
 	//vec2 texCoords = ParallaxMapping(indice,parseTcDisp,fs_in.viewDir);
@@ -189,7 +196,9 @@ void main(void){
 
 	float tiling = heights[indice].x;
 	if(isRoad)
-		tiling = 150;
+		tiling = roadTiling;
+	if(isCliff)
+		tiling = cliffTiling;
 
 	float x = mod(fs_in.tc.x*tiling/2.0,0.5);
 	vec2 parseTc = vec2(x,fs_in.tc.y*tiling)/4.0+0.25;
@@ -211,26 +220,22 @@ void main(void){
 
 
 	blendValue = 1-blendValue;
-	//cliff detector
-	//Get face normal
-	vec3 X = dFdx(fs_in.Pos);
-	vec3 Y = dFdy(fs_in.Pos);
-	vec3 normal=normalize(cross(X,Y));
-	bool isCliff = normal.y<0.6 && fs_in.height>10.0;
+
 
 	vec3 unitNormal;
-	if(isRoad){
-		unitNormal = normalize((texture(roadMap,parseTcNrm).rbg * 2.0 - 1.0) );
-	}
-	else{
-		if(!isCliff){
-			if(indice2==-1)
-				unitNormal = normalize((texture(gSampler[indice],parseTcNrm).rbg * 2.0 - 1.0) );
-			else
-				unitNormal = normalize((mix(texture(gSampler[indice],parseTcNrm),texture(gSampler[indice2],parseTcNrm2),blendValue)).rbg * 2.0 - 1.0);
-		}else
-			unitNormal = normalize((texture(cliffMap,parseTcNrm).rbg * 2.0 - 1.0) );
-	}
+
+	if(!isCliff){
+		if(isRoad){
+			unitNormal = normalize((texture(roadMap,parseTcNrm).rbg * 2.0 - 1.0) );
+		}else{
+		if(indice2==-1)
+			unitNormal = normalize((texture(gSampler[indice],parseTcNrm).rbg * 2.0 - 1.0) );
+		else
+			unitNormal = normalize((mix(texture(gSampler[indice],parseTcNrm),texture(gSampler[indice2],parseTcNrm2),blendValue)).rbg * 2.0 - 1.0);
+		}
+	}else
+		unitNormal = normalize((texture(cliffMap,parseTcNrm).rbg * 2.0 - 1.0) );
+
 
 	vec3 unitNormalBasic = normalize(fs_in.normal);
 
@@ -243,7 +248,7 @@ void main(void){
 	float nDotl = dot(unitNormal,unitLightVector);
 	float nDotl2 = dot(unitNormalBasic,unitLightVector);
 	float brightness = max(nDotl,0.0);
-	float brightness2 = max(nDotl2,0.0);
+	float brightness2 = max(nDotl2,0.3);
 
 	vec3 lightDirection = -unitLightVector;
 
@@ -264,18 +269,20 @@ void main(void){
 
 
 
-	if(isRoad)
-		landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(roadMap,parseTc)+ vec4(specular,1.0);
-	else{
-		if(!isCliff){
-			if(indice2==-1)
-				landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(gSampler[indice],parseTc) ;
-			else
-				landscape = textureProj(shadowMap, fs_in.shadow_coord)* mix(texture(gSampler[indice],parseTc),texture(gSampler[indice2],parseTc2),blendValue);
-		}else{
-			landscape = textureProj(shadowMap, fs_in.shadow_coord)* texture(cliffMap,parseTc);
+
+	if(!isCliff){
+		if(isRoad)
+			landscape = texture(roadMap,parseTc)+ vec4(specular,1.0);
+		else{
+		if(indice2==-1)
+			landscape = texture(gSampler[indice],parseTc) ;
+		else
+			landscape = mix(texture(gSampler[indice],parseTc),texture(gSampler[indice2],parseTc2),blendValue);
 		}
+	}else{
+		landscape = texture(cliffMap,parseTc);
 	}
+
 
 
 
@@ -285,11 +292,11 @@ void main(void){
 
 	landscape *= vec4(totalDiffuse,1.0)  ;//+ vec4(specular,1.0);
 	/*if(fs_in.height>50 && unitNormalBasic.y>0.9){
-		landscape = vec4(0.9 ) + vec4(specular,1.0);
-	}
-	else if(fs_in.height>20 && unitNormal.y<=(min((fs_in.height-20)/30.0,0.9))){
-		landscape = vec4(0.9) + vec4(specular,1.0);
+		landscape = (vec4(0.9 ) + vec4(specular,1.0)) * brightness2;
 	}*/
+	if(fs_in.height>snow && unitNormal.y>=0 && unitNormal.y<=(min((fs_in.height)/(snow+0.01+snowAttenuation),snowDensity))){
+		landscape =(vec4(1.0) + vec4(specular,1.0)) * brightness2;
+	}
 	vec3 normalReflect = normalize(fs_in.RM * (unitNormal * fs_in.TBN));
 	float fresnelFactor = max(dot(normalize(fs_in.toCameraVector),unitNormal),0.8);
 	vec3 r = reflect(normalize(fs_in.toCameraVector),unitNormal);

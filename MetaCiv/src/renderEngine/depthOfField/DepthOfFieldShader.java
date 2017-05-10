@@ -4,8 +4,8 @@ import renderEngine.shaders.ShaderProgram;
 
 public class DepthOfFieldShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/renderEngine/depthOfField/dofVertex.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/depthOfField/dofFragment.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/depthOfField/dofVertex.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/depthOfField/dofFragment.glsl";
 	
 	private int location_colourTexture;
 	private int location_blurTexture;

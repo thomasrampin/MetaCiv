@@ -7,8 +7,8 @@ import renderEngine.shaders.ShaderProgram;
 import renderEngine.utils.Matrix;
 
 public class LightShadowShader extends ShaderProgram{
-	private static final String VERTEX_FILE = "src/renderEngine/shadowsMapping/lightVs.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/shadowsMapping/lightFs.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/shadowsMapping/lightVs.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/shadowsMapping/lightFs.glsl";
 	
 	private int location_mvp;
 	private int location_projectionMatrix;

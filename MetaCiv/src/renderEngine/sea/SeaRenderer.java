@@ -11,11 +11,13 @@ import org.lwjgl.opengl.GL40;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import civilisation.world.World;
 import renderEngine.Window;
 import renderEngine.entities.Camera;
 import renderEngine.entities.Light;
 import renderEngine.loaders.Loader;
 import renderEngine.models.Mesh;
+import renderEngine.terrains.Terrain;
 import renderEngine.utils.FPS;
 import renderEngine.utils.Matrix;
 
@@ -55,8 +57,8 @@ public class SeaRenderer {
 		prepareRender(camera,light,delta);	
 		
 			Matrix4f modelMatrix = Matrix.createTransformationMatrix(
-					new Vector3f(-128,16,-128), 0, 0, 0,
-					13);
+					new Vector3f(-128,0,-128), 0, 0, 0,
+					13,13,13);
 			shader.loadModelMatrix(modelMatrix);
 			shader.conectTexture();
 			shader.loadTessLevel(tessLevel);
@@ -79,7 +81,31 @@ public class SeaRenderer {
 			//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
 			//GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 			GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64 * 64);
-		
+			int i=1;
+			while(Terrain.SIZE_Z>-128+64*13*i || Terrain.SIZE_X>-128+64*13*i){
+				if(Terrain.SIZE_Z>-128+64*13*i){
+					modelMatrix = Matrix.createTransformationMatrix(
+							new Vector3f(-128+(64*13*i),0,-128), 0, 0, 0,
+							13,13,13);
+					shader.loadModelMatrix(modelMatrix);
+					GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64 * 64);
+				}
+				if(Terrain.SIZE_X>-128+64*13*i){
+					modelMatrix = Matrix.createTransformationMatrix(
+							new Vector3f(-128,0,-128+(64*13*i)), 0, 0, 0,
+							13,13,13);
+					shader.loadModelMatrix(modelMatrix);
+					GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64 * 64);
+				}
+				if(Terrain.SIZE_Z>-128+64*13*i && Terrain.SIZE_X>-128+64*13*i){
+					modelMatrix = Matrix.createTransformationMatrix(
+							new Vector3f(-128+(64*13*i),0,-128+(64*13*i)), 0, 0, 0,
+							13,13,13);
+					shader.loadModelMatrix(modelMatrix);
+					GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64 * 64);
+				}
+				i++;
+			}
 		unbind();
 	}
 	
@@ -109,11 +135,6 @@ public class SeaRenderer {
 		shader.stop();
 	}
 
-	private void setUpVAO(Loader loader) {
-		// Just x and z vectex positions here, y is set to 0 in v.shader
-		float[] vertices = { -100, -100, -100, 100, 100, -100, 100, -100, -100, 100, 100, 100 };
-		quad = loader.loadToVAO(vertices,2);
-	}
 
 	public void notifyTessLevel(int tessLevel) {
 		this.tessLevel = tessLevel;

@@ -7,8 +7,8 @@ import renderEngine.shaders.ShaderProgram;
  
 public class GuiShader extends ShaderProgram{
      
-    private static final String VERTEX_FILE = "src/renderEngine/gui/guiVertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src/renderEngine/gui/guiFragmentShader.glsl";
+    private static final String VERTEX_FILE = "/renderEngine/gui/guiVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "/renderEngine/gui/guiFragmentShader.glsl";
      
     private int location_transformationMatrix;
     private int location_color;

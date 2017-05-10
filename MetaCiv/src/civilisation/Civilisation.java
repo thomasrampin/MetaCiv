@@ -44,7 +44,7 @@ public class Civilisation extends AbstractAgent implements Cloneable{
     int agentsInitiaux;
     int scatteredModifier;
     boolean mustBeSaved = true;
-    String RoadTexture;
+    int startX,startY;
 
     public Civilisation(String path)
     {
@@ -378,8 +378,22 @@ public class Civilisation extends AbstractAgent implements Cloneable{
         cerveau.removeStartingCognitons(c);
     }
 
-    public void setRoadTexture(String road) {
-        RoadTexture = road;
-    }
+	public int getStartX() {
+		return startX;
+	}
+
+	public void setStartX(int startX) {
+		this.startX = startX;
+	}
+
+	public int getStartY() {
+		return startY;
+	}
+
+	public void setStartY(int startY) {
+		this.startY = startY;
+	}
+
+    
 
 }

@@ -77,5 +77,9 @@ public class TKDefaultViewer extends AbstractGridViewer{
 			g.fillRect(x , y , cellSize, cellSize);
 		}
 	}
+	
+	public Patch[] getGrid(){
+		return getPatchGrid();
+	}
 }
 

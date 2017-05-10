@@ -44,6 +44,11 @@ public class World extends TKEnvironment implements Serializable
 	
 	private static int tick = 0;
 	static int x , y;
+	static float snowHeight;
+	static float snowDistanceAtt;
+	static float snowDensity;
+	static float roadTiling;
+	static float cliffTiling;
 	
 	//For output file
 	/*
@@ -82,12 +87,58 @@ public class World extends TKEnvironment implements Serializable
 		
 		x = Integer.parseInt(Initialiseur.getChamp("Largeur", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()))[0]);
        	y = Integer.parseInt(Initialiseur.getChamp("Hauteur", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()))[0]);
+       	
+       	String[] snowHeightS =Initialiseur.getChamp("SnowHeight", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!snowHeightS[0].equals("null")){
+       		snowHeight = Float.parseFloat(snowHeightS[0]);
+       	}else{
+       		snowHeight=0;
+       	}
+       	
+       	String[] snowDAttS = Initialiseur.getChamp("SnowDistanceAttenuation", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!snowDAttS[0].equals("null")){
+       		snowDistanceAtt = Float.parseFloat(snowDAttS[0]);
+       	}else{
+       		snowDistanceAtt=0;
+       	}
+       	
+       	
+       	String[] snowDS  = Initialiseur.getChamp("SnowDensity", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
 
-		
-       
+       	if(!snowDS[0].equals("null")){
+       		snowDensity = Float.parseFloat(snowDS[0]);
+       	}else{
+       		snowDensity=0;
+       	}
+       	
+       	String[] roadTS = Initialiseur.getChamp("RoadTiling", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!roadTS[0].equals("null")){
+       		roadTiling = Float.parseFloat(roadTS[0]);
+       	}else{
+       		roadTiling=1;
+       	}
+       	
+       	String[] cliffTS = Initialiseur.getChamp("CliffTiling", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!cliffTS[0].equals("null")){
+       		cliffTiling = Float.parseFloat(cliffTS[0]);
+       	}else{
+       		cliffTiling=1;
+       	}
+       	
+       	snowDensity /= 100.0f;
+       	
+       	String[] civilisationS = Initialiseur.getChamp("Civilisation", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+
+       	
+       	
 		/*Reglages sur les civilisations*/
 		for (int i = 0; i < Configuration.civilisations.size(); i++){
 			
+			if(Configuration.civilisations.get(i).getNom().equals(civilisationS[0])){
+				
+				Configuration.civilisations.get(i).setStartX(Integer.parseInt(civilisationS[1]));
+				Configuration.civilisations.get(i).setStartY(Integer.parseInt(civilisationS[2]));
+			}
 			Configuration.civilisations.get(i).postWorldSetup();
 		}
 		
@@ -478,6 +529,47 @@ public class World extends TKEnvironment implements Serializable
 		
 		
 	}
+
+	public static float getSnowHeight() {
+		return snowHeight;
+	}
+
+	public static void setSnowHeight(float snowHeight) {
+		World.snowHeight = snowHeight;
+	}
+
+	public static float getRoadTiling() {
+		return roadTiling;
+	}
+
+	public static void setRoadTiling(float roadTiling) {
+		World.roadTiling = roadTiling;
+	}
+
+	public static float getCliffTiling() {
+		return cliffTiling;
+	}
+
+	public static void setCliffTiling(float cliffTiling) {
+		World.cliffTiling = cliffTiling;
+	}
+
+	public static float getSnowDistanceAtt() {
+		return snowDistanceAtt;
+	}
+
+	public static void setSnowDistanceAtt(float snowDistanceAtt) {
+		World.snowDistanceAtt = snowDistanceAtt;
+	}
+
+	public static float getSnowDensity() {
+		return snowDensity;
+	}
+
+	public static void setSnowDensity(float snowDensity) {
+		World.snowDensity = snowDensity;
+	}
+
 	
 	
 }

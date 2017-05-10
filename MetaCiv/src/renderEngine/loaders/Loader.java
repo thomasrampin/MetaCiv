@@ -171,11 +171,11 @@ public class Loader {
 	    int pixels[] = new int[image.getWidth() * image.getHeight()];
 	    image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 	    ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); // <-- 4 for RGBA, 3 for RGB
-
+	    int k=0;
 	    for(int y = 0; y < image.getHeight(); y++){
 	        for(int x = 0; x < image.getWidth(); x++){
 	      
-	            int pixel = pixels[y*image.getHeight()+x];            
+	            int pixel = pixels[k++];            
 	            
 	            buffer.put((byte) ((pixel >>16 ) & 0xFF));
 	            buffer.put((byte)  ((pixel >>8) & 0xFF));
@@ -215,11 +215,11 @@ public class Loader {
 	    int pixels[] = new int[image.getWidth() * image.getHeight()];
 	    image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 	    ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); // <-- 4 for RGBA, 3 for RGB
-
+	    int k =0;
 	    for(int y = 0; y < image.getHeight(); y++){
 	        for(int x = 0; x < image.getWidth(); x++){
-	      
-	            int pixel = pixels[y*image.getHeight()+x];
+	        	
+	            int pixel = pixels[k];
 	          
 	            /*buffer.put((byte) (pixel & 0x00FF0000));     // Red component
 	            buffer.put((byte) (pixel & 0x0000FF00));      // Green component
@@ -227,7 +227,7 @@ public class Loader {
 	            buffer.put((byte) ((pixel & 0xFF000000) >>> 24));    // Alpha component. Only for RGBA*/
 	            
 	            
-	            
+	            k++;
 	            buffer.put((byte) ((pixel >>16 ) & 0xFF));
 	            buffer.put((byte)  ((pixel >>8) & 0xFF));
 	            buffer.put((byte)  ((pixel) & 0xFF));
@@ -456,26 +456,26 @@ public class Loader {
 	    return textureTerrainDiffID;
 	 }	
 
-	public int loadTextureAtlas(String cliffFile) {
+	public int loadTextureAtlas(String File) {
 		
 
 		BufferedImage imageDiff = null;
 		try {
-			imageDiff = ImageIO.read(new File("Assets/Texture/"+cliffFile+".png"));
+			imageDiff = ImageIO.read(new File(File+"/Diffuse.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 			 
 		BufferedImage imageNrm = null;
 		try {
-			imageNrm = ImageIO.read(new File("Assets/Texture/"+cliffFile+"_NRM.png"));
+			imageNrm = ImageIO.read(new File(File+"/Normal.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage imageDisp = null;
 		try {
-			imageDisp = ImageIO.read(new File("Assets/Texture/"+cliffFile+"_DISP.png"));
+			imageDisp = ImageIO.read(new File(File+"/DisplacementMap.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -544,42 +544,54 @@ public class Loader {
 		for(TerrainTexture t : textures){
 			
 			BufferedImage imageDiff = null;
-			try {
-				imageDiff = ImageIO.read(new File("Assets/Texture/grass/grass.png"));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			if(t.getTexture().equals("")){
+				try {
+					imageDiff = ImageIO.read(new File("Assets/Texture/grass/grass.png"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
-			try {
-				imageDiff = ImageIO.read(new File("Assets/Texture/"+t.getTexture()+".png"));
-			} catch (IOException e) {
-				e.printStackTrace();
+			else{
+				try {
+
+					imageDiff = ImageIO.read(new File(t.getTexture()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-				 
+			
 			BufferedImage imageNrm = null;
-			try {
-				imageNrm = ImageIO.read(new File("Assets/Texture/grass/grass_NRM.png"));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				imageNrm = ImageIO.read(new File("Assets/Texture/"+t.getNormalMap()+".png"));
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(t.getNormalMap().equals("")){
+				try {
+					imageNrm = ImageIO.read(new File("Assets/Texture/grass/grass_NRM.png"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}else{
+				try {
+					imageNrm = ImageIO.read(new File(t.getNormalMap()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			
 			BufferedImage imageDisp = null;
-			try {
-				imageDisp = ImageIO.read(new File("Assets/Texture/grass/grass_DISP.png"));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			if(t.getDisplacementMap().equals("")){
+				try {
+					imageDisp = ImageIO.read(new File("Assets/Texture/grass/grass_DISP.png"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
-			try {
-				imageDisp = ImageIO.read(new File("Assets/Texture/"+t.getDisplacementMap()+".png"));
-			} catch (IOException e) {
-				e.printStackTrace();
+			else{
+				try {
+					imageDisp = ImageIO.read(new File(t.getDisplacementMap()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			
 			int pixelsDiff[] = new int[imageDiff.getWidth() * imageDiff.getHeight()];

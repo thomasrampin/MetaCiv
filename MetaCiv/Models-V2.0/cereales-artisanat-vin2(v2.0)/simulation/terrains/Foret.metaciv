@@ -5,6 +5,10 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 1.0
+Erosion : 1
+Texture : Foret
+Tiling : 1.0
 Pheromone : Baies,60.0,20.0
 Pheromone : Bois,100.0,0.0
 Pheromone : Gibier,40.0,20.0

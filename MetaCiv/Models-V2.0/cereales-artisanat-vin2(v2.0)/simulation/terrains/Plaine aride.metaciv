@@ -5,6 +5,10 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 5.0
+Erosion : 5
+Texture : Plaine aride
+Tiling : 40.0
 Pheromone : Baies,20.0,0.6
 Pheromone : Bois,30.0,0.1
 Pheromone : Gibier,10.0,0.7

@@ -1,6 +1,7 @@
 Nom : Live-Plan
 Birth : false
 Self : true
+Couleur : -8355712
 Action : A_ChangeAttribute,Changed attribute(Attribute Vie),n(Integer -1)
 Action : L_CompareAttribute,attributeToCompare(Attribute Vie),comparator(Comparator <),n(Double 75.0)
 	Action : L_OwnItem,Object(Objet Boisseau_de_ble)

@@ -3,11 +3,11 @@ package renderEngine.bloom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import renderEngine.postProcessing.ImageRenderer;
+import renderEngine.postProcessing.PostProcessingRenderer;
 
 public class CombineFilter {
 	
-	private ImageRenderer renderer;
+	private PostProcessingRenderer renderer;
 	private CombineShader shader;
 	
 	public CombineFilter(int targetFboWidth, int targetFboHeight){
@@ -15,7 +15,7 @@ public class CombineFilter {
 		shader.start();
 		shader.connectTextureUnits();
 		shader.stop();
-		renderer = new ImageRenderer(targetFboWidth,targetFboHeight);
+		renderer = new PostProcessingRenderer(targetFboWidth,targetFboHeight);
 	}
 	
 	public void render(int colourTexture, int highlightTexture){
@@ -34,7 +34,7 @@ public class CombineFilter {
 	}
 
 	public int getOutputTexture() {
-		return renderer.getOutputTexture();
+		return renderer.getTexture();
 	}
 
 }

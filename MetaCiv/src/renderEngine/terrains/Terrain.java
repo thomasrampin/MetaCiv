@@ -12,6 +12,8 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import civilisation.Configuration;
+import civilisation.world.World;
 import renderEngine.loaders.Loader;
 import renderEngine.materials.Material;
 import renderEngine.models.Mesh;
@@ -40,7 +42,8 @@ public class Terrain {
 	private float x;
 	private float z;
 	
-	private static int VERTEX_COUNT; 
+	public static int VERTEX_COUNT; 
+	public static int VERTEX_COUNT_W;
 	
 	private Mesh model;
 	private Material texture;
@@ -50,7 +53,7 @@ public class Terrain {
 	
 	private static BufferedImage image;
 	
-	public Terrain(int gridX, int gridZ, Loader loader,Material texture,String cliffFile,ArrayList<TerrainTexture> arrayList){
+	public Terrain(int gridX, int gridZ, Loader loader,Material texture,ArrayList<TerrainTexture> arrayList){
 		this.texture = texture;
 		SIZE_X = 800;
 		SIZE_Z = 800;
@@ -66,23 +69,33 @@ public class Terrain {
 		gridSize = new Vector2f(image.getWidth(),image.getHeight());
 		this.model = generateTerrain(loader,image,image,arrayList);
 		this.blur = new Material(Loader.loadTextureBlur(image));
-		this.roadMap = loader.loadTextureAtlas("road/road");
-		this.cliffMap = loader.loadTextureAtlas(cliffFile);
+		
+		File f = new File(Configuration.pathToRessources+ "/Skin/road");
+		if(f.isDirectory())
+			this.roadMap = loader.loadTextureAtlas(Configuration.pathToRessources+ "/Skin/road");
+		else
+			this.roadMap = loader.loadTextureAtlas("Assets/Texture/road");
+		
+		f = new File(Configuration.pathToRessources+ "/Skin/cliff");
+		if(f.isDirectory())
+			this.cliffMap = loader.loadTextureAtlas(Configuration.pathToRessources+ "/Skin/cliff");
+		else
+			this.cliffMap = loader.loadTextureAtlas("Assets/Texture/cliff");
 		
 	}
 	
 	public static Vector3f getHeightByTab(int x,int y){
-		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
-		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x-1)*3],vertices[((y-1)*VERTEX_COUNT+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT+x-1)*3+2]);
+		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT_W+x)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[(y*VERTEX_COUNT_W+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT_W+x-1)*3],vertices[((y-1)*VERTEX_COUNT_W+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT_W+x-1)*3+2]);
 		Vector3f position = new Vector3f((position1.x+position2.x)/2.0f,(position1.y+position2.y)/2.0f,(position1.z+position2.z)/2.0f);
-		return position;
+		return position1;
 	}
 	
 	public static ArrayList<Vector4f> getAllHeightOnePoly(int x,int y){
-		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
-		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x)*3],vertices[((y-1)*VERTEX_COUNT+x)*3+1],vertices[((y-1)*VERTEX_COUNT+x)*3+2]);
-		Vector3f position3 = new Vector3f(vertices[(y*VERTEX_COUNT+x-1)*3],vertices[(y*VERTEX_COUNT+x-1)*3+1],vertices[(y*VERTEX_COUNT+x-1)*3+2]);
-		Vector3f position4 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x-1)*3],vertices[((y-1)*VERTEX_COUNT+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT+x-1)*3+2]);
+		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT_W+x)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[(y*VERTEX_COUNT_W+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT_W+x)*3],vertices[((y-1)*VERTEX_COUNT_W+x)*3+1],vertices[((y-1)*VERTEX_COUNT_W+x)*3+2]);
+		Vector3f position3 = new Vector3f(vertices[(y*VERTEX_COUNT_W+x-1)*3],vertices[(y*VERTEX_COUNT_W+x-1)*3+1],vertices[(y*VERTEX_COUNT_W+x-1)*3+2]);
+		Vector3f position4 = new Vector3f(vertices[((y-1)*VERTEX_COUNT_W+x-1)*3],vertices[((y-1)*VERTEX_COUNT_W+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT_W+x-1)*3+2]);
 		ArrayList<Vector4f> positions = new ArrayList<>();
 		positions.add(new Vector4f(position1.x,position1.y,position1.z,1.0f));
 		positions.add(new Vector4f(position2.x,position2.y,position2.z,1.0f));
@@ -92,17 +105,17 @@ public class Terrain {
 	}
 	
 	public static float getRoll(int x,int y){
-		Vector3f position = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
-		Vector3f position2 = new Vector3f(vertices[(y*VERTEX_COUNT+x-1)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x-1)*3+2]);
-		Vector3f position3 = new Vector3f(vertices[(y*VERTEX_COUNT+x-1)*3],vertices[(y*VERTEX_COUNT+x-1)*3+1],vertices[(y*VERTEX_COUNT+x-1)*3+2]);
+		Vector3f position = new Vector3f(vertices[(y*VERTEX_COUNT_W+x)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[(y*VERTEX_COUNT_W+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[(y*VERTEX_COUNT_W+x-1)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[(y*VERTEX_COUNT_W+x-1)*3+2]);
+		Vector3f position3 = new Vector3f(vertices[(y*VERTEX_COUNT_W+x-1)*3],vertices[(y*VERTEX_COUNT_W+x-1)*3+1],vertices[(y*VERTEX_COUNT_W+x-1)*3+2]);
 
 		return (position3.y<position.y)?Helper.getAngle(position, position2, position3):360-Helper.getAngle(position, position2, position3);
 	}
 	
 	public static float getPitch(int x,int y){
-		Vector3f position = new Vector3f(vertices[(y*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[(y*VERTEX_COUNT+x)*3+2]);
-		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x)*3],vertices[(y*VERTEX_COUNT+x)*3+1],vertices[((y-1)*VERTEX_COUNT+x)*3+2]);
-		Vector3f position3 = new Vector3f(vertices[((y-1)*VERTEX_COUNT+x)*3],vertices[((y-1)*VERTEX_COUNT+x)*3+1],vertices[((y-1)*VERTEX_COUNT+x)*3+2]);
+		Vector3f position = new Vector3f(vertices[(y*VERTEX_COUNT_W+x)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[(y*VERTEX_COUNT_W+x)*3+2]);
+		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT_W+x)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[((y-1)*VERTEX_COUNT_W+x)*3+2]);
+		Vector3f position3 = new Vector3f(vertices[((y-1)*VERTEX_COUNT_W+x)*3],vertices[((y-1)*VERTEX_COUNT_W+x)*3+1],vertices[((y-1)*VERTEX_COUNT_W+x)*3+2]);
 
 		return (position3.y>position.y)?Helper.getAngle(position, position2, position3):360-Helper.getAngle(position, position2, position3);
 	}
@@ -111,12 +124,13 @@ public class Terrain {
 		System.out.println("Generate Terrain...");
 		effectiveType = new ArrayList<>();
 		//image = Loader.blur(image);
-		VERTEX_COUNT = image.getHeight()/5;
-		int VERTEX_COUNT_W = image.getHeight()/5;
-		SIZE_X = image.getHeight();
-		SIZE_Z = image.getHeight();
 		
-        int count = VERTEX_COUNT * VERTEX_COUNT;
+		VERTEX_COUNT = image.getHeight()/5;
+		VERTEX_COUNT_W = image.getWidth()/5;
+		SIZE_X = World.getY()*5;
+		SIZE_Z = World.getX()*5;
+		
+        int count = VERTEX_COUNT * VERTEX_COUNT_W;
         vertices = new float[count * 3];
         float[] normals = new float[count * 3];
         float[] textureCoords = new float[count*3];
@@ -128,8 +142,8 @@ public class Terrain {
         
         Vector3f[] pos = new Vector3f[count];
         Vector3f[] Uv = new Vector3f[count];
-        int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
-        face[] faces  = new face[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
+        int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT_W-1)];
+        face[] faces  = new face[6*(VERTEX_COUNT-1)*(VERTEX_COUNT_W-1)];
         int vertexPointer = 0;
         int ii=0;
         int jj =0;
@@ -142,10 +156,10 @@ public class Terrain {
             	h = getHeight(jj,ii,image,textures) ;
             	
         		
-                vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
+                vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE_X;
                 vertices[vertexPointer*3+1] = h;
                 vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
-                vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE_X;
+                vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
                
                 
                 
@@ -182,11 +196,12 @@ public class Terrain {
         int k = 0;
         int[] dividande =  new int[count * 3];
         int kk=0;
-        for(int gz=0;gz<VERTEX_COUNT_W-1;gz++){
-            for(int gx=0;gx<VERTEX_COUNT-1;gx++){
+        for(int gz=0;gz<VERTEX_COUNT-1;gz++){
+            for(int gx=0;gx<VERTEX_COUNT_W-1;gx++){
                 int topLeft = (gz*VERTEX_COUNT_W)+gx;
                 int topRight = topLeft + 1;
-                int bottomLeft = ((gz+1)*VERTEX_COUNT)+gx;
+                int bottomLeft = ((gz+1)*VERTEX_COUNT_W)+gx;
+                
                 int bottomRight = bottomLeft + 1;
                 indices[pointer++] = topLeft;
                 indices[pointer++] = bottomLeft;
@@ -200,7 +215,8 @@ public class Terrain {
         		Vector3f v2 = new Vector3f(vp2.getX(),vp2.getY(),vp2.getZ());
         		Vector3f normal = Helper.Vectoriel(v1,v2);
         		
-        		normal.normalise();
+        		if(normal.length()>0)
+        			normal.normalise();
         		faces[k] = new face();
         		faces[k].normal = normal;
 				faces[k].pos[0] =topLeft;
@@ -221,7 +237,8 @@ public class Terrain {
         		v2 = new Vector3f(vp2.getX(),vp2.getY(),vp2.getZ());
         		normal = Helper.Vectoriel(v1,v2);
         		
-        		normal.normalise();
+        		if(normal.length()>0)
+        			normal.normalise();
         		faces[k] = new face();
         		faces[k].normal = normal;
 				faces[k].pos[0] =topRight;
@@ -387,7 +404,7 @@ public class Terrain {
 			
 			
 			if(red2 == red && green2 == green && blue2 == blue){
-				height = vector.w*10;
+				height = vector.w;
 				if(!effectiveType.contains(textures.get(i))){
 					effectiveType.add(textures.get(i));
 				}
@@ -435,6 +452,22 @@ public class Terrain {
 		float height = 0;
 		float heightL,heightR,heightD,heightU;
 		for(int i=0;i<N;i++){
+			
+			/*int l=-1*(i+1);
+			int m=0;
+			int h=-1*(i+1);
+			while(h<-1*(i+1)*-1){
+				//System.out.println(l + " " + h);
+				height += getHeight2(Math.max(x+l*3,0), Math.max(z+h*3,0), image,textures);
+				l++;
+				m++;
+				if(m>=(2*(i+1)+1) ){
+					h++;
+					m=0;
+					l=-1*(i+1);
+				}
+				dividande++;
+			}*/
 			if(i%2==0){
 				heightL = getHeight2(Math.max(x-i*3,0), z, image,textures);
 				heightR = getHeight2(Math.min(x+i*3,image.getHeight()), z, image,textures);
@@ -475,7 +508,7 @@ public class Terrain {
 		this.gridSize = gridSize;
 		BufferedImage image2 = null;
 		try {
-			image2 = ImageIO.read(new File("Assets/Texture/gloss_map.png"));
+			image2 = ImageIO.read(new File("Assets/Texture/heightmap.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

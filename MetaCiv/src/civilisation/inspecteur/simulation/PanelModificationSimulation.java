@@ -112,6 +112,7 @@ public class PanelModificationSimulation extends JPanel{
 	JButton dezoomer;
 	JButton choisirEnvironnementActif;
 	JButton pheromone;
+	JButton setting3D; 
 	
 	GroupToolBar toolBarGroupManager;
 	
@@ -454,6 +455,16 @@ public class PanelModificationSimulation extends JPanel{
 		pheromone.setToolTipText(I18nList.CheckLang("Manage pheromon"));
 
 		toolBarEnvironnement.add(pheromone);
+		
+		toolBarEnvironnement.addSeparator();
+		
+		ImageIcon iconeSetting3D = Configuration.getIcon("setting3D.png");
+		setting3D = new JButton(iconeSetting3D);
+		setting3D.addActionListener(new ActionsToolBarEnvironnement(panelEnvironnement,10));
+
+		setting3D.setToolTipText(I18nList.CheckLang("Setting 3D"));
+
+		toolBarEnvironnement.add(setting3D);
 		
 		/*Creation de la toolBar pour l'arbre d'actions*/	
 		ImageIcon icone = Configuration.getIcon("lightning--plus.png");

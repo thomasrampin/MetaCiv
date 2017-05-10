@@ -5,5 +5,9 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 1.0
+Erosion : 1
+Texture : Desert
+Tiling : 1.0
 Pheromone : Gibier,10.0,0.0
 Pheromone : Metal,20.0,0.0

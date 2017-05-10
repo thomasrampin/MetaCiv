@@ -18,11 +18,11 @@ public class TerrainShader extends ShaderProgram {
 
 	private static final int MAX_LIGHTS = 4;
 	
-	private static final String VERTEX_FILE = "src/renderEngine/terrains/terrainVertexShader.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/terrains/terrainFragmentShader.glsl";
-	private static final String TESS_CONTROL_FILE = "src/renderEngine/terrains/terrainTesstcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "src/renderEngine/terrains/terrainTesstesShader.glsl";
-	private static final String GEOMETRY_FILE = "src/renderEngine/terrains/terrainTessGeometryShader.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/terrains/terrainVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/terrains/terrainFragmentShader.glsl";
+	private static final String TESS_CONTROL_FILE = "/renderEngine/terrains/terrainTesstcsShader.glsl";
+	private static final String TESS_EVALUATION_FILE = "/renderEngine/terrains/terrainTesstesShader.glsl";
+	private static final String GEOMETRY_FILE = "/renderEngine/terrains/terrainTessGeometryShader.glsl";
 
 	private static final int MAX_TERRAIN_TYPE = 11;
 	
@@ -54,6 +54,14 @@ public class TerrainShader extends ShaderProgram {
 
 	private int location_cliffMap;
 	private int location_roadMap;
+
+	private int location_snow;
+
+	private int location_distanceAttSnow;
+
+	private int location_snowDensity;
+	private int location_roadTiling;
+	private int location_cliffTiling;
 	
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -88,15 +96,17 @@ public class TerrainShader extends ShaderProgram {
 		location_distanceFog = super.getUniformLocation("distanceFog");
 		location_viewPos = super.getUniformLocation("viewPos");
 
-
+		location_snow = super.getUniformLocation("snow");
+		location_distanceAttSnow = super.getUniformLocation("snowAttenuation");
+		location_snowDensity = super.getUniformLocation("snowDensity");
 		location_lightPosition = super.getUniformLocation("lightPosition");
 		location_lightColour = super.getUniformLocation("lightColour");
 		
 		
 		location_heights_size = super.getUniformLocation("heights_size");
 
-
-		
+		location_roadTiling = super.getUniformLocation("roadTiling");
+		location_cliffTiling = super.getUniformLocation("cliffTiling");
 		location_heights = new int[MAX_TERRAIN_TYPE];
 		for(int i=0;i<MAX_TERRAIN_TYPE;i++){
 			location_heights[i] = super.getUniformLocation("heights["+i+"]");
@@ -136,7 +146,7 @@ public class TerrainShader extends ShaderProgram {
 		for(int i=0;i<texturese.size();i++){
 			
 
-			Vector4f h = new Vector4f(texturese.get(i).getTiling(),0,0,texturese.get(i).getHeight()*10);//2 empty slots
+			Vector4f h = new Vector4f(texturese.get(i).getTiling(),0,0,texturese.get(i).getHeight());//2 empty slots
 			
 			super.loadVector4(location_heights[i], h);
 		}
@@ -185,5 +195,25 @@ public class TerrainShader extends ShaderProgram {
 		int location = super.getUniformLocation(name);
 		super.loadInt(location, id+5);
 		
+	}
+
+	public void loadSnow(float snow) {
+		super.loadFloat(location_snow, snow);
+	}
+
+	public void loadDistanceAttSnow(float snowDistanceAtt) {
+		super.loadFloat(location_distanceAttSnow, snowDistanceAtt);
+	}
+
+	public void loadSnowDensity(float snowDensity) {
+		super.loadFloat(location_snowDensity, snowDensity);
+	}
+	
+	public void loadRoadTiling(float roadTiling){
+		super.loadFloat(location_roadTiling, roadTiling);
+	}
+	
+	public void loadCliffTiling(float cliffTiling){
+		super.loadFloat(location_cliffTiling, cliffTiling);
 	}
 }

@@ -32,7 +32,7 @@ public class Objet implements Serializable {
 	static String defaultIconName = "briefcase.png";
 	
 	public Objet(){
-		icone = new ImageIcon(this.getClass().getResource("../inspecteur/icones/"+defaultIconName));
+		icone = Configuration.getIcon(defaultIconName);
 		nomIcone = defaultIconName;
 		this.effets = new ArrayList<Effect>();
 		this.recette = new ArrayList<Objet>();

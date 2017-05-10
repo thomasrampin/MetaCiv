@@ -3,11 +3,11 @@ package renderEngine.depthOfField;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import renderEngine.postProcessing.ImageRenderer;
+import renderEngine.postProcessing.PostProcessingRenderer;
 
 public class DepthOfFieldFilter {
 	
-	private ImageRenderer renderer;
+	private PostProcessingRenderer renderer;
 	private DepthOfFieldShader shader;
 	
 	public DepthOfFieldFilter(){
@@ -15,7 +15,7 @@ public class DepthOfFieldFilter {
 		shader.start();
 		shader.connectTextureUnits();
 		shader.stop();
-		renderer = new ImageRenderer();
+		renderer = new PostProcessingRenderer();
 	}
 	
 	public void render(int colourTexture, int blurTexture,int depthBuffer){
@@ -30,8 +30,8 @@ public class DepthOfFieldFilter {
 		shader.stop();
 	}
 	
-	public int getOutputTexture(){
-		return renderer.getOutputTexture();
+	public int getTexture(){
+		return renderer.getTexture();
 	}
 	
 	public void cleanUp(){
