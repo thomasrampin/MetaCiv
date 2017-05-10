@@ -391,7 +391,7 @@ public class AdvancedStatsWindows extends TKDefaultViewer {
         obj.getSocFilter().checkTotalInWorld();
         obj.getObjFilter().checkAllObjects();
         obj.applyOptions();
-        att.getSocFilter().checkTotalInWorld();
+        att.getSocFilter().checkTotalCiv();
         att.getAttrFilter().checkAllAttributes();
         att.applyOptions();
         cog.getSocFilter().checkTotalInWorld();

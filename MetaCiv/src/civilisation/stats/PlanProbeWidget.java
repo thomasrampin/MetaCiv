@@ -77,6 +77,8 @@ public class PlanProbeWidget extends AbstractCompositeProbeWidget{
 					Double totalWeight = 0.0;
 					if(charts.get(statsWatcher.plotName) == null)
 						addChart(statsWatcher.plotName);
+					if(charts.get(statsWatcher.plotName).get(WidgetPanelChartType.CTYP_Area) == null)
+						charts.get(statsWatcher.plotName).put(WidgetPanelChartType.CTYP_Area, allocChartFromType(WidgetPanelChartType.CTYP_Area));
 					DefaultCategoryDataset target = (DefaultCategoryDataset) ((CategoryPlot)charts.get(statsWatcher.plotName).get(WidgetPanelChartType.CTYP_Area).getPlot()).getDataset();
 					HashMap<String, Double> planWeight = new HashMap<String, Double>();
 					for(Human h : statsWatcher.getAllHumans())
@@ -109,6 +111,9 @@ public class PlanProbeWidget extends AbstractCompositeProbeWidget{
 					Double totalWeight = 0.0;
 					if(charts.get(statsWatcher.plotName) == null)
 						addChart(statsWatcher.plotName);
+					if(charts.get(statsWatcher.plotName).get(WidgetPanelChartType.CTYP_Pie) == null)
+						charts.get(statsWatcher.plotName).put(WidgetPanelChartType.CTYP_Pie, allocChartFromType(WidgetPanelChartType.CTYP_Pie));
+
 					DefaultPieDataset target = (DefaultPieDataset) ((PiePlot3D)charts.get(statsWatcher.plotName).get(WidgetPanelChartType.CTYP_Pie).getPlot()).getDataset();
 					HashMap<String, Double> planWeight = new HashMap<String, Double>();
 					for(Human h : statsWatcher.getAllHumans())

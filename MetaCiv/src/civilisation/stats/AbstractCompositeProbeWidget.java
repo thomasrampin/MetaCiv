@@ -134,7 +134,7 @@ public class AbstractCompositeProbeWidget extends AbstractProbeWidget {
 	*/
     }
 
-    private JFreeChart allocChartFromType(String text) {
+    protected JFreeChart allocChartFromType(String text) {
         JFreeChart result = null;
         if (text.equals(WidgetPanelChartType.CTYP_Area)) {
             result = allocDefaultAreaChart();

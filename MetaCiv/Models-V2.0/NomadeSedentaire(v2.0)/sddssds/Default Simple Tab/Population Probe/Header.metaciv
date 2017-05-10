@@ -1,0 +1,4 @@
+size : 610,330
+position : 625,15
+legend : true
+type : class civilisation.stats.PopulationProbeWidget
