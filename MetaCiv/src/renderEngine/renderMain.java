@@ -153,7 +153,7 @@ public class renderMain implements Runnable {
 
 			Facility3D.setUp(loader);
 			Turtle3D.setUp(loader);
-			Road3D.setUp(loader);
+
 			
 			
 			

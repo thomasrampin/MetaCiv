@@ -1,8 +1,0 @@
-Nom : PlusVin
-Description : null
-Cible : cogniton
-NomCible : Stock_Vin
-Valeur : 0.1
-Permanence : false
-Type : 1
-Activation : 0

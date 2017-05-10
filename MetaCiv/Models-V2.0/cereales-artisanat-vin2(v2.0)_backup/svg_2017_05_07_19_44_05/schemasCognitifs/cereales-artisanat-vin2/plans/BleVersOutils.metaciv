@@ -1,7 +1,0 @@
-Nom : BleVersOutils
-Birth : false
-Self : false
-Action : A_Rentrer
-Action : A_Trade,turns(Integer 10),itemToGive(Objet Boisseau_de_ble),nItemToGive(Integer 1),itemToTake(Objet Outil),nItemToTake(Integer 1),myTag(String BleVersOutils),compatibleTag(String OutilsVersBle)
-	Action : A_EmitCogniton,Cogniton(Cogniton DemandeOutils),n(Double -0.2000000000000188)
-	Action : A_EmitCogniton,Cogniton(Cogniton DemandeOutils),n(Double 0.19999999999998122)

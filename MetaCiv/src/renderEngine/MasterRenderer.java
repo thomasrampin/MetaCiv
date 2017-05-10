@@ -50,7 +50,7 @@ public class MasterRenderer {
      
     private Map<Model,List<Object3D>> entities = new HashMap<Model,List<Object3D>>();
     private Map<Model,List<Object3D>> entitiesInstanced = new HashMap<Model,List<Object3D>>();
-    private Map<Models,List<Object3D>> entities2 = new HashMap<Models,List<Object3D>>();
+    private Map<Models,List<Object3D>> entitiesMultiObj = new HashMap<Models,List<Object3D>>();
     private Terrain terrain;
     
     private boolean terrainInit;
@@ -60,7 +60,7 @@ public class MasterRenderer {
 		GL11.glCullFace(GL11.GL_BACK);*/
 
         createProjectionMatrix();
-        irenderer = new InstancedRenderer(loader,instancedObject,projectionMatrix);
+
         terrainInit = false;
         renderer = new EntityRenderer(loader,shader,projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures,loader);
@@ -72,7 +72,7 @@ public class MasterRenderer {
         shader.start();
         shader.loadLights(sun);
         shader.loadViewMatrix(camera);
-        renderer.render(entities,entities2,fbos);
+        renderer.render(entities,entitiesMultiObj,fbos);
         shader.stop();
 
         
@@ -102,7 +102,7 @@ public class MasterRenderer {
 
         
         entities.clear();
-        entities2.clear();
+        entitiesMultiObj.clear();
         entitiesInstanced.clear();
     }
      
