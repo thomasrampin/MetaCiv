@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 #define N_LIGHTS 4
 
 in VS_OUT{
@@ -23,13 +23,13 @@ layout (location = 1) out vec4 FragmentColor1;
 
 
 
-layout (binding = 1) uniform sampler2D diffuseMap;
-layout (binding = 2) uniform sampler2D normalMap;
-layout (binding = 3) uniform sampler2D dispMap;
-layout (binding = 6) uniform sampler2D shadowMap;
-layout (binding = 4) uniform sampler2D roughnessMap;
-layout (binding = 5) uniform sampler2D metalMap;
-layout (binding = 0) uniform sampler2D reflexion_map;
+uniform sampler2D diffuseMap;
+uniform sampler2D normalMap;
+uniform sampler2D dispMap;
+uniform sampler2D shadowMap;
+uniform sampler2D roughnessMap;
+uniform sampler2D metalMap;
+uniform sampler2D reflexion_map;
 
 uniform vec3 lightColour;
 uniform float shineDamper;

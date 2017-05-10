@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 #define N_LIGHTS 4
 
 in vec3 position;

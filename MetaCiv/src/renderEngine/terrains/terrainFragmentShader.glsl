@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 
 
 #define GL_ARB_bindless_texture_is_supported 0

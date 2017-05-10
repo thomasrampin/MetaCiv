@@ -119,6 +119,7 @@ public class renderMain implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Window.showInfo();
 		tempId = -1;
 		focusCamera = -1;
 		if(Window.checkGlVersion()){
@@ -181,7 +182,7 @@ public class renderMain implements Runnable {
 			Shadow shadow = new Shadow();
 			
 
-			Window.showInfo();
+			
 			TextMaster.init(loader);
 			ActionsMenuWorld3D buttonObserve = new ActionsMenuWorld3D(new Vector3f(0,0,0),new Vector2f(Display.getWidth()-200,50), new Vector2f(180,32),"Observe one Agent",font ,1,worldViewer);
 			ActionsMenuWorld3D buttonDebug = new ActionsMenuWorld3D(new Vector3f(0,0,0),new Vector2f(Display.getWidth()-200,50+32+5), new Vector2f(180,32),"Switch Debug String",font,2,worldViewer);

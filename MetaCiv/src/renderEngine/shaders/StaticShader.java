@@ -38,7 +38,7 @@ public class StaticShader extends ShaderProgram{
 	private int location_heightScale;
 	private int location_roughnessMap;
 	private int location_reflexion;
-	private int location_reflexion_blur;
+	private int location_metalMap;
 	private int location_skyAngle;
 	
 	private int location_reflMapped;
@@ -81,7 +81,7 @@ public class StaticShader extends ShaderProgram{
 		location_heightScale = super.getUniformLocation("height_scale");
 		location_reflexion = super.getUniformLocation("reflexion");
 		location_reflMapped = super.getUniformLocation("reflMapped");
-		location_reflexion_blur = super.getUniformLocation("reflexion_blur");
+		location_metalMap = super.getUniformLocation("metalMap");
 		location_skyAngle = super.getUniformLocation("skyAngle");
 		location_metalMapped = super.getUniformLocation("metalMapped");
 		location_colorAction = super.getUniformLocation("colorAction");
@@ -98,11 +98,12 @@ public class StaticShader extends ShaderProgram{
 	
 	public void connectTextureUnits(){
 		super.loadInt(location_reflexion, 0);
-		super.loadInt(location_reflexion_blur, 1);
-		super.loadInt(location_diffuseMap, 2);
-		super.loadInt(location_normalMap, 3);
-		super.loadInt(location_dispMap, 4);
-		super.loadInt(location_roughnessMap, 5);
+
+		super.loadInt(location_diffuseMap, 1);
+		super.loadInt(location_normalMap, 2);
+		super.loadInt(location_dispMap, 3);
+		super.loadInt(location_roughnessMap, 4);
+		super.loadInt(location_metalMap, 5);
 		super.loadInt(location_shadowMap, 6);
 	}
 	
