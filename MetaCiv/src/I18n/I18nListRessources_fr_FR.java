@@ -10,6 +10,13 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 		  //tableau des mots cl�s et des valeurs 
 
 		  static final Object[][] contents = {
+			  {"Intensity Height : ","Intensité de la hauteur : "},
+			  {"Use Sea : ","Utilisé la mer : "},
+			  {"HeightMap : ","Carte de hauteur : "},
+			  {"Multiplier Size Map : ","Taille de la map multiplicateur : "},
+			  {"Accuracy : ","Precision : "},
+			  {"Terrain Setting","Parametre Terrain"},
+			  {"Ersosion Method : ","Methode d'erosion : "},
 			  {"Snow","Neige"},
 			  {"Tiling","Repetition"},
 			  {"Road Tiling : ","Route Repetition : "},

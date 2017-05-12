@@ -1,0 +1,7 @@
+Nom : FaireUnePelle
+Description : Un nouveau cogniton
+Type : CULTURON
+StartChance : 0
+Initial : 0
+Permet : ConstruirePelle
+Influence : ConstruirePelle,2

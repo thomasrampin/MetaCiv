@@ -1,8 +1,8 @@
-#version 430
+#version 330
 
 out vec4 out_Color;
 
-in TES_OUT
+in VS_OUT
 {
 	vec2 tc;
 	float height;
@@ -65,10 +65,10 @@ void main(void) {
 	float seaDepth = depthDistance - seaDistance;
 
 	vec2 modifyTexCoords = fs_in.tc;
-	vec2 modifyTexCoords2 = fs_in.tc;
 
-	vec2 distortion1 = (texture(dudvMap, vec2(fs_in.tc.x*10.0 + moveFactor * 2.0,fs_in.tc.y*10.0)).rg * 2.0 -1.0) * 0.01;
-	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x*10.0 + moveFactor* 2.0,fs_in.tc.y*10.0 + moveFactor* 2.0)).rg * 2.0 -1.0) * 0.01 * clamp(seaDepth/20.0,0.0,1.0);
+
+	vec2 distortion1 = (texture(dudvMap, vec2(fs_in.tc.x + moveFactor * 2.5,fs_in.tc.y)).rg * 2.5 -1.0) * 0.01;
+	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x + moveFactor* 2.5,fs_in.tc.y + moveFactor* 2.5)).rg * 2.0 -1.0) * 0.01 * clamp(seaDepth/20.0,0.0,1.0);
 
 
 
@@ -80,18 +80,10 @@ void main(void) {
 	modifyTexCoords += distortion1;
 
 	vec3 viewVector = normalize(fs_in.toCameraVector);
-	
-	vec4 normalMapColour = texture(normalMap, modifyTexCoords*20);
+
+	vec4 normalMapColour = texture(normalMap, modifyTexCoords*2.5);
 	vec3 normal = vec3(normalMapColour.r *2.0 -1.0, normalMapColour.b, normalMapColour.g *2.0 -1.0);
 	normal = normalize(normal);
-
-
-
-	distortion1 = (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor * 2.0,fs_in.tc.y*50.0)).rg * 2.0 -1.0) * waveStrenght;
-	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor* 2.0,fs_in.tc.y*50.0 + moveFactor* 2.0)).rg * 2.0 -1.0) * waveStrenght;
-	vec3 normal2 =  normalize((texture(normalMap, distortion1).rbg* fs_in.height*10 ) - vec3(1.0));
-
-
 
 
 	vec3 reflectedLight = reflect(normalize(fs_in.fromLightVector), normal);
@@ -115,7 +107,6 @@ void main(void) {
 	float brightness = max(nDotl,0.2);
 
 
-
 	float fresnelFactor = min(max(dot(viewVector,normal),0.3),1.0);
 
 	vec4 lighting =  vec4(brightness * lightColour ,1.0);
@@ -125,9 +116,6 @@ void main(void) {
 	vec4 depthTexture = mix(vec4(0.302, 0.439, 1.0,1.0),texture(refractionMap,coords2),(1-texture(depthMap,coords2).r));
 	//out_Color = texture(diffuseMap,modifyTexCoords);
 	out_Color = mix(texture(diffuseMap,coords), depthTexture,fresnelFactor);
-	out_Color = (mix(out_Color,vec4(1.0,1.0,1.0,1.0),fs_in.height));
-
-	out_Color *= max(dot(normal2,vec3(0,1,0)),0.5);
 
 	out_Color *= lighting;
 

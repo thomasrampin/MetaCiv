@@ -41,6 +41,7 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
     JSpinner passabilite;
     JSpinner jSpinnerHeight;
     JSpinner jSpinnerErosion;
+    JSpinner jSpinnerBlurMethod;
     JSpinner jSpinnerTiling;
     JTextField textureFile;
     JCheckBox infranchissable;
@@ -141,6 +142,12 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 		jSpinnerErosion = new JSpinner(spinModel);
 		boxErosion.add(jSpinnerErosion);
 
+		Box boxBlurMethod = Box.createHorizontalBox();
+		spinModel = new SpinnerNumberModel(terrain.getBlur(), 0, 1, 1);
+		boxBlurMethod.add(new JLabel(I18nList.CheckLang("Ersosion Method : ")));
+		jSpinnerBlurMethod = new JSpinner(spinModel);
+		boxBlurMethod.add(jSpinnerBlurMethod);
+		
 		Box boxTexture = Box.createHorizontalBox();
 		boxTexture.add(new JLabel(I18nList.CheckLang("Textures Folder : ")));
 		textureFile = new JTextField(terrain.getTexture());
@@ -155,6 +162,7 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 		Box box = Box.createVerticalBox();
 		box.add(boxHeight);
 		box.add(boxErosion);
+		box.add(boxBlurMethod);
 		box.add(boxTexture);
 		box.add(boxTiling);
 		
@@ -193,6 +201,7 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 				terrain.setInfranchissable(infranchissable.isSelected());
 				terrain.setHeight( (double) jSpinnerHeight.getValue());
 				terrain.setErosion((Integer) jSpinnerErosion.getValue());
+				terrain.setBlur((Integer) jSpinnerBlurMethod.getValue());
 				terrain.setTexture(textureFile.getText());
 				terrain.setTiling((double) jSpinnerTiling.getValue());
 				renderMain.updateTerrain();

@@ -32,6 +32,7 @@ public class Terrain {
 	int tempideale;
 	float height;
 	int erosion;
+	int blur;
 	private String texture;
 	float tiling;
 	
@@ -56,6 +57,7 @@ public class Terrain {
 		this.height = 1;
 		this.tiling = 1.0f;
 		this.erosion = 1;
+		this.blur = 0;
 		this.texture = nom;
 	}
 
@@ -159,6 +161,7 @@ public class Terrain {
 			out.println("Apparition : " + this.getApparition());
 			out.println("Hauteur : " + this.height);
 			out.println("Erosion : " + this.erosion);
+			out.println("BlurMethod : " + this.blur);
 			out.println("Texture : " + this.texture);
 			out.println("Tiling : " + this.tiling);
 			for (int i = 0; i < this.pheromones.size();i++){
@@ -237,6 +240,13 @@ public class Terrain {
 		this.tiling = (float)d;
 	}
 
+	public int getBlur() {
+		return this.blur;
+	}
+
+	public void setBlur(int blur){
+		this.blur = blur;
+	}
 	
 	
 }

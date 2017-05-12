@@ -4,12 +4,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import civilisation.world.World;
 import civilisation.world.WorldViewer;
 import renderEngine.terrains.Terrain;
 
 public class Camera {
 	
-	private static final float ZOOM_OUT_MAX = 400;
+	private static final float ZOOM_OUT_MAX = 800;
 	private static final float SPEED = 1.5f;
 	
 	private Vector3f position = new Vector3f(0,0,0);
@@ -31,8 +32,8 @@ public class Camera {
 		
 		float zoomLevel = Mouse.getDWheel() * distanceFromPivot/4000.0f;
 		Vector3f position = new Vector3f(0,0,100000);
-		int cX = (int) (this.position.x/(25/WorldViewer.initialCellSize));
-		int cY = (int) (this.position.z/(25/WorldViewer.initialCellSize));
+		int cX = (int) (this.position.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		int cY = (int) (this.position.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		
 		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT)
 			position = Terrain.getHeightByTab(cX,cY);
@@ -80,8 +81,8 @@ public class Camera {
 		float verticalDistance = calculateVertical();
 		calculateCameraPosition(horizontalDistance,verticalDistance);
 		
-		cX = (int) (this.position.x/(25/WorldViewer.initialCellSize));
-		cY = (int) (this.position.z/(25/WorldViewer.initialCellSize));
+		cX = (int) (this.position.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		cY = (int) (this.position.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		
 		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT)
 			position = Terrain.getHeightByTab(cX,cY);
@@ -117,8 +118,8 @@ public class Camera {
 		pos.y = lookAt.y + verticalDistance;
 		pos.z = lookAt.z - offsetZ;
 		
-		int cX = (int) (pos.x/(25/WorldViewer.initialCellSize));
-		int cY = (int) (pos.z/(25/WorldViewer.initialCellSize));
+		int cX = (int) (pos.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		int cY = (int) (pos.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		Vector3f p = new Vector3f(0,0,100000);
 		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT)
 			p = Terrain.getHeightByTab(cX,cY);

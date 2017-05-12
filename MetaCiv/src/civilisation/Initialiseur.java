@@ -356,6 +356,13 @@ public class Initialiseur {
 		       		t.setErosion(1);
 		       	}
 		       	
+		       	String[] BlurMethod = getChamp("BlurMethod",file);
+		       	if(!BlurMethod[0].equals("null")){
+		       		t.setBlur(Integer.parseInt(BlurMethod[0]));
+		       	}else{
+		       		t.setBlur(0);
+		       	}
+		       	
 		       	String[] Texture = getChamp("Texture",file);
 		       	if(!Erosion[0].equals("null")){
 		       		t.setTexture(Texture[0]);

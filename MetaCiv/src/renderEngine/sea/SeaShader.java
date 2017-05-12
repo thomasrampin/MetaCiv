@@ -5,16 +5,13 @@ import org.lwjgl.util.vector.Matrix4f;
 import renderEngine.entities.Camera;
 import renderEngine.entities.Light;
 import renderEngine.shaders.ShaderProgram;
-import renderEngine.shaders.ShaderTessProgram;
 import renderEngine.utils.Matrix;
 
-public class SeaShader extends ShaderTessProgram {
-
+public class SeaShader extends ShaderProgram  {
+	
 	private final static String VERTEX_FILE = "/renderEngine/sea/seaVertex.glsl";
 	private final static String FRAGMENT_FILE = "/renderEngine/sea/seaFragment.glsl";
-	private static final String TESS_CONTROL_FILE = "/renderEngine/sea/seatcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "/renderEngine/sea/seatesShader.glsl";
-	private static final String GEOMETRY_FILE = "";
+
 	
 	
 	private int location_modelMatrix;
@@ -36,7 +33,7 @@ public class SeaShader extends ShaderTessProgram {
 	
 	
 	public SeaShader() {
-		super(VERTEX_FILE, FRAGMENT_FILE,TESS_CONTROL_FILE,TESS_EVALUATION_FILE,GEOMETRY_FILE);
+		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
 
 	@Override

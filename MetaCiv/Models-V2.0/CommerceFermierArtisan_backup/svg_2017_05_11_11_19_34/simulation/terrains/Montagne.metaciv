@@ -1,0 +1,12 @@
+Nom : Montagne
+Couleur : 0.0,0.0,0.4
+Passabilite : 25
+Infranchissable : false
+AltMin : 0
+AltMax : 20
+Apparition : 0
+Hauteur : 30.0
+Erosion : 10
+Texture : roche
+Tiling : 1.0
+Pheromone : Bois,10.0,0.2

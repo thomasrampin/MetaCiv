@@ -72,7 +72,7 @@ public class MasterRenderer {
         shader.start();
         shader.loadLights(sun);
         shader.loadViewMatrix(camera);
-        renderer.render(entities,entitiesMultiObj,fbos);
+        renderer.render(entities,entitiesMultiObj,fbos,distanceFog);
         shader.stop();
 
         
@@ -154,7 +154,7 @@ public class MasterRenderer {
         shader.cleanUp();
         terrainShader.cleanUp();
 
-        irenderer.cleanUp();
+        //irenderer.cleanUp();
     }
      
     public void prepare() {
@@ -165,7 +165,7 @@ public class MasterRenderer {
         GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
     }
      
-    private void createProjectionMatrix() {
+    public void createProjectionMatrix() {
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
         float x_scale = y_scale / aspectRatio;

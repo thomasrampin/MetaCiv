@@ -96,48 +96,7 @@ vec4 fog(vec4 c)
 
 uniform float height_scale=0.1;
 
-vec2 ParallaxMapping(int indice,vec2 texCoords, vec3 viewDir)
-{
-    // number of depth layers
-    const float minLayers = 10;
-    const float maxLayers = 20;
-    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));
-    // calculate the size of each layer
-    float layerDepth = 1.0 / numLayers;
-    // depth of current layer
-    float currentLayerDepth = 0.0;
-    // the amount to shift the texture coordinates per layer (from vector P)
-    vec2 P = viewDir.xy / viewDir.z * height_scale;
-    vec2 deltaTexCoords = P / numLayers;
 
-    // get initial values
-    vec2  currentTexCoords     = texCoords;
-    float currentDepthMapValue = texture(gSampler[indice], currentTexCoords).r;
-
-    while(currentLayerDepth < currentDepthMapValue)
-    {
-        // shift texture coordinates along direction of P
-        currentTexCoords -= deltaTexCoords;
-        // get depthmap value at current texture coordinates
-        currentDepthMapValue = texture(gSampler[indice], currentTexCoords).r;
-        // get depth of next layer
-        currentLayerDepth += layerDepth;
-    }
-
-    // -- parallax occlusion mapping interpolation from here on
-    // get texture coordinates before collision (reverse operations)
-    vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
-
-    // get depth after and before collision for linear interpolation
-    float afterDepth  = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = texture(gSampler[indice], prevTexCoords).r - currentLayerDepth + layerDepth;
-
-    // interpolation of texture coordinates
-    float weight = afterDepth / (afterDepth - beforeDepth);
-    vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
-
-    return finalTexCoords;
-}
 
 vec3 blend(vec4 texture1, float a1, vec4 texture2, float a2)
 {
@@ -310,8 +269,12 @@ void main(void){
 	float s = sign(r.z) * 0.5;
 	tc.s = 0.75 - s * (0.5 - tc.s);
 	tc.t = 0.5 +0.5 * tc.t;
-
-	FragmentColor0 = fog(landscape);
+	if(heights[indice].y==0.0){
+		totalDiffuse = brightness2 * lightColour;
+		FragmentColor0 = fog(texture(blendMap,fs_in.tc) * vec4(totalDiffuse,1.0));
+	}
+	else
+		FragmentColor0 = fog(landscape);
 	//FragmentColor0 = mix(textureLod(reflexion,tc,8),FragmentColor0,fresnelFactor);
 	//out_Color = vec4(fs_in.tangent,1.0);
 	FragmentColor1 = vec4(0,0,0,1);

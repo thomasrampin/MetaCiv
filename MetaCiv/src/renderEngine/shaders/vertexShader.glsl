@@ -21,6 +21,8 @@ out VS_OUT{
 	vec3 TangentFragPos;
 	mat3 RM;
 	mat3 TBN;
+	vec3 eye_coord;
+	vec3 world_coord;
 }vs_out;
 
 uniform mat4 transformationMatrix;
@@ -47,9 +49,10 @@ void main(void){
     vs_out.TangentLightPos =  vs_out.TBN * lightPosition;
     vs_out.TangentViewPos  =  vs_out.TBN * viewPos;
     vs_out.TangentFragPos  =  vs_out.TBN * worldPosition.xyz;
-
-
-	gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    vec4 Peye = projectionMatrix * viewMatrix * worldPosition;
+    vs_out.eye_coord = -Peye.xyz;
+    vs_out.world_coord = -Peye.xyz;
+	gl_Position = Peye;
 	vs_out.pass_textureCoords = textureCoords;
 
 

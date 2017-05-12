@@ -34,17 +34,17 @@ public class EntityRenderer {
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
-        //shader.connectTextureUnits();
+        shader.connectTextureUnits();
         shader.stop();
     }
 
 
 
-    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2,SeaFrameBuffers fbos) {
+    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2,SeaFrameBuffers fbos, float distanceFog) {
         for (Model model : entities.keySet()) {
         	
         	
-            prepareTexturedModel(model,fbos);
+            prepareTexturedModel(model,fbos,distanceFog);
             List<Object3D> batch = entities.get(model);
             for (Object3D entity : batch) {
                 prepareInstance(entity);
@@ -57,7 +57,7 @@ public class EntityRenderer {
     }
  
     
-    private void prepareTexturedModel(Model model,SeaFrameBuffers fbos) {
+    private void prepareTexturedModel(Model model,SeaFrameBuffers fbos, float distanceFog) {
         Mesh rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -71,6 +71,7 @@ public class EntityRenderer {
         shader.loadNormalMapped(false);
         shader.loadReflMapped(false);
         shader.loadMetalMapped(false);
+        shader.loadDistanceFog(distanceFog);
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
         shader.loadColorID(model.getColorID());

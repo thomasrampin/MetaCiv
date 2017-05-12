@@ -16,13 +16,11 @@ import renderEngine.utils.TerrainTexture;
 
 public class TerrainShader extends ShaderProgram {
 
-	private static final int MAX_LIGHTS = 4;
+
 	
 	private static final String VERTEX_FILE = "/renderEngine/terrains/terrainVertexShader.glsl";
 	private static final String FRAGMENT_FILE = "/renderEngine/terrains/terrainFragmentShader.glsl";
-	private static final String TESS_CONTROL_FILE = "/renderEngine/terrains/terrainTesstcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "/renderEngine/terrains/terrainTesstesShader.glsl";
-	private static final String GEOMETRY_FILE = "/renderEngine/terrains/terrainTessGeometryShader.glsl";
+
 
 	private static final int MAX_TERRAIN_TYPE = 11;
 	
@@ -145,8 +143,8 @@ public class TerrainShader extends ShaderProgram {
 		super.loadInt(location_heights_size, texturese.size());
 		for(int i=0;i<texturese.size();i++){
 			
-
-			Vector4f h = new Vector4f(texturese.get(i).getTiling(),0,0,texturese.get(i).getHeight());//2 empty slots
+			
+			Vector4f h = new Vector4f(texturese.get(i).getTiling(),texturese.get(i).isTextured(),0,texturese.get(i).getHeight());//2 empty slots
 			
 			super.loadVector4(location_heights[i], h);
 		}

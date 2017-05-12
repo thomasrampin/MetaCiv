@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import civilisation.world.World;
 import renderEngine.entities.Camera;
 import renderEngine.entities.Light;
 import renderEngine.loaders.Loader;
@@ -17,7 +18,7 @@ import renderEngine.utils.Matrix;
 
 public class SkyRenderer {
 
-	private static final float SIZE = 500f;
+	private static final float SIZE = World.getSize3D();
 	
 	public static final Vector3f COLOUR = new Vector3f(0.8f,0.8f,0.8f);
 	
@@ -61,7 +62,7 @@ public class SkyRenderer {
 		shader.loadDensity(density);
 		shader.loadPlane(plane);
 		shader.loadSunPosition(sun.getPosition());
-		Matrix4f transformationMatrix = Matrix.createTransformationMatrix(0);
+		Matrix4f transformationMatrix = Matrix.createTransformationMatrix(new Vector3f(0,0,0), 0, 0, 0, SIZE);
 		shader.loadTransformationMatrix(transformationMatrix);
 		GL30.glBindVertexArray(cube.getVaoID());
 		GL20.glEnableVertexAttribArray(0);

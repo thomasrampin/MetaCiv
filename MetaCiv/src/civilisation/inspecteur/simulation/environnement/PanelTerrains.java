@@ -43,19 +43,19 @@ public class PanelTerrains extends JJPanel{
 		JMenuItem editerPhero = new JMenuItem(I18nList.CheckLang("Edit terrain"));
 
 		editerPhero.addActionListener(new ActionsMenuTerrain(this,0));
-		editerPhero.setIcon(new ImageIcon(this.getClass().getResource("../../icones/pencil.png")));
+		editerPhero.setIcon(Configuration.getIcon("pencil.png"));
 		popup.add(editerPhero);
 		
 		JMenuItem editerCouleur = new JMenuItem(I18nList.CheckLang("Change colour"));
 
 		editerCouleur.addActionListener(new ActionsMenuTerrain(this,1));
-		editerCouleur.setIcon(new ImageIcon(this.getClass().getResource("../../icones/color--pencil.png")));
+		editerCouleur.setIcon(Configuration.getIcon("color--pencil.png"));
 		popup.add(editerCouleur);
 		
 		JMenuItem supprimer = new JMenuItem(I18nList.CheckLang("Remove"));
 
 		supprimer.addActionListener(new ActionsMenuTerrain(this,2));
-		supprimer.setIcon(new ImageIcon(this.getClass().getResource("../../icones/cross.png")));
+		supprimer.setIcon(Configuration.getIcon("cross.png"));
 		popup.add(supprimer);
 		
 		popup.show(this, e.getX(), e.getY());

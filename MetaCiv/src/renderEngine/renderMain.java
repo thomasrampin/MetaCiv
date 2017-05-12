@@ -1,6 +1,7 @@
 package renderEngine;
 
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +11,11 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
-
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
@@ -25,6 +26,7 @@ import civilisation.CivLauncher;
 import civilisation.Configuration;
 import civilisation.DefineConstants;
 import civilisation.amenagement.Amenagement;
+import civilisation.world.World;
 import civilisation.world.WorldViewer;
 import renderEngine.gui.ActionsMenuWorld3D;
 import renderEngine.gui.Drawable;
@@ -44,7 +46,7 @@ import renderEngine.loaders.Loader;
 
 import renderEngine.sea.SeaFrameBuffers;
 import renderEngine.sea.SeaRenderer;
-import renderEngine.sea.SeaShader;
+import renderEngine.sea.SeaTessShader;
 import renderEngine.shaders.StaticShader;
 import renderEngine.shadowsMapping.Shadow;
 import renderEngine.shadowsMapping.ShadowFrameBuffer;
@@ -94,6 +96,9 @@ public class renderMain implements Runnable {
 	final Patch[] grid;
 	private boolean init = true;
 	
+	public static int wBuffer;
+	public static int hBuffer;
+	
 	public renderMain(BufferedImage bufferedView, WorldViewer worldViewer, Patch[] patchs) {
 		grid = patchs;
 		this.image = bufferedView;
@@ -103,7 +108,7 @@ public class renderMain implements Runnable {
 		
 		textures = new ArrayList<>();
 		for(civilisation.world.Terrain terrain: Configuration.terrains){
-			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getTiling(),terrain.getTexture());
+			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getBlur(),terrain.getTiling(),terrain.getTexture());
 			textures.add(type);
 		}
 		this.worldViewer = worldViewer;
@@ -112,7 +117,11 @@ public class renderMain implements Runnable {
 
 	@Override
 	public void run() {
-
+		java.awt.Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int height = (int)dimension.getHeight();
+		int width = (int)dimension.getWidth();
+		wBuffer = width;
+		hBuffer = height-8;
 		try {
 			Window.createDislay();
 		} catch (IOException e) {
@@ -160,11 +169,11 @@ public class renderMain implements Runnable {
 			
 	
 			
-			FrameBufferObject multisample = new FrameBufferObject(Display.getWidth(), Display.getHeight());
+			FrameBufferObject multisample = new FrameBufferObject(width, height);
 			ShadowFrameBuffer shadowsTexture = new ShadowFrameBuffer();
-			FrameBufferObject outputFbo = new FrameBufferObject(Display.getWidth(), Display.getHeight(),FrameBufferObject.DEPTH_TEXTURE);
-			FrameBufferObject colorID = new FrameBufferObject(Display.getWidth(), Display.getHeight(),FrameBufferObject.DEPTH_TEXTURE);
-			PostProcessing.init(loader);
+			FrameBufferObject outputFbo = new FrameBufferObject(width, height,FrameBufferObject.DEPTH_TEXTURE);
+			FrameBufferObject colorID = new FrameBufferObject(width, height,FrameBufferObject.DEPTH_TEXTURE);
+			PostProcessing.init(loader,width, height);
 			
 			
 			
@@ -173,12 +182,12 @@ public class renderMain implements Runnable {
 	
 			//*************Water Renderer Set-up******************
 			
-			SeaShader waterShader = new SeaShader();
-			SeaRenderer waterRenderer = new SeaRenderer(loader, waterShader,renderer.getProjectionMatrix());
+			
+			SeaRenderer waterRenderer = new SeaRenderer(loader,renderer.getProjectionMatrix());
 	
 			SeaFrameBuffers fbos = new SeaFrameBuffers();
 			
-			FrameBufferObject sFbo = new FrameBufferObject(Display.getWidth(), Display.getHeight(),FrameBufferObject.DEPTH_TEXTURE);
+			
 			Shadow shadow = new Shadow();
 			
 
@@ -247,6 +256,60 @@ public class renderMain implements Runnable {
 
 				camera.move();
 
+				/*Change resolution*/
+				if(Keyboard.isKeyDown(Keyboard.KEY_F1 )){//High
+					wBuffer = width;
+					hBuffer = height-8;
+					renderer.createProjectionMatrix();
+					multisample = new FrameBufferObject(width, height);
+					
+					outputFbo = new FrameBufferObject(width,height,FrameBufferObject.DEPTH_TEXTURE);
+					colorID = new FrameBufferObject(width, height,FrameBufferObject.DEPTH_TEXTURE);
+					PostProcessing.update(width,height);
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_F2 )){//Medium
+					wBuffer = (int) (width/1.5);
+					hBuffer = (int) (height/1.5-8);
+					renderer.createProjectionMatrix();
+					multisample = new FrameBufferObject((int)(width/1.5), (int)(height/1.5));
+					
+					outputFbo = new FrameBufferObject((int)(width/1.5),(int)(height/1.5),FrameBufferObject.DEPTH_TEXTURE);
+					colorID = new FrameBufferObject((int)(width/1.5), (int)(height/1.5),FrameBufferObject.DEPTH_TEXTURE);
+					PostProcessing.update((int)(width/1.5),(int)(height/1.5));
+				}
+				if(Keyboard.isKeyDown(Keyboard.KEY_F3 )){//Low
+					wBuffer = width/3;
+					hBuffer = height/3-8;
+					renderer.createProjectionMatrix();
+					multisample = new FrameBufferObject(width/3, height/3);
+					
+					outputFbo = new FrameBufferObject(width/3,height/3,FrameBufferObject.DEPTH_TEXTURE);
+					colorID = new FrameBufferObject(width/3, height/3,FrameBufferObject.DEPTH_TEXTURE);
+					PostProcessing.update(width/3,height/3);
+				}
+				
+				if((Keyboard.isKeyDown(56) ||Keyboard.isKeyDown(184)) && Keyboard.isKeyDown(28) && !pressPlus){//Switch fullScreen
+					
+					if(Display.getWidth() == width ){
+						try {
+							Display.setDisplayMode(new DisplayMode((int)(width/1.5),(int)(height/1.5)));
+						} catch (LWJGLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}else{
+						try {
+							Display.setDisplayMode(new DisplayMode(width,height));
+						} catch (LWJGLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					pressPlus = true;
+				}else{
+					pressPlus = false;
+				}
+				
 				if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD4  )){
 					CivLauncher.sch.setDelay(CivLauncher.sch.getDelay()+10);
 				}
@@ -303,17 +366,20 @@ public class renderMain implements Runnable {
 	    			FOG_INCREASE_SPEED = -FOG_INCREASE_SPEED;
 	    		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 	    		
-	            fbos.bindReflectionFrameBuffer();
-	            
-	            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,0),distanceFog,true,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
-	            skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,0),true);
-				fbos.unbindCurrentFrameBuffer();
-				
-	            fbos.bindRefractionFrameBuffer();
-	            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
-	            
-				fbos.unbindCurrentFrameBuffer();
-
+	    		
+	    		/*Sea Pass*/
+	    		if(World.getSea()!=0){
+		            fbos.bindReflectionFrameBuffer();
+		            
+		            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,0),distanceFog,true,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
+		            skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,0),true);
+					fbos.unbindCurrentFrameBuffer();
+					
+		            fbos.bindRefractionFrameBuffer();
+		            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
+		            
+					fbos.unbindCurrentFrameBuffer();
+	    		}
 
 
 	
@@ -345,7 +411,8 @@ public class renderMain implements Runnable {
 					
 					renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
 					
-					waterRenderer.render( camera,sun,fbos,distanceFog,delta);
+					if(World.getSea()!=0)
+						waterRenderer.render( camera,sun,fbos,distanceFog,delta);
 					
 					skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,100000),false);
 					
@@ -355,8 +422,8 @@ public class renderMain implements Runnable {
 					PostProcessing.doPostProcessing(outputFbo.getColourTexture(),outputFbo.getDepthTexture());
 				}else{
 					renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
-					
-					waterRenderer.render( camera,sun,fbos,distanceFog,delta);
+					if(World.getSea()!=0)
+						waterRenderer.render( camera,sun,fbos,distanceFog,delta);
 					
 					skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,100000),false);
 				}
@@ -365,13 +432,13 @@ public class renderMain implements Runnable {
 					drawable.draw();
 				TextMaster.render(camera);
 				Window.updateDisplay();
-
+				
 				if(turtles.size()>0){
 					
 					if(InputHandler.reset(InputHandler.isButtonDown(0) == inputType.INSTANT)){
 						for(int id=0;id<turtles.size();id++){
 							
-							ByteBuffer pixel = colorID.ReadPixel(Mouse.getX(), Mouse.getY());
+							ByteBuffer pixel = colorID.ReadPixel((int)(Mouse.getX()/(float)(Display.getWidth()/(float)wBuffer)), (int)(Mouse.getY()/(float)(Display.getHeight()/(float)hBuffer)));
 							if(Helper.isSameColor(turtles.get(id).getColorID(), pixel)){
 								focusCamera = id;
 								break;
@@ -395,7 +462,7 @@ public class renderMain implements Runnable {
 			
 			drawable.cleanUp();
 			shadow.cleanUp();
-			sFbo.cleanUp();
+		
 			PostProcessing.cleanUp();
 			outputFbo.cleanUp();
 			multisample.cleanUp();
@@ -414,7 +481,7 @@ public class renderMain implements Runnable {
 		isNotify = true;
 		textures = new ArrayList<>();
 		for(civilisation.world.Terrain terrain: Configuration.terrains){
-			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getTiling(),terrain.getTexture());
+			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getBlur(),terrain.getTiling(),terrain.getTexture());
 			textures.add(type);
 		}
 		
@@ -470,8 +537,8 @@ public class renderMain implements Runnable {
 		Lock l = new ReentrantLock();
 		l.lock();
 
-		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/5);
-		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
+		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
 		try {
 			int id = containTurtle(t.getID());
 			if(id == -1 && t.isPlayingRole(DefineConstants.Role_Human)){
@@ -551,15 +618,15 @@ public class renderMain implements Runnable {
 		}
 		
 		if(i!=-1 && j!=-1){
-			int cX = (int) (((grid[j].x*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
-			int cY = (int) (((grid[j].y*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
+			int cX = (int) (((grid[j].x*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
+			int cY = (int) (((grid[j].y*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
 			
 			Vector3f position = Terrain.getHeightByTab(cX,cY);
 			facilitys.add(new Facility3D(color,new Vector3f(position.x,position.y,position.z),-1,true,a));
 		}
 		int ID = containFacility(id);
-		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/5);
-		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
+		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
 		if(ID == -1){
 			Vector3f position = Terrain.getHeightByTab(cX,cY);
 
@@ -593,8 +660,8 @@ public class renderMain implements Runnable {
 	}
 
 	public void renderMsg(String msg, int x, int y,int cellSize, int id) {
-		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/5);
-		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/5);
+		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
+		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
 		
 		Vector3f position = Terrain.getHeightByTab(cX,cY);
 		position.y += 5;

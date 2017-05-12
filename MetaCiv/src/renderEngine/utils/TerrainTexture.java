@@ -19,8 +19,10 @@ public class TerrainTexture {
 	private float height;
 	private int erosion;
 	private float tiling;
+	private int blur;
+	private float isTextured;
 	
-	public TerrainTexture(float h, float s, float b,float height, int erosion,String texture,String normalMap,String displacementMap){
+	public TerrainTexture(float h, float s, float b,float height, int erosion,int blur,String texture,String normalMap,String displacementMap){
 		int color = Color.HSBtoRGB(h, s,b);
 		this.r = (color >> 16) & 0x000000FF;
 		this.g = (color >>8 ) & 0x000000FF;
@@ -30,10 +32,11 @@ public class TerrainTexture {
 		this.displacementMap = displacementMap;
 		this.height = height;
 		this.erosion = erosion;
+		this.blur = blur;
 	}
 
-	public TerrainTexture(Color couleur, float height, int erosion, float tiling, String texture) {
-		
+	public TerrainTexture(Color couleur, float height, int erosion,int blur, float tiling, String texture) {
+		this.isTextured = 1.0f;
 		this.r = couleur.getRed();
 		this.g = couleur.getGreen();
 		this.b = couleur.getBlue();
@@ -56,22 +59,26 @@ public class TerrainTexture {
 
 			}
 		}
+		if(this.texture.equals(""))
+			this.isTextured = 0.0f;
 		this.height = height;
 		this.erosion = erosion;
 		this.tiling = tiling;
+		this.blur = blur;
 	}
 
 	public TerrainTexture(TerrainTexture terrainTexture) {
 		this.r = terrainTexture.getR();
 		this.g = terrainTexture.getG();
 		this.b = terrainTexture.getB();
-
+		this.isTextured = terrainTexture.isTextured;
 		this.texture = terrainTexture.texture;
 		this.normalMap = terrainTexture.normalMap;
 		this.displacementMap = terrainTexture.displacementMap;
 		this.height = terrainTexture.height;
 		this.erosion = terrainTexture.erosion;
 		this.tiling = terrainTexture.tiling;
+		this.blur = terrainTexture.blur;
 	}
 
 	public int getR() {
@@ -148,5 +155,19 @@ public class TerrainTexture {
 	public void setTiling(float tiling) {
 		this.tiling = tiling;
 	}
+
+	public float getBlur() {
+		return this.blur;
+	}
+
+	public float isTextured() {
+		return isTextured;
+	}
+
+	public void setTextured(float isTextured) {
+		this.isTextured = isTextured;
+	}
+	
+	
 	
 }

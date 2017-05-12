@@ -34,7 +34,7 @@ public class Terrain {
 	private static final float MAX_PIXEL_COLOUR = 256 * 256 *256;
 	private float textureCoordsOffsetX;
 	private static  float[] vertices;
-	private Vector2f gridSize;
+	
 	
 	private static ArrayList<TerrainTexture> effectiveType;
 	private static int diffuseArray[];
@@ -66,7 +66,7 @@ public class Terrain {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		gridSize = new Vector2f(image.getWidth(),image.getHeight());
+
 		this.model = generateTerrain(loader,image,image,arrayList);
 		this.blur = new Material(Loader.loadTextureBlur(image));
 		
@@ -125,10 +125,10 @@ public class Terrain {
 		effectiveType = new ArrayList<>();
 		//image = Loader.blur(image);
 		
-		VERTEX_COUNT = image.getHeight()/5;
-		VERTEX_COUNT_W = image.getWidth()/5;
-		SIZE_X = World.getY()*5;
-		SIZE_Z = World.getX()*5;
+		VERTEX_COUNT = image.getHeight()/World.getAccuracy();
+		VERTEX_COUNT_W = image.getWidth()/World.getAccuracy();
+		SIZE_X = World.getY()*World.getSize3D();
+		SIZE_Z = World.getX()*World.getSize3D();
 		
         int count = VERTEX_COUNT * VERTEX_COUNT_W;
         vertices = new float[count * 3];
@@ -158,7 +158,8 @@ public class Terrain {
         		
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE_X;
                 vertices[vertexPointer*3+1] = h;
-                vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
+                if(!World.getHeightMap().equals(""))
+                	vertices[vertexPointer*3+1] += getHeight(j%image2.getHeight(),i%image2.getWidth());
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
                
                 
@@ -182,9 +183,9 @@ public class Terrain {
                 
                 lastH = h;
                 
-                jj+=5;
+                jj+=World.getAccuracy();
             }
-            ii +=5;
+            ii +=World.getAccuracy();
         }
         
         
@@ -377,7 +378,7 @@ public class Terrain {
 		float height = image.getRGB(x, z);
 		height += MAX_PIXEL_COLOUR /2f;
 		height /= MAX_PIXEL_COLOUR /2f;
-		height *= MAX_HEIGHT;
+		height *= World.getIntensityHeight();
 		
 		return height;
 	}
@@ -444,6 +445,35 @@ public class Terrain {
 		return erosion;
 	}
 	
+	private static int getBlur(int x, int z, BufferedImage image,ArrayList<TerrainTexture> textures){
+		if(x<0 || x>= image.getWidth() || z<0 || z>=image.getHeight()){
+			return 0;
+		}
+		int rgb = image.getRGB(x, z);
+		float red = (rgb >> 16) & 0x000000FF;
+		float green = (rgb >>8 ) & 0x000000FF;
+		float blue = (rgb) & 0x000000FF;
+		int erosion = 0;
+		
+		
+		for(int i=0;i<textures.size();i++){
+			Vector4f vector = new Vector4f(textures.get(i).getR(),textures.get(i).getG(),textures.get(i).getB(),textures.get(i).getBlur());
+			
+			
+			
+			float red2 = vector.x;
+			float green2 = vector.y;
+			float blue2 = vector.z;
+			
+			
+			if(red2 == red && green2 == green && blue2 == blue){
+				erosion = (int) vector.w;
+				break;
+			}
+		}
+		return erosion;
+	}
+	
 	public static float getHeight(int x, int z, BufferedImage image,ArrayList<TerrainTexture> textures){
 		
 		int N=getErosion(x,z,image,textures);
@@ -451,40 +481,69 @@ public class Terrain {
 		int dividande=0;
 		float height = 0;
 		float heightL,heightR,heightD,heightU;
-		for(int i=0;i<N;i++){
-			
-			/*int l=-1*(i+1);
-			int m=0;
-			int h=-1*(i+1);
-			while(h<-1*(i+1)*-1){
-				//System.out.println(l + " " + h);
-				height += getHeight2(Math.max(x+l*3,0), Math.max(z+h*3,0), image,textures);
-				l++;
-				m++;
-				if(m>=(2*(i+1)+1) ){
-					h++;
-					m=0;
-					l=-1*(i+1);
+		int algo = getBlur(x,z,image,textures);
+		if(algo==0){
+			for(int i=0;i<N;i++){
+				
+				/*int l=-1*(i+1);
+				int m=0;
+				int h=-1*(i+1);
+				while(h<-1*(i+1)*-1){
+					//System.out.println(l + " " + h);
+					height += getHeight2(Math.max(x+l*3,0), Math.max(z+h*3,0), image,textures);
+					l++;
+					m++;
+					if(m>=(2*(i+1)+1) ){
+						h++;
+						m=0;
+						l=-1*(i+1);
+					}
+					dividande++;
+				}*/
+				if(i%2==0){
+					heightL = getHeight2(Math.max(x-i*3,0), z, image,textures);
+					heightR = getHeight2(Math.min(x+i*3,image.getWidth()), z, image,textures);
+					heightD = getHeight2(x, Math.max(z-i*3,0), image,textures);
+					heightU = getHeight2(x, Math.min(z+i*3,image.getHeight()), image,textures);
+				}else{
+					heightL = getHeight2(Math.max(x-(i-1)*3,0), Math.max(z-(i-1)*3,0), image,textures);
+					heightR = getHeight2(Math.min(x+(i-1)*3,image.getWidth()), Math.min(z+(i-1)*3,image.getHeight()), image,textures);
+					heightD = getHeight2(Math.min(x+(i-1)*3,image.getWidth()), Math.max(z-(i-1)*3,0), image,textures);
+					heightU = getHeight2(Math.max(x-(i-1)*3,0), Math.min(z+(i-1)*3,image.getHeight()), image,textures);				
 				}
-				dividande++;
-			}*/
-			if(i%2==0){
-				heightL = getHeight2(Math.max(x-i*3,0), z, image,textures);
-				heightR = getHeight2(Math.min(x+i*3,image.getHeight()), z, image,textures);
-				heightD = getHeight2(x, Math.max(z-i*3,0), image,textures);
-				heightU = getHeight2(x, Math.min(z+i*3,image.getHeight()), image,textures);
-			}else{
-				heightL = getHeight2(Math.max(x-(i-1)*3,0), Math.max(z-(i-1)*3,0), image,textures);
-				heightR = getHeight2(Math.min(x+(i-1)*3,image.getHeight()), Math.min(z+(i-1)*3,image.getHeight()), image,textures);
-				heightD = getHeight2(Math.min(x+(i-1)*3,image.getHeight()), Math.max(z-(i-1)*3,0), image,textures);
-				heightU = getHeight2(Math.max(x-(i-1)*3,0), Math.min(z+(i-1)*3,image.getHeight()), image,textures);				
+				
+				dividande+=4;
+				height += heightL+heightR+heightD+heightU;
 			}
-			
-			dividande+=4;
-			height += heightL+heightR+heightD+heightU;
-		}
-		height/=dividande;
+			height/=dividande;
 
+		}
+		else{
+			int i=0;
+			while(i<N){
+				
+				int l=-1*(i+1);
+				int m=0;
+				int h=-1*(i+1);
+				while(h<-1*(i+1)*-1){
+					//System.out.println(l + " " + h);
+					height += getHeight2(Math.min(Math.max(x+l*3,0),image.getWidth()), Math.min(Math.max(z+h*3,0),image.getHeight()), image,textures);
+					l++;
+					m++;
+					if(m>=(2*(i+1)+1) ){
+						h++;
+						m=0;
+						l=-1*(i+1);
+					}
+					dividande++;
+					
+				}
+				i++;
+			}
+			height/=dividande;
+
+		}
+		
 		return height;
 	}
 	
@@ -505,10 +564,11 @@ public class Terrain {
 	}
 
 	public void notifyHeightMap(Loader loader, BufferedImage image, Vector2f gridSize,ArrayList<TerrainTexture> textures) {
-		this.gridSize = gridSize;
+		
 		BufferedImage image2 = null;
 		try {
-			image2 = ImageIO.read(new File("Assets/Texture/heightmap.png"));
+			if(!World.getHeightMap().equals(""))
+				image2 = ImageIO.read(new File(Configuration.pathToRessources+ "/Skin/" + World.getHeightMap() + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

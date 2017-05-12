@@ -5,3 +5,7 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 10.0
+Erosion : 10
+Texture : forest
+Tiling : 40.0

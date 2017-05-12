@@ -41,11 +41,15 @@ public class StaticShader extends ShaderProgram{
 	private int location_metalMap;
 	private int location_skyAngle;
 	
+	
+	
 	private int location_reflMapped;
 
 	private int location_metalMapped;
 
 	private int location_colorAction;
+
+	private int location_distanceFog;
 	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -85,7 +89,7 @@ public class StaticShader extends ShaderProgram{
 		location_skyAngle = super.getUniformLocation("skyAngle");
 		location_metalMapped = super.getUniformLocation("metalMapped");
 		location_colorAction = super.getUniformLocation("colorAction");
-
+		location_distanceFog = super.getUniformLocation("distanceFog");
 
 		location_lightPosition = super.getUniformLocation("lightPosition");
 		location_lightColour = super.getUniformLocation("lightColour");
@@ -106,6 +110,11 @@ public class StaticShader extends ShaderProgram{
 		super.loadInt(location_metalMap, 5);
 		super.loadInt(location_shadowMap, 6);
 	}
+	
+	public void loadDistanceFog(float distanceFog){
+		super.loadFloat(location_distanceFog, distanceFog);
+	}
+	
 	
 	public void loadHeightScale(float hS){
 		super.loadFloat(location_heightScale, hS);

@@ -49,6 +49,12 @@ public class World extends TKEnvironment implements Serializable
 	static float snowDensity;
 	static float roadTiling;
 	static float cliffTiling;
+	static int accuracy=5;
+	static float size3D=5;
+	static String heightMap;
+	static float intensityHeight;
+	static int sea=2;
+	
 	
 	//For output file
 	/*
@@ -123,6 +129,41 @@ public class World extends TKEnvironment implements Serializable
        		cliffTiling = Float.parseFloat(cliffTS[0]);
        	}else{
        		cliffTiling=1;
+       	}
+       	
+     	String[] AccuracyS = Initialiseur.getChamp("Accuracy", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!AccuracyS[0].equals("null")){
+       		accuracy = Integer.parseInt(AccuracyS[0]);
+       	}else{
+       		accuracy=5;
+       	}
+
+     	String[] MultiplySize3DS = Initialiseur.getChamp("MultiplySize3DS", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!MultiplySize3DS[0].equals("null")){
+       		size3D = Float.parseFloat(MultiplySize3DS[0]);
+       	}else{
+       		size3D=5;
+       	}
+       	
+     	String[] HeightMapS = Initialiseur.getChamp("HeightMap", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!HeightMapS[0].equals("null")){
+       		heightMap = HeightMapS[0];
+       	}else{
+       		heightMap="";
+       	}
+       	
+     	String[] HeightIntensityS = Initialiseur.getChamp("HeightIntensity", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!HeightIntensityS[0].equals("null")){
+       		intensityHeight = Float.parseFloat(HeightIntensityS[0]);
+       	}else{
+       		intensityHeight=1;
+       	}
+       	
+     	String[] SeaS = Initialiseur.getChamp("Sea", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!SeaS[0].equals("null")){
+       		sea = Integer.parseInt(SeaS[0]);
+       	}else{
+       		sea=2;
        	}
        	
        	snowDensity /= 100.0f;
@@ -568,6 +609,46 @@ public class World extends TKEnvironment implements Serializable
 
 	public static void setSnowDensity(float snowDensity) {
 		World.snowDensity = snowDensity;
+	}
+
+	public static int getAccuracy() {
+		return accuracy;
+	}
+
+	public static void setAccuracy(int accuracy) {
+		World.accuracy = accuracy;
+	}
+
+	public static float getSize3D() {
+		return size3D;
+	}
+
+	public static void setSize3D(float size3d) {
+		size3D = size3d;
+	}
+
+	public static String getHeightMap() {
+		return heightMap;
+	}
+
+	public static void setHeightMap(String heightMap) {
+		World.heightMap = heightMap;
+	}
+
+	public static int getSea() {
+		return sea;
+	}
+
+	public static void setSea(int sea) {
+		World.sea = sea;
+	}
+
+	public static float getIntensityHeight() {
+		return intensityHeight;
+	}
+
+	public static void setIntensityHeight(float intensity) {
+		intensityHeight = intensity;
 	}
 
 	

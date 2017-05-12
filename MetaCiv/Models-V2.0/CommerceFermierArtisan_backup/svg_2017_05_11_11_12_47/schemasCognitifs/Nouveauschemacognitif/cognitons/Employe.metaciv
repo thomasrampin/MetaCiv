@@ -1,0 +1,7 @@
+Nom : Employe
+Description : Un nouveau cogniton
+Type : BELIEF
+StartChance : 0
+Initial : 0
+Permet : Employe
+Influence : Employe,3

@@ -1,0 +1,7 @@
+Nom : BonCueilleur
+Description : Un nouveau cogniton
+Type : PERCEPT
+StartChance : 0
+Initial : 0
+Influence : DevenirAgriculteur,4
+Trigger : CompetenceCueilleur,0.0,1,SeuilBonCueilleur

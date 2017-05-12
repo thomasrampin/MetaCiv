@@ -5,6 +5,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import renderEngine.renderMain;
 import renderEngine.fontMeshCreator.FontType;
 import renderEngine.fontMeshCreator.GUIText;
 
@@ -17,13 +18,16 @@ public abstract class Button {
 	private boolean isPressed;
 	private boolean isHover = false;
 	private boolean isVisible = true;
+	private int width;
+	private int height;
 	
 	public Button(int textureId, Vector2f position, Vector2f dimension){
 		this.gui = new Panel(textureId,position,dimension);
 		this.position = position;
 		this.dimension = dimension;
 		this.isPressed = false;
-		
+		width = Display.getWidth();
+		height = Display.getHeight();
 	}
 	
 	public Button(Vector3f color, Vector2f position, Vector2f dimension){
@@ -32,6 +36,8 @@ public abstract class Button {
 		this.dimension = dimension;
 		this.isPressed = false;
 		this.color=color;
+		width = Display.getWidth();
+		height = Display.getHeight();
 	}
 	
 	public Button(int textureId, Vector2f position, Vector2f dimension,String text,FontType font){
@@ -39,6 +45,8 @@ public abstract class Button {
 		this.position = position;
 		this.dimension = dimension;
 		this.isPressed = false;
+		width = Display.getWidth();
+		height = Display.getHeight();
 		new GUIText(text, 1, font, new Vector3f(position.x/Display.getWidth() , position.y/Display.getHeight() ,0), 1f, false,-1,true);
 	}
 	
@@ -48,6 +56,8 @@ public abstract class Button {
 		this.dimension = dimension;
 		this.isPressed = false;
 		this.color=color;
+		width = Display.getWidth();
+		height = Display.getHeight();
 		new GUIText(text, 1, font, new Vector3f(position.x/Display.getWidth() , position.y/Display.getHeight() ,0), 1f, false,-1,true);
 	}
 	
@@ -66,8 +76,10 @@ public abstract class Button {
 	}
 	
 	public void update(){
-		int mouseX = Mouse.getX();
-		int mouseY = Display.getHeight() - Mouse.getY();
+		float factor =  Display.getWidth()/(float)width;
+		int mouseX = (int) (Mouse.getX()/factor);
+		int mouseY = (int) (Display.getHeight()/factor - (int)(Mouse.getY()/factor));
+		
 		if(mouseX>position.x && mouseX<position.x+dimension.x && mouseY>position.y && mouseY<position.y+dimension.y && isVisible){
 			isHover = true;
 			gui.setHover(true);

@@ -1,0 +1,8 @@
+Nom : FaimEtRienDansMonSac
+Description : Un nouveau cogniton
+Type : PERCEPT
+StartChance : 0
+Initial : 0
+Permet : AllerChercherAuVillage
+Influence : Consommer,-1
+Influence : AllerChercherAuVillage,1

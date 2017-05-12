@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 import civilisation.Configuration;
 import civilisation.amenagement.Amenagement;
 import civilisation.amenagement.TypeAmenagement;
+import civilisation.world.World;
 import renderEngine.loaders.Loader;
 import renderEngine.utils.BoundingBox;
 import renderEngine.utils.Helper;
@@ -77,8 +78,8 @@ public class Facility3D {
 				float distY = box.getMax().y - box.getMin().y;
 				float distZ = box.getMax().z - box.getMin().z;
 				float distMax = Math.max(Math.max(distX, distY),distZ);
-				if(distMax>5){
-					objects3d.get(objects3d.size()-1).object3d.setScale(5.0f/distMax);
+				if(distMax>World.getSize3D()){
+					objects3d.get(objects3d.size()-1).object3d.setScale(World.getSize3D()/distMax);
 				}
 			}else{
 				objects3d.add(new ObjectFacility3D(new Object3D("Default_facility","", loader,true, new Vector3f(100, 20, 150), 0, 90, 0, 1.0f),Amenagement.getColor(),false));

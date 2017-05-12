@@ -16,6 +16,8 @@ in VS_OUT{
 	vec3 TangentFragPos;
 	mat3 RM;
 	mat3 TBN;
+	vec3 eye_coord;
+	vec3 world_coord;
 }fs_in;
 
 layout (location = 0) out vec4 FragmentColor0;
@@ -42,6 +44,8 @@ uniform bool reciveShadow;
 uniform bool reflMapped;
 uniform bool metalMapped;
 
+uniform vec4 fog_color = vec4(0.4, 0.6, 0.9, 0);
+uniform float distanceFog;
 
 const vec4 CloudColor = vec4(0.9,0.8,0.9,0.8);
 const vec4 Horizon = vec4(0.2,0.3,0.941,1);
@@ -51,51 +55,22 @@ uniform float skyAngle;
 uniform float height_scale;
 
 //size reflect image
-const float size_level1 = 2048.0;
+const float size_level1 = 1024.0;
 
-
-vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
+vec4 fog(vec4 c)
 {
-    // number of depth layers
-    const float minLayers = 10;
-    const float maxLayers = 20;
-    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));
-    // calculate the size of each layer
-    float layerDepth = 1.0 / numLayers;
-    // depth of current layer
-    float currentLayerDepth = 0.0;
-    // the amount to shift the texture coordinates per layer (from vector P)
-    vec2 P = viewDir.xy / viewDir.z * height_scale;
-    vec2 deltaTexCoords = P / numLayers;
+    float z = length(fs_in.eye_coord)/distanceFog;
 
-    // get initial values
-    vec2  currentTexCoords     = texCoords;
-    float currentDepthMapValue = texture(dispMap, currentTexCoords).r;
+    float de = 0.025 * smoothstep(0.0, 6.0, 10.0 - fs_in.world_coord.y);
+    float di = 0.045 * (smoothstep(0.0, 40.0, 20.0 - fs_in.world_coord.y));
 
-    while(currentLayerDepth < currentDepthMapValue)
-    {
-        // shift texture coordinates along direction of P
-        currentTexCoords -= deltaTexCoords;
-        // get depthmap value at current texture coordinates
-        currentDepthMapValue = texture(dispMap, currentTexCoords).r;
-        // get depth of next layer
-        currentLayerDepth += layerDepth;
-    }
+    float extinction   = exp(-z * de);
+    float inscattering = exp(-z * di);
 
-    // -- parallax occlusion mapping interpolation from here on
-    // get texture coordinates before collision (reverse operations)
-    vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
-
-    // get depth after and before collision for linear interpolation
-    float afterDepth  = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = texture(dispMap, prevTexCoords).r - currentLayerDepth + layerDepth;
-
-    // interpolation of texture coordinates
-    float weight = afterDepth / (afterDepth - beforeDepth);
-    vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
-
-    return finalTexCoords;
+    return c * extinction + fog_color * (1.0 - inscattering);
 }
+
+
 
 
 void main(void){
@@ -194,6 +169,7 @@ void main(void){
 	if(colorAction.r != -1.0)
 		FragmentColor0 *= vec4(colorAction,1.0);
 
+	FragmentColor0 = fog(FragmentColor0);
 	FragmentColor1 = colorID;
 
 }
