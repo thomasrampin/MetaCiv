@@ -109,7 +109,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 			g2d = bufferedView.createGraphics();
 	        t.start();
 	        bufferedView_activate = true;
-	       
+	     
 	        initialCellSize = cellSize;
 		}
 		//System.out.println("WV a fini activate");
@@ -274,8 +274,11 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 	@Override
 	public void paintTurtle(Graphics g,Turtle t,int x,int y) {
 		Color c = paintOneTurtle( g, t, x, y, true);
-		if(bufferedView_activate)
+		if(bufferedView_activate){
+			if(render.init)
+		        render.initMainFacilitys();
 			render.paintOneTurtle(t,x,y,c,getCellSize());
+		}
 
 	}
 

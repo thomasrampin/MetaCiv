@@ -20,7 +20,7 @@ public class Camera {
 	private float distanceFromPivot=200;
 	private float yangle;
 	private float roll;
-	
+
 	
 	public Camera(){
 		
@@ -38,7 +38,7 @@ public class Camera {
 		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
 			position = Terrain.getHeightByTab(cX,cY);
 		
-		if (distanceFromPivot - zoomLevel > 5f && distanceFromPivot - zoomLevel < ZOOM_OUT_MAX && distanceFromPivot - zoomLevel >position.y+8)
+		if (distanceFromPivot - zoomLevel > 5f && distanceFromPivot - zoomLevel < ZOOM_OUT_MAX)
 			distanceFromPivot -= zoomLevel;
 		
 		
@@ -165,9 +165,11 @@ public class Camera {
 
 	public void setTarget(Vector3f position2) {
 		this.lookAt = position2;
+	
 		
 	}
-	
-	
+	public void setDistance(){
+		distanceFromPivot = 40;
+	}
 	
 }

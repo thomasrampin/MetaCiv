@@ -50,8 +50,8 @@ void main(void){
     vs_out.TangentViewPos  =  vs_out.TBN * viewPos;
     vs_out.TangentFragPos  =  vs_out.TBN * worldPosition.xyz;
     vec4 Peye = projectionMatrix * viewMatrix * worldPosition;
-    vs_out.eye_coord = -Peye.xyz;
-    vs_out.world_coord = -Peye.xyz;
+    vs_out.eye_coord = Peye.xyz;
+    vs_out.world_coord = worldPosition.wyz;
 	gl_Position = Peye;
 	vs_out.pass_textureCoords = textureCoords;
 

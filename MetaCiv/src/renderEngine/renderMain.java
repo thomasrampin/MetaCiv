@@ -94,7 +94,7 @@ public class renderMain implements Runnable {
 	private boolean menuActionIsVisible = false;
 	private WorldViewer worldViewer;
 	final Patch[] grid;
-	private boolean init = true;
+	public boolean init = true;
 	
 	public static int wBuffer;
 	public static int hBuffer;
@@ -442,6 +442,7 @@ public class renderMain implements Runnable {
 							ByteBuffer pixel = colorID.ReadPixel((int)(Mouse.getX()/(float)(Display.getWidth()/(float)wBuffer)), (int)(Mouse.getY()/(float)(Display.getHeight()/(float)hBuffer)));
 							if(Helper.isSameColor(turtles.get(id).getColorID(), pixel)){
 								focusCamera = id;
+								camera.setDistance();
 								break;
 							}else{
 								focusCamera = -1;
@@ -576,17 +577,17 @@ public class renderMain implements Runnable {
 		
 	}
 
-	synchronized private void initMainFacilitys(){
+	public synchronized void initMainFacilitys(){
 		init = false;
-		for(int j=0;j<grid.length;j++){
-			for (int i = 0; i < Configuration.civilisations.size(); i++){
-				
+		for (int i = 0; i < Configuration.civilisations.size(); i++){
+			for(int j=0;j<grid.length;j++){
 				if(grid[j].x == Configuration.civilisations.get(i).getStartX() && grid[j].y == Configuration.civilisations.get(i).getStartY()){
-					System.out.println("test" + j + " " + i);
-					int cX = (int) ((grid[j].x/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
-					int cY = (int) ((grid[j].y/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/5);
+					
+					int cX = (int) ((grid[j].x*5)/World.getAccuracy());
+					int cY = (int) ((grid[j].y*5)/World.getAccuracy());
+
 					Vector3f position = Terrain.getHeightByTab(cX,cY);
-					facilitys.add(new Facility3D( ( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),new Vector3f(0,0,0),grid[j].getTurtles().get(0).getID(),true,( (Amenagement) grid[j].getTurtles().get(0))));
+					facilitys.add(new Facility3D(new Vector3f(position.x,position.y,position.z),-1,true));
 					//drawFacility(grid[j].x,grid[j].y,( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),grid[j].getTurtles().get(0).getID(),WorldViewer.initialCellSize,( (Amenagement) grid[j].getTurtles().get(0)),true);
 					break;
 				}
@@ -595,11 +596,13 @@ public class renderMain implements Runnable {
 	}
 	
 	synchronized  public void drawFacility(int x, int y, Color color, int id, int cellSize, Amenagement a, boolean Capitale) {
-		int i=-1,j=-1;
+		int i=-1;
+		int civPos[] = new int[Configuration.civilisations.size()];
+		boolean found = false;
 		if(init){
 			init = false;
-			boolean found = false;
-			for(j=0;j<grid.length;j++){
+			
+			for(int j=0;j<grid.length;j++){
 				for (i = 0; i < Configuration.civilisations.size(); i++){
 					
 					if(grid[j].x == Configuration.civilisations.get(i).getStartX() && grid[j].y == Configuration.civilisations.get(i).getStartY()){
@@ -609,22 +612,25 @@ public class renderMain implements Runnable {
 						facilitys.add(new Facility3D( ( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),new Vector3f(0,0,0),grid[j].getTurtles().get(0).getID(),true,( (Amenagement) grid[j].getTurtles().get(0))));
 						*///drawFacility(grid[j].x,grid[j].y,( (Amenagement) grid[j].getTurtles().get(0)).getColorType(),grid[j].getTurtles().get(0).getID(),WorldViewer.initialCellSize,( (Amenagement) grid[j].getTurtles().get(0)),true);
 						found = true;
+						civPos[i] = j;
 						break;
 					}
 				}
-				if(found)break;
+				
 			}
 			
 			
 		}
 		
-		if(i!=-1 && j!=-1){
-			int cX = (int) (((grid[j].x*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
-			int cY = (int) (((grid[j].y*5)/(WorldViewer.initialCellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
-			
-			Vector3f position = Terrain.getHeightByTab(cX,cY);
-			facilitys.add(new Facility3D(color,new Vector3f(position.x,position.y,position.z),-1,true,a));
-		}
+		/*if(found){
+			for (i = 0; i < Configuration.civilisations.size(); i++){
+				int cX = (int) (((grid[civPos[i]].x*5))/World.getAccuracy());
+				int cY = (int) (((grid[civPos[i]].y*5))/World.getAccuracy());
+				
+				Vector3f position = Terrain.getHeightByTab(cX,cY);
+				facilitys.add(new Facility3D(color,new Vector3f(position.x,position.y,position.z),-1,true,a));
+			}
+		}*/
 		int ID = containFacility(id);
 		int cX = (int) ((x/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());
 		int cY = (int) ((y/(cellSize/(float)WorldViewer.initialCellSize))/World.getAccuracy());

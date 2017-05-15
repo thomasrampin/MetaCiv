@@ -86,8 +86,7 @@ public class Terrain {
 	
 	public static Vector3f getHeightByTab(int x,int y){
 		Vector3f position1 = new Vector3f(vertices[(y*VERTEX_COUNT_W+x)*3],vertices[(y*VERTEX_COUNT_W+x)*3+1],vertices[(y*VERTEX_COUNT_W+x)*3+2]);
-		Vector3f position2 = new Vector3f(vertices[((y-1)*VERTEX_COUNT_W+x-1)*3],vertices[((y-1)*VERTEX_COUNT_W+x-1)*3+1],vertices[((y-1)*VERTEX_COUNT_W+x-1)*3+2]);
-		Vector3f position = new Vector3f((position1.x+position2.x)/2.0f,(position1.y+position2.y)/2.0f,(position1.z+position2.z)/2.0f);
+	
 		return position1;
 	}
 	

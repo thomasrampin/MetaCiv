@@ -62,13 +62,14 @@ vec4 fog(vec4 c)
     float z = length(fs_in.eye_coord)/distanceFog;
 
     float de = 0.025 * smoothstep(0.0, 6.0, 10.0 - fs_in.world_coord.y);
-    float di = 0.045 * (smoothstep(0.0, 40.0, 20.0 - fs_in.world_coord.y));
+    float di = 0.045 * (smoothstep(0.0, 20.0, 20.0 - fs_in.world_coord.y));
 
     float extinction   = exp(-z * de);
     float inscattering = exp(-z * di);
 
     return c * extinction + fog_color * (1.0 - inscattering);
 }
+
 
 
 

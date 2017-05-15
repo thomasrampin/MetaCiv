@@ -168,21 +168,22 @@ public class World extends TKEnvironment implements Serializable
        	
        	snowDensity /= 100.0f;
        	
-       	String[] civilisationS = Initialiseur.getChamp("Civilisation", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+        ArrayList<String[]> civilisationS = Initialiseur.getListeChamp("Civilisation", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
 
        	
        	
 		/*Reglages sur les civilisations*/
-		for (int i = 0; i < Configuration.civilisations.size(); i++){
-			
-			if(Configuration.civilisations.get(i).getNom().equals(civilisationS[0])){
+        for (int j = 0; j < civilisationS.size(); j++){
+			for (int i = 0; i < Configuration.civilisations.size(); i++){
 				
-				Configuration.civilisations.get(i).setStartX(Integer.parseInt(civilisationS[1]));
-				Configuration.civilisations.get(i).setStartY(Integer.parseInt(civilisationS[2]));
+				if(Configuration.civilisations.get(i).getNom().equals(civilisationS.get(j)[0])){
+					
+					Configuration.civilisations.get(i).setStartX(Integer.parseInt(civilisationS.get(j)[1]));
+					Configuration.civilisations.get(i).setStartY(Integer.parseInt(civilisationS.get(j)[2]));
+				}
+				Configuration.civilisations.get(i).postWorldSetup();
 			}
-			Configuration.civilisations.get(i).postWorldSetup();
-		}
-		
+        }
 		/*Init pheromons*/
 		for (int i = 0 ; i < Configuration.itemsPheromones.size() ; i++ ) {
 			this.addFlavor(Configuration.itemsPheromones.get(i).getNom());
