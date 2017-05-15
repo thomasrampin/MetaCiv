@@ -61,7 +61,12 @@ public class TextMaster {
 				
 				if(text.getId() == id){
 					text.setPosition(position);
-					text.setTextString(msg);
+					if(!msg.equals(text.getTextString())){
+						text.setTextString(msg);
+						TextMeshData data = font.loadText(text);
+						int vao = loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
+						text.setMeshInfo(vao, data.getVertexCount());
+					}
 					return;
 				}
 			}

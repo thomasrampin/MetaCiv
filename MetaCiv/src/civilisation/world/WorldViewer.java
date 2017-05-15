@@ -446,7 +446,7 @@ public class WorldViewer extends TKDefaultViewer implements Serializable
 		if(!agent.getDebugString().equals("")){
 			String msg = agent.getDebugString();
 			if(bufferedView_activate)
-				render.renderMsg(msg,x,y,cellSize,t.getID());
+				render.renderMsg(msg,x,y,cellSize,agent.getID());
 			//System.out.println(msg);
 			int distanceBubbleFromAgent = 20;
 			int padding = 2;

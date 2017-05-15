@@ -225,6 +225,7 @@ public class renderMain implements Runnable {
 					debugMessage.clear();
 					TextMaster.resetDebugString();
 				}
+				
 				for(int i=0;i<debugMessage.size();i++){
 					if(debugMessage.get(i).modify){
 						TextMaster.checkId(debugMessage.get(i).id,debugMessage.get(i).msg,debugMessage.get(i).position,font);
@@ -577,7 +578,7 @@ public class renderMain implements Runnable {
 		
 	}
 
-	public synchronized void initMainFacilitys(){
+	synchronized public void initMainFacilitys(){
 		init = false;
 		for (int i = 0; i < Configuration.civilisations.size(); i++){
 			for(int j=0;j<grid.length;j++){
