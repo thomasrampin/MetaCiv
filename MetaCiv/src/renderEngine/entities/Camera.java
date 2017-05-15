@@ -35,7 +35,7 @@ public class Camera {
 		int cX = (int) (this.position.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		int cY = (int) (this.position.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		
-		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT)
+		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
 			position = Terrain.getHeightByTab(cX,cY);
 		
 		if (distanceFromPivot - zoomLevel > 5f && distanceFromPivot - zoomLevel < ZOOM_OUT_MAX && distanceFromPivot - zoomLevel >position.y+8)
@@ -84,7 +84,7 @@ public class Camera {
 		cX = (int) (this.position.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		cY = (int) (this.position.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		
-		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT)
+		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
 			position = Terrain.getHeightByTab(cX,cY);
 		while(this.position.y<position.y+5){
 		
@@ -121,7 +121,7 @@ public class Camera {
 		int cX = (int) (pos.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		int cY = (int) (pos.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
 		Vector3f p = new Vector3f(0,0,100000);
-		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT)
+		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
 			p = Terrain.getHeightByTab(cX,cY);
 		pitch += pitchChange;
 		return pos.y>p.y+5;

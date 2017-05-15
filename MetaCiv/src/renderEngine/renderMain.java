@@ -388,8 +388,9 @@ public class renderMain implements Runnable {
 				if(turtles.size()>0 ){
 					
 					for(int i=0;i<turtles.size();i++){
+						
 						if(turtles.get(i).getTurlte().isAlive()){
-							renderer.processEntity(turtles.get(i).getObject3d(),turtles.get(i).getColorID(),turtles.get(i).getColorAction());
+							renderer.processMultiEntity(turtles.get(i).getObject3d(),turtles.get(i).getColorID(),turtles.get(i).getColorAction());
 						}
 		            }
 					

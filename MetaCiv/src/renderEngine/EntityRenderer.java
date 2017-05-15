@@ -47,6 +47,8 @@ public class EntityRenderer {
             prepareTexturedModel(model,fbos,distanceFog);
             List<Object3D> batch = entities.get(model);
             for (Object3D entity : batch) {
+            	shader.loadColorAction(entity.getColorAction());
+            	shader.loadColorID(entity.getColorID());
                 prepareInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
                         GL11.GL_UNSIGNED_INT, 0);
@@ -74,8 +76,8 @@ public class EntityRenderer {
         shader.loadDistanceFog(distanceFog);
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
-        shader.loadColorID(model.getColorID());
-        shader.loadColorAction(model.getColorAction());
+        
+        //shader.loadColorAction(model.getColorAction());
         if(Keyboard.isKeyDown(Keyboard.KEY_A)){
         	hS+=0.1;
         	

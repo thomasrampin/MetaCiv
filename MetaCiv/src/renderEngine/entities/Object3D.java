@@ -22,6 +22,9 @@ public class Object3D {
 	private Models models;
 	private boolean multiObj;
 	
+	private Vector3f colorAction;
+	private Vector4f colorID;
+	
 	private ArrayList<Vector4f> positionOverWrite; // Road only
 
 	public Object3D(Object3D object3d){
@@ -192,4 +195,22 @@ public class Object3D {
 		this.positionOverWrite = positionOverWrite;
 	}
 
+	public void setColorAction(Vector3f color) {
+		colorAction = color;
+	}
+
+	public Vector3f getColorAction(){
+		return colorAction;
+	}
+
+	public Vector4f getColorID() {
+		return colorID;
+	}
+
+	public void setColorID(Vector4f colorID) {
+		this.colorID = colorID;
+	}
+	
+	
+	
 }

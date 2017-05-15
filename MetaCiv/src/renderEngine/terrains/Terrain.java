@@ -42,7 +42,7 @@ public class Terrain {
 	private float x;
 	private float z;
 	
-	public static int VERTEX_COUNT; 
+	public static int VERTEX_COUNT_H; 
 	public static int VERTEX_COUNT_W;
 	
 	private Mesh model;
@@ -125,12 +125,12 @@ public class Terrain {
 		effectiveType = new ArrayList<>();
 		//image = Loader.blur(image);
 		
-		VERTEX_COUNT = image.getHeight()/World.getAccuracy();
+		VERTEX_COUNT_H = image.getHeight()/World.getAccuracy();
 		VERTEX_COUNT_W = image.getWidth()/World.getAccuracy();
 		SIZE_X = World.getY()*World.getSize3D();
 		SIZE_Z = World.getX()*World.getSize3D();
 		
-        int count = VERTEX_COUNT * VERTEX_COUNT_W;
+        int count = VERTEX_COUNT_H * VERTEX_COUNT_W;
         vertices = new float[count * 3];
         float[] normals = new float[count * 3];
         float[] textureCoords = new float[count*3];
@@ -142,24 +142,24 @@ public class Terrain {
         
         Vector3f[] pos = new Vector3f[count];
         Vector3f[] Uv = new Vector3f[count];
-        int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT_W-1)];
-        face[] faces  = new face[6*(VERTEX_COUNT-1)*(VERTEX_COUNT_W-1)];
+        int[] indices = new int[6*(VERTEX_COUNT_H-1)*(VERTEX_COUNT_W-1)];
+        face[] faces  = new face[6*(VERTEX_COUNT_H-1)*(VERTEX_COUNT_W-1)];
         int vertexPointer = 0;
         int ii=0;
         int jj =0;
-        float lastH = 0;
-        float max = 0;
-        for(int i=0;i<VERTEX_COUNT;i++){
+        
+        
+        for(int i=0;i<VERTEX_COUNT_H;i++){
         	jj = 0;
             for(int j=0;j<VERTEX_COUNT_W;j++){
             	float h;
             	h = getHeight(jj,ii,image,textures) ;
             	
         		
-                vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE_X;
+                vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_H - 1) * SIZE_X;
                 vertices[vertexPointer*3+1] = h;
                 if(!World.getHeightMap().equals(""))
-                	vertices[vertexPointer*3+1] += getHeight(j%image2.getHeight(),i%image2.getWidth());
+                	vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
                
                 
@@ -176,12 +176,12 @@ public class Terrain {
                
                
                 textureCoords[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_W - 1);
-                textureCoords[vertexPointer*3+1] = (float)i/((float)VERTEX_COUNT - 1);
+                textureCoords[vertexPointer*3+1] = (float)i/((float)VERTEX_COUNT_H - 1);
                 textureCoords[vertexPointer*3+2] = 0;
                 Uv[vertexPointer] = new Vector3f(textureCoords[vertexPointer*3],textureCoords[vertexPointer*3+1],textureCoords[vertexPointer*3+2]);
                 vertexPointer++;
                 
-                lastH = h;
+               
                 
                 jj+=World.getAccuracy();
             }
@@ -195,13 +195,13 @@ public class Terrain {
         
         int pointer = 0;
         int k = 0;
-        int[] dividande =  new int[count * 3];
-        int kk=0;
-        for(int gz=0;gz<VERTEX_COUNT-1;gz++){
-            for(int gx=0;gx<VERTEX_COUNT_W-1;gx++){
-                int topLeft = (gz*VERTEX_COUNT_W)+gx;
+        int[] diviseur =  new int[count * 3];
+
+        for(int z=0;z<VERTEX_COUNT_H-1;z++){
+            for(int x=0;x<VERTEX_COUNT_W-1;x++){
+                int topLeft = (z*VERTEX_COUNT_W)+x;
                 int topRight = topLeft + 1;
-                int bottomLeft = ((gz+1)*VERTEX_COUNT_W)+gx;
+                int bottomLeft = ((z+1)*VERTEX_COUNT_W)+x;
                 
                 int bottomRight = bottomLeft + 1;
                 indices[pointer++] = topLeft;
@@ -248,33 +248,33 @@ public class Terrain {
                 normals[topLeft*3] += faces[k-1].normal.getX();
                 normals[topLeft*3+1] += faces[k-1].normal.getY();
                 normals[topLeft*3+2] += faces[k-1].normal.getZ();
-                dividande[topLeft] ++;
+                diviseur[topLeft] ++;
                 
                 normals[bottomLeft*3] += faces[k-1].normal.getX();
                 normals[bottomLeft*3+1] += faces[k-1].normal.getY();
                 normals[bottomLeft*3+2] += faces[k-1].normal.getZ();
-                dividande[bottomLeft] ++;
+                diviseur[bottomLeft] ++;
                 
                 normals[topRight*3] += faces[k-1].normal.getX();
                 normals[topRight*3+1] += faces[k-1].normal.getY();
                 normals[topRight*3+2] += faces[k-1].normal.getZ();
-                dividande[topRight] ++;
+                diviseur[topRight] ++;
                 
                 
                 normals[topRight*3] += faces[k].normal.getX();
                 normals[topRight*3+1] += faces[k].normal.getY();
                 normals[topRight*3+2] += faces[k].normal.getZ();
-                dividande[topRight] ++;
+                diviseur[topRight] ++;
                 
                 normals[bottomLeft*3] += faces[k].normal.getX();
                 normals[bottomLeft*3+1] += faces[k].normal.getY();
                 normals[bottomLeft*3+2] += faces[k].normal.getZ();
-                dividande[bottomLeft] ++;
+                diviseur[bottomLeft] ++;
                 
                 normals[bottomRight*3] += faces[k].normal.getX();
                 normals[bottomRight*3+1] += faces[k].normal.getY();
                 normals[bottomRight*3+2] += faces[k].normal.getZ();
-                dividande[bottomRight] ++;
+                diviseur[bottomRight] ++;
                 k++;
             }
         }
@@ -341,9 +341,9 @@ public class Terrain {
         
     	k = 0;
     	for(int i=0;i<count*3;i+=3){
-    		normals[i] /= dividande[k];
-    		normals[i+1] /= dividande[k];
-    		normals[i+2] /= dividande[k];
+    		normals[i] /= diviseur[k];
+    		normals[i+1] /= diviseur[k];
+    		normals[i+2] /= diviseur[k];
     		k++;
                    
     	}
@@ -479,37 +479,23 @@ public class Terrain {
 		int N=getErosion(x,z,image,textures);
 		
 		int dividande=0;
+		int merge = 3;
 		float height = 0;
 		float heightL,heightR,heightD,heightU;
 		int algo = getBlur(x,z,image,textures);
 		if(algo==0){
 			for(int i=0;i<N;i++){
-				
-				/*int l=-1*(i+1);
-				int m=0;
-				int h=-1*(i+1);
-				while(h<-1*(i+1)*-1){
-					//System.out.println(l + " " + h);
-					height += getHeight2(Math.max(x+l*3,0), Math.max(z+h*3,0), image,textures);
-					l++;
-					m++;
-					if(m>=(2*(i+1)+1) ){
-						h++;
-						m=0;
-						l=-1*(i+1);
-					}
-					dividande++;
-				}*/
+
 				if(i%2==0){
-					heightL = getHeight2(Math.max(x-i*3,0), z, image,textures);
-					heightR = getHeight2(Math.min(x+i*3,image.getWidth()), z, image,textures);
-					heightD = getHeight2(x, Math.max(z-i*3,0), image,textures);
-					heightU = getHeight2(x, Math.min(z+i*3,image.getHeight()), image,textures);
+					heightL = getHeight2(Math.max(x-i*merge,0), z, image,textures);
+					heightR = getHeight2(Math.min(x+i*merge,image.getWidth()), z, image,textures);
+					heightD = getHeight2(x, Math.max(z-i*merge,0), image,textures);
+					heightU = getHeight2(x, Math.min(z+i*merge,image.getHeight()), image,textures);
 				}else{
-					heightL = getHeight2(Math.max(x-(i-1)*3,0), Math.max(z-(i-1)*3,0), image,textures);
-					heightR = getHeight2(Math.min(x+(i-1)*3,image.getWidth()), Math.min(z+(i-1)*3,image.getHeight()), image,textures);
-					heightD = getHeight2(Math.min(x+(i-1)*3,image.getWidth()), Math.max(z-(i-1)*3,0), image,textures);
-					heightU = getHeight2(Math.max(x-(i-1)*3,0), Math.min(z+(i-1)*3,image.getHeight()), image,textures);				
+					heightL = getHeight2(Math.max(x-(i-1)*merge,0), Math.max(z-(i-1)*merge,0), image,textures);
+					heightR = getHeight2(Math.min(x+(i-1)*merge,image.getWidth()), Math.min(z+(i-1)*merge,image.getHeight()), image,textures);
+					heightD = getHeight2(Math.min(x+(i-1)*merge,image.getWidth()), Math.max(z-(i-1)*merge,0), image,textures);
+					heightU = getHeight2(Math.max(x-(i-1)*merge,0), Math.min(z+(i-1)*merge,image.getHeight()), image,textures);				
 				}
 				
 				dividande+=4;
@@ -526,8 +512,8 @@ public class Terrain {
 				int m=0;
 				int h=-1*(i+1);
 				while(h<-1*(i+1)*-1){
-					//System.out.println(l + " " + h);
-					height += getHeight2(Math.min(Math.max(x+l*3,0),image.getWidth()), Math.min(Math.max(z+h*3,0),image.getHeight()), image,textures);
+					
+					height += getHeight2(Math.min(Math.max(x+l*merge,0),image.getWidth()), Math.min(Math.max(z+h*merge,0),image.getHeight()), image,textures);
 					l++;
 					m++;
 					if(m>=(2*(i+1)+1) ){

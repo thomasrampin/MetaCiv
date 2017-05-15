@@ -3,6 +3,9 @@ package renderEngine.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
+
 import renderEngine.utils.BoundingBox;
 
 public class Models {
@@ -33,5 +36,9 @@ public class Models {
 	public BoundingBox getBox(){
 		return box;
 	}
+
+
+
+
 	
 }

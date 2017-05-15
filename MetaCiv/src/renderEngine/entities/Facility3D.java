@@ -34,19 +34,6 @@ public class Facility3D {
 	
 	public Facility3D(Color c, Vector3f position,int ID,boolean main, Amenagement a){
 		
-		/*Color color = Configuration.getAmenagementsByNameFor3D("Setlement").getColor();
-		if(color.getBlue() == c.getBlue() &&color.getGreen() == c.getGreen() && color.getRed() == c.getRed()){
-			this.object3d = new Object3D(settlement);
-			this.c = c;
-		}
-		
-		color = Configuration.getAmenagementsByNameFor3D("Ferme").getColor();
-		//System.out.println("Ferme color: " + color.getRed() + " " + color.getGreen() + " " + color.getBlue() + " Path color: " + c.getRed() + " " + c.getGreen() + " " + c.getBlue());
-		if(color.getBlue() == c.getBlue() &&color.getGreen() == c.getGreen() && color.getRed() == c.getRed()){
-			//System.out.println("true");
-			this.object3d = new Object3D(ferme);
-			this.c = c;
-		}*/
 		this.a = a;
 		for(ObjectFacility3D object:objects3d){
 			if(c.equals(object.color)){

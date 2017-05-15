@@ -137,9 +137,12 @@ public class MasterRenderer {
    
     public void processMultiEntity(Object3D entity, int i, Vector3f color){
         Models entityModels = entity.getModels();
+        entity.setColorAction(color);
+        entity.setColorID(Helper.IntegerToColor(i));
         for(Model entityModel:entityModels.getModels()){
+        	
 	        List<Object3D> batch = entities.get(entityModel);
-	        entityModel.setColorAction(color);
+
 	        if(batch!=null){
 	            batch.add(entity);
 	        }else{
