@@ -44,7 +44,7 @@ public class EntityRenderer {
         for (Model model : entities.keySet()) {
         	
         	
-            prepareTexturedModel(model,fbos,distanceFog);
+            prepareModel(model,fbos,distanceFog);
             List<Object3D> batch = entities.get(model);
             for (Object3D entity : batch) {
             	shader.loadColorAction(entity.getColorAction());
@@ -53,13 +53,13 @@ public class EntityRenderer {
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
                         GL11.GL_UNSIGNED_INT, 0);
             }
-            unbindTexturedModel();
+            unbindModel();
         }
 
     }
  
     
-    private void prepareTexturedModel(Model model,SeaFrameBuffers fbos, float distanceFog) {
+    private void prepareModel(Model model,SeaFrameBuffers fbos, float distanceFog) {
         Mesh rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -117,7 +117,7 @@ public class EntityRenderer {
     	}
     }
  
-    private void unbindTexturedModel() {
+    private void unbindModel() {
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);

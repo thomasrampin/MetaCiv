@@ -372,12 +372,12 @@ public class renderMain implements Runnable {
 	    		if(World.getSea()!=0){
 		            fbos.bindReflectionFrameBuffer();
 		            
-		            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,0),distanceFog,true,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
+		            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,0),distanceFog,true,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix(),false);
 		            skyboxRenderer.render(camera,sun,new Vector4f(0,1,0,0),true);
 					fbos.unbindCurrentFrameBuffer();
 					
 		            fbos.bindRefractionFrameBuffer();
-		            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
+		            renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,true,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix(),false);
 		            
 					fbos.unbindCurrentFrameBuffer();
 	    		}
@@ -411,7 +411,7 @@ public class renderMain implements Runnable {
 				if(!wireframe){
 					multisample.bindFrameBuffer();
 					
-					renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
+					renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix(),true);
 					
 					if(World.getSea()!=0)
 						waterRenderer.render( camera,sun,fbos,distanceFog,delta);
@@ -423,7 +423,7 @@ public class renderMain implements Runnable {
 					multisample.resolveToFbo(GL30.GL_COLOR_ATTACHMENT1,colorID);
 					PostProcessing.doPostProcessing(outputFbo.getColourTexture(),outputFbo.getDepthTexture());
 				}else{
-					renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix());
+					renderer.render(lights, camera,image,sun,textures,new Vector4f(0,1,0,100000),distanceFog,false,false,false,shadowsTexture,fbos,shadow.getShadowMatrix(),shadow.getLightVpMatrix(),true);
 					if(World.getSea()!=0)
 						waterRenderer.render( camera,sun,fbos,distanceFog,delta);
 					

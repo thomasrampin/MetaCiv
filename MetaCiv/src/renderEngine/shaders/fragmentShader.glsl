@@ -161,7 +161,8 @@ void main(void){
 		vec4 final_gloss = FragmentColor0 * gloss_color;
 		if(metalMapped)
 			FragmentColor0 = mix(FragmentColor0,final_gloss,(fresnelFactor)*texture(metalMap,texCoords).r);
-
+		else
+			FragmentColor0 = mix(FragmentColor0,final_gloss,0.5);
 		//FragmentColor0 += texture(reflexion_blur,tc);
 		//FragmentColor0 += mix(texture(reflexion,  vec2(tc.x+skyAngle/6,tc.y)),texture(reflexion_blur, vec2(tc.x+skyAngle/6,tc.y)),0.0);
 		//FragmentColor0 += CloudColor* max(texture(reflexion_blur, vec2(tc.x+skyAngle,tc.y)).r - 0.01*2,0)*gloss;
@@ -171,6 +172,7 @@ void main(void){
 		FragmentColor0 *= vec4(colorAction,1.0);
 
 	FragmentColor0 = fog(FragmentColor0);
+
 	FragmentColor1 = colorID;
 
 }

@@ -56,8 +56,8 @@ public class MasterRenderer {
     private boolean terrainInit;
      
     public MasterRenderer(Loader loader,ArrayList<TerrainTexture> textures,Object3D instancedObject){
-		/*GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);*/
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
 
         createProjectionMatrix();
 
@@ -67,14 +67,15 @@ public class MasterRenderer {
         terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<TerrainTexture>());
     }
      
-    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<TerrainTexture> textures,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
+    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<TerrainTexture> textures,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix, boolean render_objects){
         prepare();
-        shader.start();
-        shader.loadLights(sun);
-        shader.loadViewMatrix(camera);
-        renderer.render(entities,entitiesMultiObj,fbos,distanceFog);
-        shader.stop();
-
+        if(render_objects){
+	        shader.start();
+	        shader.loadLights(sun);
+	        shader.loadViewMatrix(camera);
+	        renderer.render(entities,entitiesMultiObj,fbos,distanceFog);
+	        shader.stop();
+        }
         
         
         if(!fromLight){
@@ -110,6 +111,8 @@ public class MasterRenderer {
     
      
     public void processEntity(Object3D entity, int i, Vector3f colorAction){
+    	entity.setColorAction(colorAction);
+        entity.setColorID(Helper.IntegerToColor(i));
         Model entityModel = new Model(entity.getModel());
         entityModel.setColorID(Helper.IntegerToColor(i));
         entityModel.setColorAction(colorAction);
