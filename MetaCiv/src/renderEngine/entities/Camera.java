@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector3f;
 import civilisation.world.World;
 import civilisation.world.WorldViewer;
 import renderEngine.terrains.Terrain;
+import renderEngine.utils.FPS;
 
 public class Camera {
 	
@@ -50,31 +51,31 @@ public class Camera {
 			angleAroundPivot -= angleChange;
 			
 		}
-
+		float speed = distanceFromPivot/100.0f;
 		if(Keyboard.isKeyDown(Keyboard.KEY_Z)){
 			
-			lookAt.z += distanceFromPivot/100.0f * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.z += speed * Math.cos(Math.toRadians(angleAroundPivot));
 		
-			lookAt.x += distanceFromPivot/100.0f * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.x += speed * Math.sin(Math.toRadians(angleAroundPivot));
 		
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
 			
-			lookAt.z -= distanceFromPivot/100.0f * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.z -= speed * Math.cos(Math.toRadians(angleAroundPivot));
 			
-			lookAt.x -= distanceFromPivot/100.0f * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.x -= speed * Math.sin(Math.toRadians(angleAroundPivot));
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_Q)){
 			
-			lookAt.z -= distanceFromPivot/100.0f * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.z -= speed * Math.sin(Math.toRadians(angleAroundPivot));
 			
-			lookAt.x += distanceFromPivot/100.0f * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.x += speed * Math.cos(Math.toRadians(angleAroundPivot));
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
 			
-			lookAt.z += distanceFromPivot/100.0f * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.z += speed * Math.sin(Math.toRadians(angleAroundPivot));
 			
-			lookAt.x -= distanceFromPivot/100.0f * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.x -= speed * Math.cos(Math.toRadians(angleAroundPivot));
 	
 			}
 		float horizontalDistance = calculateHorizontal();

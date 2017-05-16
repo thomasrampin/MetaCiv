@@ -158,7 +158,7 @@ public class Terrain {
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_H - 1) * SIZE_X;
                 vertices[vertexPointer*3+1] = h;
                 if(!World.getHeightMap().equals(""))
-                	vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
+                	vertices[vertexPointer*3+1] += getHeight(j%image2.getHeight(),i%image2.getWidth());
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
                
                 
