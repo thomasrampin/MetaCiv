@@ -158,7 +158,7 @@ public class Terrain {
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_H - 1) * SIZE_X;
                 vertices[vertexPointer*3+1] = h;
                 if(!World.getHeightMap().equals(""))
-                	vertices[vertexPointer*3+1] += getHeight(j%image2.getHeight(),i%image2.getWidth());
+                	vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
                
                 
@@ -548,17 +548,17 @@ public class Terrain {
 		return texture;
 	}
 
-	public void notifyHeightMap(Loader loader, BufferedImage image, Vector2f gridSize,ArrayList<TerrainTexture> textures) {
+	public void notifyHeightMap(Loader loader, BufferedImage image2, Vector2f gridSize,ArrayList<TerrainTexture> textures) {
 		
-		BufferedImage image2 = null;
+
 		try {
 			if(!World.getHeightMap().equals(""))
-				image2 = ImageIO.read(new File(Configuration.pathToRessources+ "/Skin/" + World.getHeightMap() + ".png"));
+				image = ImageIO.read(new File(Configuration.pathToRessources+ "/Skin/" + World.getHeightMap() + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.model = generateTerrain(loader,image,image2,textures);
-		this.texture = new Material(Loader.loadTexture(image));
+		this.model = generateTerrain(loader,image2,image,textures);
+		this.texture = new Material(Loader.loadTexture(image2));
 		
 		diffuseArray = Loader.loadTextureAtlas(effectiveType);
 	}
