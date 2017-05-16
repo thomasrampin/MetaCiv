@@ -56,8 +56,8 @@ public class MasterRenderer {
     private boolean terrainInit;
      
     public MasterRenderer(Loader loader,ArrayList<TerrainTexture> textures,Object3D instancedObject){
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glCullFace(GL11.GL_BACK);
+		/*GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);*/
 
         createProjectionMatrix();
 

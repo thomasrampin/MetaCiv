@@ -201,7 +201,7 @@ public class OBJLoader {
 		float[] texturesArray = new float[vertices.size() * 3];
 		float[] normalsArray = new float[vertices.size() * 3];
 		float[] tangentsArray = new float[vertices.size() * 3];
-		convertDataToArrays(vertices, textures, normals, verticesArray,
+		storeDataInArrays(vertices, textures, normals, verticesArray,
 				texturesArray, normalsArray, tangentsArray);
 		
 		Material texture = loadMaterial(fileMaterial,fileName,loader);
@@ -266,12 +266,12 @@ public class OBJLoader {
 			indices.add(index);
 			return currentVertex;
 		} else {
-			return dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices,
+			return doProccess(currentVertex, textureIndex, normalIndex, indices,
 					vertices);
 		}
 	}
 	
-	private static void convertDataToArrays(List<Vertex> vertices, List<Vector3f> textures,
+	private static void storeDataInArrays(List<Vertex> vertices, List<Vector3f> textures,
 			List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
 			float[] normalsArray, float[] tangentsArray) {
 
@@ -298,7 +298,7 @@ public class OBJLoader {
 		}
 	}
 
-	private static Vertex dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex,
+	private static Vertex doProccess(Vertex previousVertex, int newTextureIndex,
 			int newNormalIndex, List<Integer> indices, List<Vertex> vertices) {
 		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
 			indices.add(previousVertex.getIndex());
@@ -306,7 +306,7 @@ public class OBJLoader {
 		} else {
 			Vertex anotherVertex = previousVertex.getDuplicateVertex();
 			if (anotherVertex != null) {
-				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex,
+				return doProccess(anotherVertex, newTextureIndex,
 						newNormalIndex, indices, vertices);
 			} else {
 				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.position);
@@ -808,7 +808,7 @@ public class OBJLoader {
 				float[] texturesArray = new float[vertices.size() * 3];
 				float[] normalsArray = new float[vertices.size() * 3];
 				float[] tangentsArray = new float[vertices.size() * 3];
-				convertDataToArrays(vertices, textures, normals, verticesArray,
+				storeDataInArrays(vertices, textures, normals, verticesArray,
 						texturesArray, normalsArray, tangentsArray);
 	
 	

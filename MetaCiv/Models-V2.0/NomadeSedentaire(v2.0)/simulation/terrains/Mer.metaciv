@@ -5,7 +5,7 @@ Infranchissable : true
 AltMin : 0
 AltMax : 20
 Apparition : 0
-Hauteur : -0.8
+Hauteur : -10.0
 Erosion : 13
 Texture : sand
-Tiling : 40
+Tiling : 40.0
