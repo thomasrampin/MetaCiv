@@ -2,14 +2,8 @@ Nom : faim
 Description : Un nouveau cogniton
 Type : PERCEPT
 StartChance : 0
+Couleur : -1
 Initial : 0
 Permet : Manger
 Influence : Manger,10
-Hue0 : 0
-Hue1 : 0
-Hue2 : 0
-Hue3 : 0
-Hue4 : 0
-Hue5 : 0
-Hue6 : 0
 Trigger : faim,0.0,-1,SeuilFaim

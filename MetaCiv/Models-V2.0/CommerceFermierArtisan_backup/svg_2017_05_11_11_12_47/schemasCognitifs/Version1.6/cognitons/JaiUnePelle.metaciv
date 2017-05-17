@@ -1,0 +1,9 @@
+Nom : JaiUnePelle
+Description : Un nouveau cogniton
+Type : PERCEPT
+StartChance : 0
+Initial : 0
+Permet : RamenerPelleAuVillage
+Influence : ConstruirePelle,-1
+Influence : ChercherBois,-1
+Influence : RamenerPelleAuVillage,1

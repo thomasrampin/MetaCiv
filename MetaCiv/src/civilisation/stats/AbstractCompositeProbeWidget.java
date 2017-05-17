@@ -41,68 +41,65 @@ import civilisation.DefinePath;
 import civilisation.individu.plan.NPlan;
 
 public class AbstractCompositeProbeWidget extends AbstractProbeWidget {
-	JComboBox<String> selector = new JComboBox<String>();
-	HashMap<String, HashMap<String,JFreeChart>> charts = new HashMap<String, HashMap<String,JFreeChart>>();
-	ArrayList <String> chartTypeList = new ArrayList<String>();
-	int selectedChartType = 0;
-	WidgetPanelChartType chartTypeFilter;
-    
+    JComboBox<String> selector = new JComboBox<String>();
+    HashMap<String, HashMap<String, JFreeChart>> charts = new HashMap<String, HashMap<String, JFreeChart>>();
+    ArrayList<String> chartTypeList = new ArrayList<String>();
+    int selectedChartType = 0;
+    WidgetPanelChartType chartTypeFilter;
+
     ChartPanel chartPanel = new ChartPanel(null);
-    
-	
-	public AbstractCompositeProbeWidget(String title) {
-		super(title);
-		this.add(chartPanel);
-		
-		selector.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				chartPanel.setChart(charts.get(selector.getSelectedItem()).get(chartTypeList.get(selectedChartType)));
-			}
-		});
-		this.add(selector,BorderLayout.NORTH);
-		
-		JButton chartTypeBTN =new JButton("switch chart type");
-		chartTypeBTN.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cycleChartType();
-			}
-		});
-		
-		optionsBar.add(chartTypeBTN);
-		chartTypeFilter = new WidgetPanelChartType();
-		}
 
-	protected void changeLegendState() {
-	
-	}
-	
-	public JTabbedPane getOptionTab() {
-		JTabbedPane t = super.getOptionTab();
-		t.add("Chart Type", getChartTypeSelector());
-		return t;
-	}
-	
-	private WidgetPanelChartType getChartTypeSelector() {
-		return chartTypeFilter;
-	}
 
-	protected void generateChartsForProbes()
-	{
-		chartTypeList.clear();
-		for(JCheckBox ck: chartTypeFilter.check)
-		{
-			if(ck.isSelected())
-			{
-				chartTypeList.add(ck.getText());
-			}
-		}
-		if(chartTypeList.size() == 0)
-			selectedChartType = 0;
-		else
-			selectedChartType = selectedChartType % chartTypeList.size();
-				/*
+    public AbstractCompositeProbeWidget(String title) {
+        super(title);
+        this.add(chartPanel);
+
+        selector.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chartPanel.setChart(charts.get(selector.getSelectedItem()).get(chartTypeList.get(selectedChartType)));
+            }
+        });
+        this.add(selector, BorderLayout.NORTH);
+
+        JButton chartTypeBTN = new JButton("switch chart type");
+        chartTypeBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cycleChartType();
+            }
+        });
+
+        optionsBar.add(chartTypeBTN);
+        chartTypeFilter = new WidgetPanelChartType();
+    }
+
+    protected void changeLegendState() {
+
+    }
+
+    public JTabbedPane getOptionTab() {
+        JTabbedPane t = super.getOptionTab();
+        t.add("Chart Type", getChartTypeSelector());
+        return t;
+    }
+
+    public WidgetPanelChartType getChartTypeSelector() {
+        return chartTypeFilter;
+    }
+
+    protected void generateChartsForProbes() {
+        chartTypeList.clear();
+        for (JCheckBox ck : chartTypeFilter.check) {
+            if (ck.isSelected()) {
+                chartTypeList.add(ck.getText());
+            }
+        }
+        if (chartTypeList.size() == 0)
+            selectedChartType = 0;
+        else
+            selectedChartType = selectedChartType % chartTypeList.size();
+                /*
 		
 		for(String W : humanProbes.keySet())
 		{
@@ -135,123 +132,109 @@ public class AbstractCompositeProbeWidget extends AbstractProbeWidget {
 		if(selector.getItemCount() >0)
 			selector.setSelectedIndex(0);
 	*/
-	}
-	
-	private JFreeChart allocChartFromType(String text) {
-		JFreeChart result = null;
-		if(text.equals(WidgetPanelChartType.CTYP_Area))
-		{
-			result = allocDefaultAreaChart();
-		}
-		else if(text.equals(WidgetPanelChartType.CTYP_Pie))
-		{
-			result = allocDefaultPieChart();			
-		}
-		
-		return result;
-	}
+    }
 
-	protected void addChart(String title)
-	{
-		HashMap<String, JFreeChart> col = charts.get(title);
-		for(JCheckBox ck: chartTypeFilter.check)
-		{
-			if(ck.isSelected())
-			{
-				if(col == null)
-				{
-					col = new HashMap<String, JFreeChart>();
-					col.put(ck.getText(), allocChartFromType(ck.getText()));
-				}
-				else if(col.get(ck.getText()) == null)
-					col.put(ck.getText(), allocChartFromType(ck.getText()));
-			}
-			else
-			{
-				if(col != null)
-					col.remove(ck.getText());
-			}
-		}
-		if(col != null)
-		{
-			charts.put(title, col);
-			if(((DefaultComboBoxModel<String>)selector.getModel()).getIndexOf(title)==-1)
-				selector.addItem(title);
-		}
+    protected JFreeChart allocChartFromType(String text) {
+        JFreeChart result = null;
+        if (text.equals(WidgetPanelChartType.CTYP_Area)) {
+            result = allocDefaultAreaChart();
+        } else if (text.equals(WidgetPanelChartType.CTYP_Pie)) {
+            result = allocDefaultPieChart();
+        }
+
+        return result;
+    }
+
+    protected void addChart(String title) {
+        HashMap<String, JFreeChart> col = charts.get(title);
+        for (JCheckBox ck : chartTypeFilter.check) {
+            if (ck.isSelected()) {
+                if (col == null) {
+                    col = new HashMap<String, JFreeChart>();
+                    col.put(ck.getText(), allocChartFromType(ck.getText()));
+                } else if (col.get(ck.getText()) == null)
+                    col.put(ck.getText(), allocChartFromType(ck.getText()));
+            } else {
+                if (col != null)
+                    col.remove(ck.getText());
+            }
+        }
+        if (col != null) {
+            charts.put(title, col);
+            if (((DefaultComboBoxModel<String>) selector.getModel()).getIndexOf(title) == -1)
+                selector.addItem(title);
+        }
 		/*if(selector.getItemCount() >0)
 			selector.setSelectedIndex(0);*/
-	}
-	
-	private JFreeChart allocDefaultPieChart() {
-		JFreeChart chart = ChartFactory.createPieChart3D(null,          // chart title
-		new DefaultPieDataset(),                // data
-		false,                   // include legend
-		true,
-		false);
+    }
 
-		PiePlot3D plot = (PiePlot3D) chart.getPlot();
-		plot.setStartAngle(290);
-		plot.setDirection(Rotation.CLOCKWISE);
-		plot.setForegroundAlpha(0.75f);
-		plot.setBackgroundPaint(this.getBackground());
-		return chart;
-	}
+    private JFreeChart allocDefaultPieChart() {
+        JFreeChart chart = ChartFactory.createPieChart3D(null,          // chart title
+                new DefaultPieDataset(),                // data
+                false,                   // include legend
+                true,
+                false);
 
-	private JFreeChart allocDefaultAreaChart() {
-		final JFreeChart chart = ChartFactory.createStackedBarChart(
-		null, // chart title
-		"Ticks", // domain axis label
-		"Value", // range axis label
-		new DefaultCategoryDataset(), // data
-		PlotOrientation.VERTICAL, // the plot orientation
-		true, // legend
-		true, // tooltips
-		false // urls
-		);
+        PiePlot3D plot = (PiePlot3D) chart.getPlot();
+        plot.setStartAngle(290);
+        plot.setDirection(Rotation.CLOCKWISE);
+        plot.setForegroundAlpha(0.75f);
+        plot.setBackgroundPaint(this.getBackground());
+        return chart;
+    }
 
-		GroupedStackedBarRenderer renderer = new GroupedStackedBarRenderer();
-		KeyToGroupMap map = new KeyToGroupMap("G");
-		for (NPlan plan : Configuration.getSchemaCognitifEnCourEdition()
-				.getPlans()) {
-			map.mapKeyToGroup(plan.getNom(), "G");
-		}
+    private JFreeChart allocDefaultAreaChart() {
+        final JFreeChart chart = ChartFactory.createStackedBarChart(
+                null, // chart title
+                "Ticks", // domain axis label
+                "Value", // range axis label
+                new DefaultCategoryDataset(), // data
+                PlotOrientation.VERTICAL, // the plot orientation
+                true, // legend
+                true, // tooltips
+                false // urls
+        );
 
-		renderer.setSeriesToGroupMap(map);
-		renderer.setBarPainter(new StandardBarPainter());
-		renderer.setItemMargin(0.0f);
+        GroupedStackedBarRenderer renderer = new GroupedStackedBarRenderer();
+        KeyToGroupMap map = new KeyToGroupMap("G");
+        for (NPlan plan : Configuration.getSchemaCognitifEnCourEdition()
+                .getPlans()) {
+            map.mapKeyToGroup(plan.getNom(), "G");
+        }
 
-		SubCategoryAxis domainAxis = new SubCategoryAxis("Tick");
+        renderer.setSeriesToGroupMap(map);
+        renderer.setBarPainter(new StandardBarPainter());
+        renderer.setItemMargin(0.0f);
 
-		CategoryPlot plot = (CategoryPlot) chart.getPlot();
-		plot.setDomainAxis(domainAxis);
-		plot.setRenderer(renderer);
-		return chart;
-	}
-	
-	public void applyOptions()
-	{
-		super.applyOptions();
-	}
-	
-	protected void cycleChartType()
-	{
-		if(chartTypeList.size() == 0)
-			selectedChartType = 0;
-		else
-			selectedChartType = (selectedChartType+1) % chartTypeList.size();
-		chartPanel.setChart(charts.get(selector.getSelectedItem()).get(chartTypeList.get(selectedChartType)));
-	}
-	
-	@Override
-	public void toFile(File tabFolder) {
-		super.toFile(tabFolder);
-		File widgetFolder = new File(tabFolder.getAbsolutePath()+"/"+this.getTitle());
-		
-		System.out.println(this.getClass());
-		if(chartTypeFilter != null)
-		{
-			chartTypeFilter.toFile(widgetFolder);
-		}
-		
-		}
+        SubCategoryAxis domainAxis = new SubCategoryAxis("Tick");
+
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        plot.setDomainAxis(domainAxis);
+        plot.setRenderer(renderer);
+        return chart;
+    }
+
+    public void applyOptions() {
+        super.applyOptions();
+    }
+
+    protected void cycleChartType() {
+        if (chartTypeList.size() == 0)
+            selectedChartType = 0;
+        else
+            selectedChartType = (selectedChartType + 1) % chartTypeList.size();
+        chartPanel.setChart(charts.get(selector.getSelectedItem()).get(chartTypeList.get(selectedChartType)));
+    }
+
+    @Override
+    public void toFile(File tabFolder) {
+        super.toFile(tabFolder);
+        File widgetFolder = new File(tabFolder.getAbsolutePath() + "/" + this.getTitle());
+
+        System.out.println(this.getClass());
+        if (chartTypeFilter != null) {
+            chartTypeFilter.toFile(widgetFolder);
+        }
+
+    }
 }

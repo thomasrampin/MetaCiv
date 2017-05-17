@@ -1,0 +1,7 @@
+Nom : BesoinHutte
+Description : Un nouveau cogniton
+Type : CULTURON
+StartChance : 0
+Initial : 0
+Permet : ConstruireHutte
+Influence : ConstruireHutte,4

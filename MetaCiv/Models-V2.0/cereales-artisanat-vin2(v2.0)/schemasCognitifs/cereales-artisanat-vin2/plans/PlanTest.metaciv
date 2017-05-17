@@ -1,6 +1,7 @@
 Nom : PlanTest
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_ComparePhero,pheroToCompare(Pheromone Cereales),comparator(Comparator <),n(Double 99.0)
 	Action : A_Move,NORTH
 	Action : A_Move,WEST

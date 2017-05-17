@@ -1,6 +1,7 @@
 Nom : Auto Plan
 Birth : false
 Self : true
+Couleur : -8355712
 Action : L_CompareAttribute,attributeToCompare(Attribute age),comparator(Comparator <),n(Double -100.0 Constant SeuilAge)
 	Action : A_ChangeAttribute,Modified attribute(Attribute sante),n(Integer -1 Constant __NoConstant)
 	Action : A_DoNothing

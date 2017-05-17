@@ -2,6 +2,7 @@ Nom : Base
 Description : Un nouveau cogniton
 Type : MEME
 StartChance : 100
+Couleur : -1
 Initial : 1
 Permet : Produire du ble
 Permet : Produire des outils
@@ -9,10 +10,3 @@ Permet : OutilsVersBle
 Permet : BleVersOutils
 Influence : Produire du ble,2
 Influence : Produire des outils,2
-Hue0 : 0
-Hue1 : 0
-Hue2 : 0
-Hue3 : 0
-Hue4 : 0
-Hue5 : 0
-Hue6 : 0

@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 #define N_LIGHTS 4
 
 in vec3 position;
@@ -19,6 +19,10 @@ out VS_OUT{
 	vec3 TangentLightPos;
 	vec3 TangentViewPos;
 	vec3 TangentFragPos;
+	mat3 RM;
+	mat3 TBN;
+	vec3 eye_coord;
+	vec3 world_coord;
 }vs_out;
 
 uniform mat4 transformationMatrix;
@@ -40,18 +44,21 @@ void main(void){
     vec3 T = normalize(normalMatrix * tangents);
     vec3 N = normalize(normalMatrix * normal);
     vec3 B = normalize(cross(N,T));
-    mat3 TBN = transpose(mat3(T, B, N));
+    vs_out.TBN = transpose(mat3(T, B, N));
 
-    vs_out.TangentLightPos = TBN * lightPosition;
-    vs_out.TangentViewPos  = TBN * viewPos;
-    vs_out.TangentFragPos  = TBN * worldPosition.xyz;
-
-
-	gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    vs_out.TangentLightPos =  vs_out.TBN * lightPosition;
+    vs_out.TangentViewPos  =  vs_out.TBN * viewPos;
+    vs_out.TangentFragPos  =  vs_out.TBN * worldPosition.xyz;
+    vec4 Peye = projectionMatrix * viewMatrix * worldPosition;
+    vs_out.eye_coord = Peye.xyz;
+    vs_out.world_coord = worldPosition.wyz;
+	gl_Position = Peye;
 	vs_out.pass_textureCoords = textureCoords;
 
 
-
+	vs_out.RM = mat3( transformationMatrix[0].xyz,
+			transformationMatrix[1].xyz,
+			transformationMatrix[2].xyz );
 
 	vs_out.toLightVector =  (lightPosition - worldPosition.xyz);
 	vs_out.toCameraVector = ((inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz);

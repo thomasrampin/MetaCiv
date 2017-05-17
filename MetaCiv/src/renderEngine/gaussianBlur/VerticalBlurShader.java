@@ -4,8 +4,8 @@ import renderEngine.shaders.ShaderProgram;
 
 public class VerticalBlurShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE = "src/renderEngine/gaussianBlur/verticalBlurVertex.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/gaussianBlur/blurFragment.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/gaussianBlur/verticalBlurVertex.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/gaussianBlur/blurFragment.glsl";
 	
 	private int location_targetHeight;
 	

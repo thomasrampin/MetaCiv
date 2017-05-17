@@ -1,6 +1,7 @@
 package civilisation.amenagement;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.Serializable;
 
 import turtlekit.kernel.Patch;
@@ -17,7 +18,7 @@ public class AmenagementPublic extends Amenagement implements Serializable {
 	}
 	
 	@Override
-	public void dessiner(Graphics g,int x,int y,int cellS)
+	public void dessiner(Graphics g,Graphics2D g2d,int x,int y,int cellS)
 	{
 		
 	}

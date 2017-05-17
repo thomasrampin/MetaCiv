@@ -5,6 +5,12 @@ Civilisation : Civ1,67,89
 Civilisation : Civ2,19,47
 Civilisation : Civ3,75,36
 
+SnowHeight : 0
+SnowDistanceAttenuation : 0
+SnowDensity : 0
+RoadTiling : 150
+CliffTiling : 40
+
 Terrain : Colline
 Terrain : Desert profond
 Terrain : Desert

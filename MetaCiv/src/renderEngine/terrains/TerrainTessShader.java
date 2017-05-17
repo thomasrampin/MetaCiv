@@ -18,11 +18,11 @@ public class TerrainTessShader extends ShaderTessProgram {
 
 	private static final int MAX_TERRAIN_TYPE = 11;
 	
-	private static final String VERTEX_FILE = "src/renderEngine/terrains/terrainTessVertexShader.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/terrains/terrainTessFragmentShader.glsl";
-	private static final String TESS_CONTROL_FILE = "src/renderEngine/terrains/terrainTesstcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "src/renderEngine/terrains/terrainTesstesShader.glsl";
-	private static final String GEOMETRY_FILE = "src/renderEngine/terrains/terrainTessGeometryShader.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/terrains/terrainTessVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/terrains/terrainTessFragmentShader.glsl";
+	private static final String TESS_CONTROL_FILE = "/renderEngine/terrains/terrainTesstcsShader.glsl";
+	private static final String TESS_EVALUATION_FILE = "/renderEngine/terrains/terrainTesstesShader.glsl";
+	private static final String GEOMETRY_FILE = "/renderEngine/terrains/terrainTessGeometryShader.glsl";
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;

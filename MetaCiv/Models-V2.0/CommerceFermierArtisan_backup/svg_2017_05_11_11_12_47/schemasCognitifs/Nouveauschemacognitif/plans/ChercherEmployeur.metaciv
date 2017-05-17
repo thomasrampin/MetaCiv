@@ -1,0 +1,6 @@
+Nom : ChercherEmployeur
+Birth : false
+Self : false
+Action : L_AUnChef
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Employe),n(Double 5.0 Constant __NoConstant)
+	Action : A_BroadcastMessage_Embauche,Radius(Integer 20 Constant __NoConstant)

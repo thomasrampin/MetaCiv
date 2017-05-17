@@ -2,6 +2,7 @@ package civilisation.amenagement;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -59,7 +60,7 @@ public class Amenagement extends Turtle implements Serializable {
 	} 
 
 	
-	public void dessiner(Graphics g,int x,int y,int cellS)
+	public void dessiner(Graphics g,Graphics2D g2d, int x,int y,int cellS)
 	{
 		g.setColor(type.getColor());
 		

@@ -1,0 +1,11 @@
+Nom : Cueillir
+Birth : false
+Self : false
+Action : A_SmellAndMove,ResourcesToFollow(Pheromone Baies)
+Action : A_Transform,Resource to collect(Pheromone Baies),Created Object(Objet Deprecated)
+Action : L_RandomPercent,n(Double 10.0)
+	Action : A_Transform,Resource to collect(Pheromone Bois),Created Object(Objet Bois)
+	Action : A_DoNothing
+Action : L_CompareNombreObjets,objetToCompare(Objet Deprecated),comparator(Comparator >),n(Double 50.0 Constant SeuilRamenerBaiesCueilleur)
+	Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton TropDansMonSac),n(Double 4.0)
+	Action : A_DoNothing

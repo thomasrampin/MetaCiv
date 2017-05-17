@@ -173,7 +173,8 @@ public class InterfaceLauncher extends JFrame implements MouseListener, ActionLi
 		if(arg0.getSource().equals(civkraftBoutonSoloWith3D)){
 			
 			
-			this.dispose();			
+			this.dispose();
+	
 			//this.setVisible(false);
 			setChoix(1);
 			choix3D=1;

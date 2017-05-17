@@ -57,7 +57,14 @@ public class OBJLoader {
 					fileMaterial = currentLine[1];
 				}
 				else if(line.startsWith("v ")){	//Vertices position
-					Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[2]),Float.parseFloat(currentLine[3]),Float.parseFloat(currentLine[4]));
+					Vector3f vertex;
+					
+					if(currentLine[1].isEmpty()){
+						vertex = new Vector3f(Float.parseFloat(currentLine[2]),Float.parseFloat(currentLine[3]),Float.parseFloat(currentLine[4]));
+					}else{
+						
+						vertex = new Vector3f(Float.parseFloat(currentLine[1]),Float.parseFloat(currentLine[2]),Float.parseFloat(currentLine[3]));
+					}
 					vertices.add(new Vertex(vertices.size(),vertex));
 					if(vertex.x < minX)
 						minX = vertex.x;
@@ -101,14 +108,24 @@ public class OBJLoader {
 					continue;
 				}
 				String[] currentLine = line.split(" ");
+				
 				String[] vertex1 = currentLine[1].split("/");
 				String[] vertex2 = currentLine[2].split("/");
 				String[] vertex3 = currentLine[3].split("/");
+				
 				Vertex v0 = processVertex(vertex1, vertices, indices,0,0,0);
 				Vertex v1 = processVertex(vertex2, vertices, indices,0,0,0);
 				Vertex v2 = processVertex(vertex3, vertices, indices,0,0,0);
-				calculateTangents(v0, v1, v2, textures);
 				
+				
+				if(currentLine.length==5){
+					String[] vertex4 = currentLine[4].split("/");
+					v2 = processVertex(vertex3, vertices, indices,0,0,0);
+					Vertex v3 = processVertex(vertex4, vertices, indices,0,0,0);
+					v0 = processVertex(vertex1, vertices, indices,0,0,0);
+					calculateTangents(v0,v1,v2,v3, textures);
+				}else
+					calculateTangents(v0, v1, v2, textures);
 				/*processVertex(vertex1,indices,vertices,textures,normals,verticesArray,textureArray,normalsArray);
 				processVertex(vertex2,indices,vertices,textures,normals,verticesArray,textureArray,normalsArray);
 				processVertex(vertex3,indices,vertices,textures,normals,verticesArray,textureArray,normalsArray);
@@ -184,7 +201,7 @@ public class OBJLoader {
 		float[] texturesArray = new float[vertices.size() * 3];
 		float[] normalsArray = new float[vertices.size() * 3];
 		float[] tangentsArray = new float[vertices.size() * 3];
-		convertDataToArrays(vertices, textures, normals, verticesArray,
+		storeDataInArrays(vertices, textures, normals, verticesArray,
 				texturesArray, normalsArray, tangentsArray);
 		
 		Material texture = loadMaterial(fileMaterial,fileName,loader);
@@ -216,6 +233,27 @@ public class OBJLoader {
 		v2.addTangent(tangent);
 	}
 
+	private static void calculateTangents(Vertex v0, Vertex v1, Vertex v2, Vertex v3,
+			List<Vector3f> textures) {
+		Vector3f delatPos1 = Vector3f.sub(v1.position, v0.position, null);
+		Vector3f delatPos2 = Vector3f.sub(v2.position, v0.position, null);
+		Vector3f uv0 = textures.get(v0.getTextureIndex());
+		Vector3f uv1 = textures.get(v1.getTextureIndex());
+		Vector3f uv2 = textures.get(v2.getTextureIndex());
+		Vector3f deltaUv1 = Vector3f.sub(uv1, uv0, null);
+		Vector3f deltaUv2 = Vector3f.sub(uv2, uv0, null);
+
+		float r = 1.0f / (deltaUv1.x * deltaUv2.y - deltaUv1.y * deltaUv2.x);
+		delatPos1.scale(deltaUv2.y);
+		delatPos2.scale(deltaUv1.y);
+		Vector3f tangent = Vector3f.sub(delatPos1, delatPos2, null);
+		tangent.scale(r);
+		v0.addTangent(tangent);
+		v1.addTangent(tangent);
+		v2.addTangent(tangent);
+		v3.addTangent(tangent);
+	}
+	
 	private static Vertex processVertex(String[] vertex, List<Vertex> vertices,
 			List<Integer> indices, int lastVertices, int lastTextures, int lastNormals) {
 		int index = Integer.parseInt(vertex[0]) - 1 - lastVertices;
@@ -228,12 +266,12 @@ public class OBJLoader {
 			indices.add(index);
 			return currentVertex;
 		} else {
-			return dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices,
+			return doProccess(currentVertex, textureIndex, normalIndex, indices,
 					vertices);
 		}
 	}
 	
-	private static void convertDataToArrays(List<Vertex> vertices, List<Vector3f> textures,
+	private static void storeDataInArrays(List<Vertex> vertices, List<Vector3f> textures,
 			List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
 			float[] normalsArray, float[] tangentsArray) {
 
@@ -260,7 +298,7 @@ public class OBJLoader {
 		}
 	}
 
-	private static Vertex dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex,
+	private static Vertex doProccess(Vertex previousVertex, int newTextureIndex,
 			int newNormalIndex, List<Integer> indices, List<Vertex> vertices) {
 		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
 			indices.add(previousVertex.getIndex());
@@ -268,7 +306,7 @@ public class OBJLoader {
 		} else {
 			Vertex anotherVertex = previousVertex.getDuplicateVertex();
 			if (anotherVertex != null) {
-				return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex,
+				return doProccess(anotherVertex, newTextureIndex,
 						newNormalIndex, indices, vertices);
 			} else {
 				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.position);
@@ -770,7 +808,7 @@ public class OBJLoader {
 				float[] texturesArray = new float[vertices.size() * 3];
 				float[] normalsArray = new float[vertices.size() * 3];
 				float[] tangentsArray = new float[vertices.size() * 3];
-				convertDataToArrays(vertices, textures, normals, verticesArray,
+				storeDataInArrays(vertices, textures, normals, verticesArray,
 						texturesArray, normalsArray, tangentsArray);
 	
 	

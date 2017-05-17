@@ -42,10 +42,7 @@ public class InstancedRenderer {
 		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);
 		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 8);
 		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 12);
-		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 5, 4, INSTANCE_DATA_LENGTH, 16);
-		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 6, 4, INSTANCE_DATA_LENGTH, 20);
-		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 7, 4, INSTANCE_DATA_LENGTH, 24);
-		loader.addAttribute(object.getModel().getRawModel().getVaoID(), vbo, 8, 4, INSTANCE_DATA_LENGTH, 28);
+
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();		
@@ -61,27 +58,6 @@ public class InstancedRenderer {
             for (Object3D entity : batch) {
             	computeModelViewMatrix(entity.getPosition(),entity.getRotX(),entity.getRotY(),entity.getRotZ(),entity.getScale(),viewMatrix,vboData);
 
-            	vboData[pointer++] = entity.getPositionOverWrite().get(3).x;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(3).y+0.3f;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(3).z;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(3).w;
-            	
-            	vboData[pointer++] = entity.getPositionOverWrite().get(0).x;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(0).y+0.3f;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(0).z;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(0).w;
-  
-            	vboData[pointer++] = entity.getPositionOverWrite().get(1).x;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(1).y+0.3f;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(1).z;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(1).w;
-
-
-            	
-            	vboData[pointer++] = entity.getPositionOverWrite().get(2).x;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(2).y+0.3f;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(2).z;
-            	vboData[pointer++] = entity.getPositionOverWrite().get(2).w;
             	
 
             }
@@ -116,10 +92,7 @@ public class InstancedRenderer {
 		GL20.glEnableVertexAttribArray(2);
 		GL20.glEnableVertexAttribArray(3);
 		GL20.glEnableVertexAttribArray(4);
-		GL20.glEnableVertexAttribArray(5);
-		GL20.glEnableVertexAttribArray(6);
-		GL20.glEnableVertexAttribArray(7);
-		GL20.glEnableVertexAttribArray(8);
+
 	}
 	
 	private void end(){
@@ -128,10 +101,7 @@ public class InstancedRenderer {
 		GL20.glDisableVertexAttribArray(2);
 		GL20.glDisableVertexAttribArray(3);
 		GL20.glDisableVertexAttribArray(4);
-		GL20.glDisableVertexAttribArray(5);
-		GL20.glDisableVertexAttribArray(6);
-		GL20.glDisableVertexAttribArray(7);
-		GL20.glDisableVertexAttribArray(8);
+
 
 		GL30.glBindVertexArray(0);
 		shader.stop();

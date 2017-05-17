@@ -36,7 +36,7 @@ public class MasterRenderer {
      
     public static final float FOV = 45;
     public static final float NEAR_PLANE = 0.1f;
-    public static final float FAR_PLANE = 20000;
+    public static final float FAR_PLANE = 10000;
      
     public static Matrix4f projectionMatrix;
      
@@ -47,12 +47,10 @@ public class MasterRenderer {
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
  
-    private TerrainTessRenderer terrainTessRenderer;
-    private TerrainTessShader terrainTessShader = new TerrainTessShader();
      
     private Map<Model,List<Object3D>> entities = new HashMap<Model,List<Object3D>>();
     private Map<Model,List<Object3D>> entitiesInstanced = new HashMap<Model,List<Object3D>>();
-    private Map<Models,List<Object3D>> entities2 = new HashMap<Models,List<Object3D>>();
+    private Map<Models,List<Object3D>> entitiesMultiObj = new HashMap<Models,List<Object3D>>();
     private Terrain terrain;
     
     private boolean terrainInit;
@@ -62,22 +60,22 @@ public class MasterRenderer {
 		GL11.glCullFace(GL11.GL_BACK);*/
 
         createProjectionMatrix();
-        irenderer = new InstancedRenderer(loader,instancedObject,projectionMatrix);
+
         terrainInit = false;
         renderer = new EntityRenderer(loader,shader,projectionMatrix);
-        terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures);
-        terrainTessRenderer = new TerrainTessRenderer(loader,terrainTessShader,loader.loadTexture("heightmap.png"),loader.loadTexture("heightmap_NRM.png"),loader.loadTexture("forest/forest_DISP.png"),loader.loadTexture("forest/forest_NRM.png"),projectionMatrix,textures);
-        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<Vector4f>());
+        terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures,loader);
+        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<TerrainTexture>());
     }
      
-    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<Vector4f> heights,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix){
+    public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<TerrainTexture> textures,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix, boolean render_objects){
         prepare();
-        shader.start();
-        shader.loadLights(sun);
-        shader.loadViewMatrix(camera);
-        renderer.render(entities,entities2,fbos);
-        shader.stop();
-
+        if(render_objects){
+	        shader.start();
+	        shader.loadLights(sun);
+	        shader.loadViewMatrix(camera);
+	        renderer.render(entities,entitiesMultiObj,fbos,distanceFog);
+	        shader.stop();
+        }
         
         
         if(!fromLight){
@@ -89,19 +87,15 @@ public class MasterRenderer {
             terrainShader.loadViewMatrix(camera);
             terrainShader.loadCameraPos(camera.getPosition());
             
-        	terrainRenderer.render(terrain,heights,distanceFog,fromLight,shadowsTexture, shadowMatrix);
+        	terrainRenderer.render(terrain,textures,distanceFog,fromLight,shadowsTexture, shadowMatrix);
         	
         	terrainShader.stop();
             if(invertPitch)
             	camera.invertPitch();
-          
-            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-        	GL11.glPolygonOffset(-1.0f,-1.0f);
-            irenderer.render(entitiesInstanced, camera);
-            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+
             
         }else{
-        	terrainRenderer.renderL(terrain,heights,distanceFog,fromLight,shadowsTexture, shadowMatrix, light_vp_matrix,camera);
+        	terrainRenderer.renderL(terrain,textures,distanceFog,fromLight,shadowsTexture, shadowMatrix, light_vp_matrix,camera);
         }
         
        //terrainTessRenderer.render(camera,terrain,sun,heights,clipPlane,distanceFog,invertPitch,forceLow);
@@ -109,7 +103,7 @@ public class MasterRenderer {
 
         
         entities.clear();
-        entities2.clear();
+        entitiesMultiObj.clear();
         entitiesInstanced.clear();
     }
      
@@ -117,6 +111,8 @@ public class MasterRenderer {
     
      
     public void processEntity(Object3D entity, int i, Vector3f colorAction){
+    	entity.setColorAction(colorAction);
+        entity.setColorID(Helper.IntegerToColor(i));
         Model entityModel = new Model(entity.getModel());
         entityModel.setColorID(Helper.IntegerToColor(i));
         entityModel.setColorAction(colorAction);
@@ -144,9 +140,12 @@ public class MasterRenderer {
    
     public void processMultiEntity(Object3D entity, int i, Vector3f color){
         Models entityModels = entity.getModels();
+        entity.setColorAction(color);
+        entity.setColorID(Helper.IntegerToColor(i));
         for(Model entityModel:entityModels.getModels()){
+        	
 	        List<Object3D> batch = entities.get(entityModel);
-	        entityModel.setColorAction(color);
+
 	        if(batch!=null){
 	            batch.add(entity);
 	        }else{
@@ -160,8 +159,8 @@ public class MasterRenderer {
     public void cleanUp(){
         shader.cleanUp();
         terrainShader.cleanUp();
-        terrainTessRenderer.cleanUp();
-        irenderer.cleanUp();
+
+        //irenderer.cleanUp();
     }
      
     public void prepare() {
@@ -172,7 +171,7 @@ public class MasterRenderer {
         GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
     }
      
-    private void createProjectionMatrix() {
+    public void createProjectionMatrix() {
         float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
         float x_scale = y_scale / aspectRatio;
@@ -188,11 +187,11 @@ public class MasterRenderer {
     }
 
 	public void notifyShaderTerrain(int id, int idDiffuse) {
-		terrainTessRenderer.setDispTex(id,idDiffuse);
+		
 	}
 
-	public void notifyTerrain(Loader loader,BufferedImage image, Vector2f gridSize,ArrayList<Vector4f> heights) {
-		terrain.notifyHeightMap(loader, image,gridSize,heights);
+	public void notifyTerrain(Loader loader,BufferedImage image, Vector2f gridSize,ArrayList<TerrainTexture> textures) {
+		terrain.notifyHeightMap(loader, image,gridSize,textures);
 		terrainInit = true;
 	}
 
@@ -202,7 +201,7 @@ public class MasterRenderer {
 	}
 
 	public void notifyTessLevel(int tessLevel) {
-		terrainTessRenderer.setTessLevel(tessLevel);
+	
 		
 	}
 

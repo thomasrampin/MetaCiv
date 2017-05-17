@@ -12,16 +12,15 @@ import renderEngine.entities.Camera;
 import renderEngine.entities.Light;
 import renderEngine.shaders.ShaderProgram;
 import renderEngine.utils.Matrix;
+import renderEngine.utils.TerrainTexture;
 
 public class TerrainShader extends ShaderProgram {
 
-	private static final int MAX_LIGHTS = 4;
+
 	
-	private static final String VERTEX_FILE = "src/renderEngine/terrains/terrainVertexShader.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/terrains/terrainFragmentShader.glsl";
-	private static final String TESS_CONTROL_FILE = "src/renderEngine/terrains/terrainTesstcsShader.glsl";
-	private static final String TESS_EVALUATION_FILE = "src/renderEngine/terrains/terrainTesstesShader.glsl";
-	private static final String GEOMETRY_FILE = "src/renderEngine/terrains/terrainTessGeometryShader.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/terrains/terrainVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/terrains/terrainFragmentShader.glsl";
+
 
 	private static final int MAX_TERRAIN_TYPE = 11;
 	
@@ -37,7 +36,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_toShadowMapSpace;
 	private int location_shadowMap;
 	private int location_diffuseMap;
-	private int location_blurMap;
+	private int location_reflexion;
 	private int location_reciveShadow;
 	private int location_shadowMatrix;
 	private int location_viewPos;
@@ -46,10 +45,21 @@ public class TerrainShader extends ShaderProgram {
 	private int location_heights_size;
 	private int location_distanceFog;
 	
+	
 
 	
 	private int location_dmap_depth;
 
+	private int location_cliffMap;
+	private int location_roadMap;
+
+	private int location_snow;
+
+	private int location_distanceAttSnow;
+
+	private int location_snowDensity;
+	private int location_roadTiling;
+	private int location_cliffTiling;
 	
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -75,22 +85,26 @@ public class TerrainShader extends ShaderProgram {
 		location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
 		location_shadowMap = super.getUniformLocation("shadowMap"); 
 		location_diffuseMap = super.getUniformLocation("blendMap"); 
+		location_cliffMap = super.getUniformLocation("cliffMap");
+		location_roadMap = super.getUniformLocation("roadMap");
 		location_reciveShadow = super.getUniformLocation("reciveShadow");
 		location_dmap_depth = super.getUniformLocation("dmap_depth");
-		location_blurMap = super.getUniformLocation("blurMap");
+		location_reflexion = super.getUniformLocation("reflexion");
 		location_shadowMatrix = super.getUniformLocation("shadow_matrix");
 		location_distanceFog = super.getUniformLocation("distanceFog");
 		location_viewPos = super.getUniformLocation("viewPos");
 
-
+		location_snow = super.getUniformLocation("snow");
+		location_distanceAttSnow = super.getUniformLocation("snowAttenuation");
+		location_snowDensity = super.getUniformLocation("snowDensity");
 		location_lightPosition = super.getUniformLocation("lightPosition");
 		location_lightColour = super.getUniformLocation("lightColour");
 		
 		
 		location_heights_size = super.getUniformLocation("heights_size");
 
-
-		
+		location_roadTiling = super.getUniformLocation("roadTiling");
+		location_cliffTiling = super.getUniformLocation("cliffTiling");
 		location_heights = new int[MAX_TERRAIN_TYPE];
 		for(int i=0;i<MAX_TERRAIN_TYPE;i++){
 			location_heights[i] = super.getUniformLocation("heights["+i+"]");
@@ -100,8 +114,10 @@ public class TerrainShader extends ShaderProgram {
 	
 	public void connectTextureUnits(){
 		super.loadInt(location_diffuseMap, 0);
-		super.loadInt(location_blurMap, 1);
+		super.loadInt(location_reflexion, 1);
 	    super.loadInt(location_shadowMap, 2);
+	    super.loadInt(location_cliffMap, 3);
+	    super.loadInt(location_roadMap, 4);
 	}
 	
 	public void loadShadowMatrix(Matrix4f matrix){
@@ -117,22 +133,20 @@ public class TerrainShader extends ShaderProgram {
 	}
 	
 	public void loadLights(Light light){
-
 		super.loadVector(location_lightPosition, light.getPosition());
 		super.loadVector(location_lightColour, light.getColour());
-
-
 	}
 	
-	public void loadHeights(ArrayList<Vector4f> heights){
-		super.loadInt(location_heights_size, heights.size());
-		for(int i=0;i<heights.size();i++){
-			int color = Color.HSBtoRGB(heights.get(i).x, heights.get(i).y, heights.get(i).z);
-			float r = (color >> 16) & 0x000000FF;
-			float g = (color >>8 ) & 0x000000FF;
-			float b = (color) & 0x000000FF;
-			Vector4f colorV = new Vector4f(r/255,g/255,b/255,heights.get(i).w/10);
-			super.loadVector4(location_heights[i], colorV);
+	public void loadHeights(ArrayList<TerrainTexture> textures){
+		ArrayList<TerrainTexture> texturese = Terrain.getEffectiveType();
+		
+		super.loadInt(location_heights_size, texturese.size());
+		for(int i=0;i<texturese.size();i++){
+			
+			
+			Vector4f h = new Vector4f(texturese.get(i).getTiling(),texturese.get(i).isTextured(),0,texturese.get(i).getHeight());//2 empty slots
+			
+			super.loadVector4(location_heights[i], h);
 		}
 	}
 	
@@ -170,11 +184,6 @@ public class TerrainShader extends ShaderProgram {
 		super.loadMatrix(location_toShadowMapSpace, matrix);
 	}
 
-	public void loadMvp(Matrix4f mvp) {
-		
-		
-	}
-
 	public void loadDistanceFog(float distanceFog){
 		super.loadFloat(location_distanceFog, distanceFog);
 	}
@@ -182,7 +191,27 @@ public class TerrainShader extends ShaderProgram {
 	public void conectTextureDiff(int id) {
 		String name = "gSampler["+id+"]";
 		int location = super.getUniformLocation(name);
-		super.loadInt(location, id+3);
+		super.loadInt(location, id+5);
 		
+	}
+
+	public void loadSnow(float snow) {
+		super.loadFloat(location_snow, snow);
+	}
+
+	public void loadDistanceAttSnow(float snowDistanceAtt) {
+		super.loadFloat(location_distanceAttSnow, snowDistanceAtt);
+	}
+
+	public void loadSnowDensity(float snowDensity) {
+		super.loadFloat(location_snowDensity, snowDensity);
+	}
+	
+	public void loadRoadTiling(float roadTiling){
+		super.loadFloat(location_roadTiling, roadTiling);
+	}
+	
+	public void loadCliffTiling(float cliffTiling){
+		super.loadFloat(location_cliffTiling, cliffTiling);
 	}
 }

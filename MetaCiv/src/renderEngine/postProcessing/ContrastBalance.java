@@ -5,12 +5,12 @@ import org.lwjgl.opengl.GL13;
 
 public class ContrastBalance {
 
-	private ImageRenderer renderer;
+	private PostProcessingRenderer renderer;
 	private ContrastShader shader;
 	
-	public ContrastBalance(){
+	public ContrastBalance(int targetFboWidth, int targetFboHeight){
 		shader = new ContrastShader();
-		renderer = new ImageRenderer();
+		renderer = new PostProcessingRenderer(targetFboWidth,targetFboHeight);
 	}
 	
 	public void render(int texture ){
@@ -24,6 +24,10 @@ public class ContrastBalance {
 	public void cleanUp(){
 		renderer.cleanUp();
 		shader.cleanUp();
+	}
+
+	public int getTexture() {
+		return renderer.getTexture();
 	}
 	
 }

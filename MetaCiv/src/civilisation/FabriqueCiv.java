@@ -86,6 +86,7 @@ public class FabriqueCiv {
 		    		}
 		    	}
 		    	System.out.println(civ.getCognitiveScheme());
+		    	
 		    }
 		}
     	

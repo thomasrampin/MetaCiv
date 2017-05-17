@@ -1,0 +1,9 @@
+Nom : TropDansMonSac
+Description : Un nouveau cogniton
+Type : PERCEPT
+StartChance : 0
+Initial : 0
+Permet : RamenerBaiesAuVillage
+Influence : RamenerBaiesAuVillage,1
+Influence : Cueillir,-1
+Influence : Agriculter,-1

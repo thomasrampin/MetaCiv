@@ -1,6 +1,7 @@
 Nom : Manger
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_OwnObject,Object(Objet Baie)
 	Action : L_Instant
 		Action : A_DropObject,Dropped object(Objet Baie),n(Integer 5 Constant __NoConstant)

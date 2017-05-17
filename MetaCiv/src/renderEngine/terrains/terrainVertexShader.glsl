@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 
 
 
@@ -22,6 +22,10 @@ out VS_OUT
 	vec3 TangentLightPos;
 	vec3 TangentViewPos;
 	vec3 TangentFragPos;
+	float height;
+	mat3 RM;
+	mat3 TBN;
+	vec3 Pos;
 }vs_out;
 
 uniform mat4 transformationMatrix;
@@ -53,24 +57,28 @@ void main(void){
 	vs_out.normal = (transformationMatrix * vec4(normal,0.0)).xyz;
 
     mat3 normalMatrix = transpose(inverse(mat3(transformationMatrix)));
-    vec3 T = normalize(normalMatrix * tangent);
-    vec3 N = normalize(normalMatrix * normal);
+    vec3 T = normalize(mat3(transformationMatrix) * tangent);
+    vec3 N = normalize(mat3(transformationMatrix) * normal);
     vec3 B = normalize(cross(N,T));
-    mat3 TBN = transpose(mat3(T, B, N));
+    vs_out.TBN = transpose(mat3(T, B, N));
 
-    vs_out.TangentLightPos = TBN * lightPosition;
-    vs_out.TangentViewPos  = TBN * viewPos;
-    vs_out.TangentFragPos  = TBN * worldPosition.xyz;
+    vs_out.TangentLightPos = vs_out.TBN * lightPosition;
+    vs_out.TangentViewPos  = vs_out.TBN * viewPos;
+    vs_out.TangentFragPos  = vs_out.TBN * worldPosition.xyz;
 
+	vs_out.RM = mat3( transformationMatrix[0].xyz,
+			transformationMatrix[1].xyz,
+			transformationMatrix[2].xyz );
+	vs_out.toLightVector =  (lightPosition - worldPosition.xyz);
 
-	vs_out.toLightVector = lightPosition - worldPosition.xyz;
-
-	vs_out.toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
-
+	vs_out.toCameraVector =  ((inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz);
+	vs_out.height = position.y;
 
 	vs_out.world_coord =  vec3(projectionMatrix) * vec3(viewMatrix) * worldPosition.xyz;
 	vs_out.eye_coord = Peye.xyz ;
 	vs_out.viewDir =  ( viewPos -  worldPosition.xyz);
-	vs_out.shadow_coord = shadow_matrix * transformationMatrix * vec4(position,1.0);
+	//vs_out.shadow_coord = shadow_matrix * transformationMatrix * vec4(position,1.0);
+
+	vs_out.Pos = worldPosition.xyz;
 
 }

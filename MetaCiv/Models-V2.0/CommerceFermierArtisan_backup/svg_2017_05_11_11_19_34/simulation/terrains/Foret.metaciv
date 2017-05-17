@@ -1,0 +1,11 @@
+Nom : Foret
+Couleur : 0.33333334,1.0,0.4
+Passabilite : 25
+Infranchissable : false
+AltMin : 0
+AltMax : 20
+Apparition : 0
+Hauteur : 1.0
+Erosion : 1
+Texture : forest
+Tiling : 40.0

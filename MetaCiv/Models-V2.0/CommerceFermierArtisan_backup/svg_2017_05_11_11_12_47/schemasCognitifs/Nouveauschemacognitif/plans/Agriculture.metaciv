@@ -1,0 +1,29 @@
+Nom : Agriculture
+Birth : false
+Self : false
+Action : L_OwnPrivateFacility,facility(Amenagement Champ)
+	Action : L_IsPrivateFacilityHere,facility(Amenagement Champ)
+		Action : L_IsCounterAtZero
+			Action : A_CollectFromFacilityEfficacite,Modified object(Objet Baie),n(Integer 50 Constant __NoConstant)
+			Action : A_DecrementerAmenagement
+		Action : A_GoToPrivateFacility,Facility(Amenagement Champ)
+	Action : L_IsAnyFacilityHere
+		Action : A_AvanceAleatoirement
+		Action : L_CompareObject,objetToCompare(Objet Baie),comparator(Comparator >),n(Double 10.0 Constant __NoConstant)
+			Action : L_MultipleActions
+				Action : A_CreatePrivateFacility_Efficacite,Facility(Amenagement Champ)
+				Action : A_AddItem,Modified object(Objet Baie),n(Integer -10 Constant __NoConstant)
+			Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Recoltes),n(Double 1.0 Constant __NoConstant)
+Action : L_IsPrivateFacilityHere,facility(Amenagement Champ)
+	Action : L_CompareEfficacite,comparator(Comparator >),n(Double 30.0 Constant __NoConstant)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Artisan),n(Double 1.0 Constant __NoConstant)
+		Action : A_ChangeCognitonWeightInteger,Cogniton(Cogniton Agriculter),n(Double 1.0 Constant __NoConstant)
+	Action : A_DoNothing
+Action : L_ARequeteEmbauche
+	Action : A_AccepterEmbauche
+	Action : A_DoNothing
+Action : L_ADesEmployes
+	Action : L_CompareObject,objetToCompare(Objet Baie),comparator(Comparator >),n(Double 20.0 Constant __NoConstant)
+		Action : A_PartagerRessourceEmployes,Modified object(Objet Baie),n(Integer 1 Constant __NoConstant)
+		Action : A_DoNothing
+	Action : A_DoNothing

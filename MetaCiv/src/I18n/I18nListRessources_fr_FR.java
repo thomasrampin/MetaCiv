@@ -9,7 +9,26 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 
 		  //tableau des mots cl�s et des valeurs 
 
-		  static final Object[][] contents = { 
+		  static final Object[][] contents = {
+			  {"Intensity Height : ","Intensité de la hauteur : "},
+			  {"Use Sea : ","Utilisé la mer : "},
+			  {"HeightMap : ","Carte de hauteur : "},
+			  {"Multiplier Size Map : ","Taille de la map multiplicateur : "},
+			  {"Accuracy : ","Precision : "},
+			  {"Terrain Setting","Parametre Terrain"},
+			  {"Ersosion Method : ","Methode d'erosion : "},
+			  {"Snow","Neige"},
+			  {"Tiling","Repetition"},
+			  {"Road Tiling : ","Route Repetition : "},
+			  {"Cliff Tiling : ","Falaise Repetition : "},
+			  {"Snow Height : ","Hauteur de neige : "},
+			  {"Snow Distance Attenuation : ","Distance d'attenuation de la neige : "},
+              {"Snow Density : ","Densite de la neige : "},
+			  {"Setting 3D","Parametre 3D"},
+			  {"Tiling : ","Repetition : "},
+			  {"Textures Folder : ","Dossier des textures : "},
+			  {"Height : ","Hauteur : "},
+			  {"Erosion : ","Erosion : "},
 			  {"Annuler","Annuler"},
 			  {"Solo 3D/ Editeur","Solo 3D/ Editeur"},
 			  {"Solo / Editeur","Solo / Editeur"},

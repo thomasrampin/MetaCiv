@@ -1,8 +1,8 @@
-#version 430
+#version 330
 
 out vec4 out_Color;
 
-in TES_OUT
+in VS_OUT
 {
 	vec2 tc;
 	float height;
@@ -65,10 +65,10 @@ void main(void) {
 	float seaDepth = depthDistance - seaDistance;
 
 	vec2 modifyTexCoords = fs_in.tc;
-	vec2 modifyTexCoords2 = fs_in.tc;
 
-	vec2 distortion1 = (texture(dudvMap, vec2(fs_in.tc.x*10.0 + moveFactor * 2.0,fs_in.tc.y*10.0)).rg * 2.0 -1.0) * 0.01;
-	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x*10.0 + moveFactor* 2.0,fs_in.tc.y*10.0 + moveFactor* 2.0)).rg * 2.0 -1.0) * 0.01 * clamp(seaDepth/20.0,0.0,1.0);
+
+	vec2 distortion1 = (texture(dudvMap, vec2(fs_in.tc.x + moveFactor * 2.5,fs_in.tc.y)).rg * 2.5 -1.0) * 0.01;
+	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x + moveFactor* 2.5,fs_in.tc.y + moveFactor* 2.5)).rg * 2.0 -1.0) * 0.01 * clamp(seaDepth/20.0,0.0,1.0);
 
 
 
@@ -80,33 +80,14 @@ void main(void) {
 	modifyTexCoords += distortion1;
 
 	vec3 viewVector = normalize(fs_in.toCameraVector);
-	
-	vec4 normalMapColour = texture(normalMap, modifyTexCoords*20);
+
+	vec4 normalMapColour = texture(normalMap, modifyTexCoords*2.5);
 	vec3 normal = vec3(normalMapColour.r *2.0 -1.0, normalMapColour.b, normalMapColour.g *2.0 -1.0);
 	normal = normalize(normal);
 
 
-	vec2 distortion2 = vec2(fs_in.tc.x*5 + moveFactor ,fs_in.tc.y*5.0 - moveFactor );
-	modifyTexCoords2 += distortion2;
-
-	distortion1 = (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor * 2.0,fs_in.tc.y*50.0)).rg * 2.0 -1.0) * waveStrenght;
-	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor* 2.0,fs_in.tc.y*50.0 + moveFactor* 2.0)).rg * 2.0 -1.0) * waveStrenght;
-	vec3 normal2 =  normalize((texture(normalMap, distortion1).rbg* fs_in.height*10 ) - vec3(1.0));
-
-
-	vec2 distortion3 = vec2(fs_in.tc.x*5 + moveFactor ,fs_in.tc.y*5.0 - moveFactor );
-	vec3 normal3 =  normalize((texture(normalMap, distortion3).rbg* fs_in.height*10) - vec3(1.0));
-
-
-	vec2 distortion4 = vec2(fs_in.tc.x*5.0 + moveFactor,fs_in.tc.y*5.0 + moveFactor*2.0);
-	normalMapColour = texture(normalMap, distortion4);
-	vec3 normal4 = vec3(normalMapColour.r *2.0 -1.0, normalMapColour.b, normalMapColour.g *2.0 -1.0)* waveStrenght;
-	vec2 distortion5 = vec2(fs_in.tc.x*5.0,fs_in.tc.y*5.0 - moveFactor*2.0);
-	normalMapColour = texture(normalMap, distortion5);
-	vec3 normal5 = vec3(normalMapColour.r *2.0 -1.0, normalMapColour.b, normalMapColour.g *2.0 -1.0)* waveStrenght;
-
 	vec3 reflectedLight = reflect(normalize(fs_in.fromLightVector), normal);
-	float specular = max(dot(reflectedLight, viewVector), 0.3);
+	float specular = max(dot(reflectedLight, viewVector), 0.0);
 	specular = pow(specular, shineDamper);
 	vec3 specularHighlights = lightColour * specular * reflectivity *3.0 * clamp(seaDepth/5.0,0.0,1.0);
 
@@ -122,33 +103,22 @@ void main(void) {
 
 
 
-	float nDotl = dot(normal2,normalize(vec3(0,1,0)));
-	float brightness = max(nDotl,0.5);
-	nDotl = dot(normal3,normalize(vec3(0,1,0)));
-	float brightness2 = max(nDotl,0.5);
-	nDotl = dot(normal4,normalize(fs_in.toLightVector));
-	float brightness3 = max(nDotl,0.4);
-	nDotl = dot(normal5,normalize(fs_in.toLightVector));
-	float brightness4 = max(nDotl,0.4);
-	nDotl = dot(normalize(vec3(0,1,0)),normalize(fs_in.toLightVector));
-	float brightness5 = max(nDotl,0.0);
+	float nDotl = dot(vec3(0,1,0),normalize(fs_in.toLightVector));
+	float brightness = max(nDotl,0.2);
+
 
 	float fresnelFactor = min(max(dot(viewVector,normal),0.3),1.0);
 
 	vec4 lighting =  vec4(brightness * lightColour ,1.0);
-	vec4 lighting2 =  vec4(brightness2 * lightColour ,1.0);
-	vec4 lighting3 =  vec4(brightness3 * lightColour ,1.0);
-	vec4 lighting4 =  vec4(brightness4 * lightColour ,1.0);
-	vec4 lighting5 =  vec4(brightness5 * lightColour ,1.0);
 
-	vec4 depthTexture = mix(vec4(0.2,0.5,1.0,1.0),texture(refractionMap,coords2),(1-texture(depthMap,coords2).r));
+
+
+	vec4 depthTexture = mix(vec4(0.302, 0.439, 1.0,1.0),texture(refractionMap,coords2),(1-texture(depthMap,coords2).r));
 	//out_Color = texture(diffuseMap,modifyTexCoords);
 	out_Color = mix(texture(diffuseMap,coords), depthTexture,fresnelFactor);
-	out_Color = (mix(out_Color,vec4(1.0,1.0,1.0,1.0),fs_in.height));
 
-	out_Color *= (lighting + lighting2  );
-	out_Color *= lighting3 + lighting4;
-	out_Color *= lighting5;
+	out_Color *= lighting;
+
 	out_Color = mix(coastlineColor,out_Color,clamp(seaDepth/15.0,0.0,1.0)),
 	out_Color += vec4(specularHighlights,0.0);
 	out_Color.a = clamp(seaDepth/5.0,0.0,1.0);

@@ -3,11 +3,11 @@ package renderEngine.gaussianBlur;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import renderEngine.postProcessing.ImageRenderer;
+import renderEngine.postProcessing.PostProcessingRenderer;
 
 public class HorizontalBlur {
 	
-	private ImageRenderer renderer;
+	private PostProcessingRenderer renderer;
 	private HorizontalBlurShader shader;
 	
 	public HorizontalBlur(int targetFboWidth, int targetFboHeight){
@@ -15,7 +15,7 @@ public class HorizontalBlur {
 		shader.start();
 		shader.loadTargetWidth(targetFboWidth);
 		shader.stop();
-		renderer = new ImageRenderer(targetFboWidth, targetFboHeight);
+		renderer = new PostProcessingRenderer(targetFboWidth, targetFboHeight);
 	}
 	
 	public void render(int texture){
@@ -26,8 +26,8 @@ public class HorizontalBlur {
 		shader.stop();
 	}
 	
-	public int getOutputTexture(){
-		return renderer.getOutputTexture();
+	public int getTexture(){
+		return renderer.getTexture();
 	}
 	
 	public void cleanUp(){

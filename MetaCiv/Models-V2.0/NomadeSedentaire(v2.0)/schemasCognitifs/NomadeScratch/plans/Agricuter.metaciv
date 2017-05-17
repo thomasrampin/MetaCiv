@@ -1,6 +1,7 @@
 Nom : Agricuter
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_OwnObject,Object(Objet Baie)
 	Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
 		Action : L_IsGroupFacilityHere,Facility(Amenagement Setlement),Group(Group societe)

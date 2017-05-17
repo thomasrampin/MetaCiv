@@ -1,6 +1,7 @@
 Nom : Pecher
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_IsFacilityInGroup,Facility(Amenagement Setlement),Group(Group societe)
 	Action : A_DoNothing
 	Action : L_IsInGroup,Group(Group Nomade)

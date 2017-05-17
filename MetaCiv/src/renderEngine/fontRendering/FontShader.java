@@ -10,13 +10,15 @@ import renderEngine.utils.Matrix;
 
 public class FontShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/renderEngine/fontRendering/fontVertex.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/fontRendering/fontFragment.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/fontRendering/fontVertex.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/fontRendering/fontFragment.glsl";
 
 	private int location_colour;
 	private int location_transformationMatrix;
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
+	private int location_Fix;
+	private int location_translation;
 
 
 	public FontShader() {
@@ -28,6 +30,8 @@ public class FontShader extends ShaderProgram {
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+		location_Fix = super.getUniformLocation("fix");
+		location_translation = super.getUniformLocation("translation");
 	}
 
 	protected void bindAttributes() {
@@ -44,6 +48,9 @@ public class FontShader extends ShaderProgram {
 		super.loadVector(location_colour, colour);
 	}
 
+	protected void loadTranslation(Vector3f translation) {
+		super.load2DVector(location_translation, new Vector2f(translation.x,translation.y));
+}
 	
 	public void loadProjectionMatrix(Matrix4f projectionMatrix){
 		super.loadMatrix(location_projectionMatrix, projectionMatrix);
@@ -54,6 +61,10 @@ public class FontShader extends ShaderProgram {
                 0,0,0, 1);
 		super.loadMatrix(location_transformationMatrix, transformationMatrix);
 		
+	}
+
+	public void loadFix(boolean fix) {
+		super.loadBoolean(location_Fix, fix);
 	}
 
 }

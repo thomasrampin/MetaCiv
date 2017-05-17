@@ -1,6 +1,7 @@
 Nom : Produire du ble
 Birth : false
 Self : false
+Couleur : -8355712
 Action : L_Repeat,n(Integer 15)
 	Action : A_SmellAndMove,PheroToFollow(Pheromone Cereales)
 Action : L_ComparePhero,pheroToCompare(Pheromone Cereales),comparator(Comparator >),n(Double 0.0)

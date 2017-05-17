@@ -44,6 +44,17 @@ public class World extends TKEnvironment implements Serializable
 	
 	private static int tick = 0;
 	static int x , y;
+	static float snowHeight;
+	static float snowDistanceAtt;
+	static float snowDensity;
+	static float roadTiling;
+	static float cliffTiling;
+	static int accuracy=5;
+	static float size3D=5;
+	static String heightMap;
+	static float intensityHeight;
+	static int sea=2;
+	
 	
 	//For output file
 	/*
@@ -82,15 +93,97 @@ public class World extends TKEnvironment implements Serializable
 		
 		x = Integer.parseInt(Initialiseur.getChamp("Largeur", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()))[0]);
        	y = Integer.parseInt(Initialiseur.getChamp("Hauteur", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()))[0]);
+       	
+       	String[] snowHeightS =Initialiseur.getChamp("SnowHeight", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!snowHeightS[0].equals("null")){
+       		snowHeight = Float.parseFloat(snowHeightS[0]);
+       	}else{
+       		snowHeight=0;
+       	}
+       	
+       	String[] snowDAttS = Initialiseur.getChamp("SnowDistanceAttenuation", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!snowDAttS[0].equals("null")){
+       		snowDistanceAtt = Float.parseFloat(snowDAttS[0]);
+       	}else{
+       		snowDistanceAtt=0;
+       	}
+       	
+       	
+       	String[] snowDS  = Initialiseur.getChamp("SnowDensity", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
 
-		
-       
+       	if(!snowDS[0].equals("null")){
+       		snowDensity = Float.parseFloat(snowDS[0]);
+       	}else{
+       		snowDensity=0;
+       	}
+       	
+       	String[] roadTS = Initialiseur.getChamp("RoadTiling", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!roadTS[0].equals("null")){
+       		roadTiling = Float.parseFloat(roadTS[0]);
+       	}else{
+       		roadTiling=1;
+       	}
+       	
+       	String[] cliffTS = Initialiseur.getChamp("CliffTiling", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!cliffTS[0].equals("null")){
+       		cliffTiling = Float.parseFloat(cliffTS[0]);
+       	}else{
+       		cliffTiling=1;
+       	}
+       	
+     	String[] AccuracyS = Initialiseur.getChamp("Accuracy", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!AccuracyS[0].equals("null")){
+       		accuracy = Integer.parseInt(AccuracyS[0]);
+       	}else{
+       		accuracy=5;
+       	}
+
+     	String[] MultiplySize3DS = Initialiseur.getChamp("MultiplySize3DS", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!MultiplySize3DS[0].equals("null")){
+       		size3D = Float.parseFloat(MultiplySize3DS[0]);
+       	}else{
+       		size3D=5;
+       	}
+       	
+     	String[] HeightMapS = Initialiseur.getChamp("HeightMap", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!HeightMapS[0].equals("null")){
+       		heightMap = HeightMapS[0];
+       	}else{
+       		heightMap="";
+       	}
+       	
+     	String[] HeightIntensityS = Initialiseur.getChamp("HeightIntensity", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!HeightIntensityS[0].equals("null")){
+       		intensityHeight = Float.parseFloat(HeightIntensityS[0]);
+       	}else{
+       		intensityHeight=1;
+       	}
+       	
+     	String[] SeaS = Initialiseur.getChamp("Sea", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+       	if(!SeaS[0].equals("null")){
+       		sea = Integer.parseInt(SeaS[0]);
+       	}else{
+       		sea=2;
+       	}
+       	
+       	snowDensity /= 100.0f;
+       	
+        ArrayList<String[]> civilisationS = Initialiseur.getListeChamp("Civilisation", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+
+       	
+       	
 		/*Reglages sur les civilisations*/
-		for (int i = 0; i < Configuration.civilisations.size(); i++){
-			
-			Configuration.civilisations.get(i).postWorldSetup();
-		}
-		
+        for (int j = 0; j < civilisationS.size(); j++){
+			for (int i = 0; i < Configuration.civilisations.size(); i++){
+				
+				if(Configuration.civilisations.get(i).getNom().equals(civilisationS.get(j)[0])){
+					
+					Configuration.civilisations.get(i).setStartX(Integer.parseInt(civilisationS.get(j)[1]));
+					Configuration.civilisations.get(i).setStartY(Integer.parseInt(civilisationS.get(j)[2]));
+				}
+				Configuration.civilisations.get(i).postWorldSetup();
+			}
+        }
 		/*Init pheromons*/
 		for (int i = 0 ; i < Configuration.itemsPheromones.size() ; i++ ) {
 			this.addFlavor(Configuration.itemsPheromones.get(i).getNom());
@@ -478,6 +571,87 @@ public class World extends TKEnvironment implements Serializable
 		
 		
 	}
+
+	public static float getSnowHeight() {
+		return snowHeight;
+	}
+
+	public static void setSnowHeight(float snowHeight) {
+		World.snowHeight = snowHeight;
+	}
+
+	public static float getRoadTiling() {
+		return roadTiling;
+	}
+
+	public static void setRoadTiling(float roadTiling) {
+		World.roadTiling = roadTiling;
+	}
+
+	public static float getCliffTiling() {
+		return cliffTiling;
+	}
+
+	public static void setCliffTiling(float cliffTiling) {
+		World.cliffTiling = cliffTiling;
+	}
+
+	public static float getSnowDistanceAtt() {
+		return snowDistanceAtt;
+	}
+
+	public static void setSnowDistanceAtt(float snowDistanceAtt) {
+		World.snowDistanceAtt = snowDistanceAtt;
+	}
+
+	public static float getSnowDensity() {
+		return snowDensity;
+	}
+
+	public static void setSnowDensity(float snowDensity) {
+		World.snowDensity = snowDensity;
+	}
+
+	public static int getAccuracy() {
+		return accuracy;
+	}
+
+	public static void setAccuracy(int accuracy) {
+		World.accuracy = accuracy;
+	}
+
+	public static float getSize3D() {
+		return size3D;
+	}
+
+	public static void setSize3D(float size3d) {
+		size3D = size3d;
+	}
+
+	public static String getHeightMap() {
+		return heightMap;
+	}
+
+	public static void setHeightMap(String heightMap) {
+		World.heightMap = heightMap;
+	}
+
+	public static int getSea() {
+		return sea;
+	}
+
+	public static void setSea(int sea) {
+		World.sea = sea;
+	}
+
+	public static float getIntensityHeight() {
+		return intensityHeight;
+	}
+
+	public static void setIntensityHeight(float intensity) {
+		intensityHeight = intensity;
+	}
+
 	
 	
 }

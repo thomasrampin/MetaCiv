@@ -5,4 +5,8 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 30.0
+Erosion : 20
+Texture : grass
+Tiling : 40.0
 Pheromone : Baies,10.0,0.2

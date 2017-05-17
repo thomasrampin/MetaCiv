@@ -3,6 +3,17 @@ Largeur : 120
 Hauteur : 120
 Civilisation : Nomade,47,65
 
+SnowHeight : 20
+SnowDistanceAttenuation : 60
+SnowDensity : 100
+RoadTiling : 150
+CliffTiling : 40
+Accuracy : 5
+MultiplySize3D : 5
+HeightMap : heightmap
+HeightIntensity : 10
+Sea : 2
+
 Terrain : Colline
 Terrain : Desert profond
 Terrain : Desert

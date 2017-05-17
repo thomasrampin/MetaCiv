@@ -25,39 +25,41 @@ import org.lwjgl.util.vector.Matrix4f;
 public class EntityRenderer {
  
     private StaticShader shader;
-    private int envTexture_level1,envTexture_level2,envTexture_level3,envTexture_level4;//temp
+    private int envTexture_level;
     private float hS = 0.0f;
  
     public EntityRenderer(Loader loader,StaticShader shader,Matrix4f projectionMatrix) {
         this.shader = shader;
-        envTexture_level1 = loader.loadTexture("reflect/level1.png");
+        envTexture_level = loader.loadTexture("reflect/level1.png");
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
-        //shader.connectTextureUnits();
+        shader.connectTextureUnits();
         shader.stop();
     }
 
 
 
-    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2,SeaFrameBuffers fbos) {
+    public void render(Map<Model, List<Object3D>> entities,Map<Models, List<Object3D>> entities2,SeaFrameBuffers fbos, float distanceFog) {
         for (Model model : entities.keySet()) {
         	
         	
-            prepareTexturedModel(model,fbos);
+            prepareModel(model,fbos,distanceFog);
             List<Object3D> batch = entities.get(model);
             for (Object3D entity : batch) {
+            	shader.loadColorAction(entity.getColorAction());
+            	shader.loadColorID(entity.getColorID());
                 prepareInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
                         GL11.GL_UNSIGNED_INT, 0);
             }
-            unbindTexturedModel();
+            unbindModel();
         }
 
     }
  
     
-    private void prepareTexturedModel(Model model,SeaFrameBuffers fbos) {
+    private void prepareModel(Model model,SeaFrameBuffers fbos, float distanceFog) {
         Mesh rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -71,10 +73,11 @@ public class EntityRenderer {
         shader.loadNormalMapped(false);
         shader.loadReflMapped(false);
         shader.loadMetalMapped(false);
+        shader.loadDistanceFog(distanceFog);
         shader.loadDiffuse(texture.getDiffuse());
         shader.loadShineVariable(texture.getShineDamper(), texture.getReflectivity());
-        shader.loadColorID(model.getColorID());
-        shader.loadColorAction(model.getColorAction());
+        
+        //shader.loadColorAction(model.getColorAction());
         if(Keyboard.isKeyDown(Keyboard.KEY_A)){
         	hS+=0.1;
         	
@@ -86,7 +89,7 @@ public class EntityRenderer {
         
         shader.loadHeightScale(hS/100.0f);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, envTexture_level1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, envTexture_level);
     	if(model.getTexture().IsTextured()){
     		shader.loadTextured(texture.IsTextured());
     		GL13.glActiveTexture(GL13.GL_TEXTURE1);
@@ -114,7 +117,7 @@ public class EntityRenderer {
     	}
     }
  
-    private void unbindTexturedModel() {
+    private void unbindModel() {
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);

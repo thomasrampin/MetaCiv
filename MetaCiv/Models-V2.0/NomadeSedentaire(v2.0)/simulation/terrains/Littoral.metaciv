@@ -5,4 +5,8 @@ Infranchissable : false
 AltMin : 0
 AltMax : 20
 Apparition : 0
+Hauteur : 3.0
+Erosion : 13
+Texture : sand
+Tiling : 40.0
 Pheromone : Poisson,20.0,0.2

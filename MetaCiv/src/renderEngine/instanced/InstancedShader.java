@@ -9,8 +9,8 @@ import renderEngine.shaders.ShaderProgram;
 public class InstancedShader extends ShaderProgram{
 	
 
-	private static final String VERTEX_FILE = "src/renderEngine/instanced/vertexShader.glsl";
-	private static final String FRAGMENT_FILE = "src/renderEngine/instanced/fragmentShader.glsl";
+	private static final String VERTEX_FILE = "/renderEngine/instanced/vertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/renderEngine/instanced/fragmentShader.glsl";
 	private int location_projectionMatrix;
 	
 

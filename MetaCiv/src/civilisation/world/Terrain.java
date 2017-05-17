@@ -30,6 +30,11 @@ public class Terrain {
 	int altmin;
 	int apparition;
 	int tempideale;
+	float height;
+	int erosion;
+	int blur;
+	private String texture;
+	float tiling;
 	
 	Terrain[] suivants;
 	int[] poidSuivant;
@@ -49,6 +54,11 @@ public class Terrain {
 		this.poidSuivant = new int[1];
 		this.altmin = 0;
 		this.altmax = 20;
+		this.height = 1;
+		this.tiling = 1.0f;
+		this.erosion = 1;
+		this.blur = 0;
+		this.texture = nom;
 	}
 
 	public int getPassabilite() {
@@ -149,7 +159,11 @@ public class Terrain {
 			out.println("AltMin : " + this.getAltMin());
 			out.println("AltMax : " + this.getAltMax());
 			out.println("Apparition : " + this.getApparition());
-
+			out.println("Hauteur : " + this.height);
+			out.println("Erosion : " + this.erosion);
+			out.println("BlurMethod : " + this.blur);
+			out.println("Texture : " + this.texture);
+			out.println("Tiling : " + this.tiling);
 			for (int i = 0; i < this.pheromones.size();i++){
 				out.println("Pheromone : " + pheromones.get(i).getNom() + "," + pheroInitiales.get(i)  + "," + pheroCroissance.get(i));
 			}
@@ -194,7 +208,45 @@ public class Terrain {
 		this.pheroCroissance = pheroCroissance;
 	}
 
-	
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(double h) {
+		this.height = (float)h;
+	}
+
+	public int getErosion() {
+		return erosion;
+	}
+
+	public void setErosion(int erosion) {
+		this.erosion = erosion;
+	}
+
+	public String getTexture() {
+		return texture;
+	}
+
+	public void setTexture(String texture) {
+		this.texture = texture;
+	}
+
+	public float getTiling() {
+		return tiling;
+	}
+
+	public void setTiling(double d) {
+		this.tiling = (float)d;
+	}
+
+	public int getBlur() {
+		return this.blur;
+	}
+
+	public void setBlur(int blur){
+		this.blur = blur;
+	}
 	
 	
 }

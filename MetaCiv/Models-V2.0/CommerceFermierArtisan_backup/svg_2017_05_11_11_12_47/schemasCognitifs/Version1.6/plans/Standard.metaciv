@@ -1,0 +1,21 @@
+Nom : Standard
+Birth : false
+Self : true
+Action : L_CompareAttribute,attributeToCompare(Attribute Energie),comparator(Comparator <),n(Double 0.0 Constant SeuilEnergiePourMourir)
+	Action : A_Die
+	Action : A_DoNothing
+Action : L_CompareAttribute,attributeToCompare(Attribute age),comparator(Comparator >),n(Double -100.0 Constant AgeMortDeVieillesse)
+	Action : L_RandomPercent,n(Double 30.0 Constant __NoConstant)
+		Action : A_Die
+		Action : A_DoNothing
+	Action : A_DoNothing
+Action : A_ChangeAttributeDouble,Modified attribute(Attribute Energie),n(Double -0.1000000000000188 Constant BaisseEnergieParTick)
+Action : A_ChangeAttributeDouble,Modified attribute(Attribute age),n(Double -10.0 Constant AgeParTick)
+Action : L_RandomPercent,n(Double 10.0)
+	Action : L_RandomPercent,n(Double 1.0)
+		Action : L_IsInGroup,Group(Group Village)
+			Action : A_DoNothing
+			Action : A_CreateGroup,GroupToCreate(GroupAndRole Village:RienFaire)
+		Action : A_DoNothing
+	Action : A_DoNothing
+Action : A_DoNothing

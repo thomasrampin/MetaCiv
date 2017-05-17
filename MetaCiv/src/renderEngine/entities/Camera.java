@@ -4,9 +4,14 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import civilisation.world.World;
+import civilisation.world.WorldViewer;
+import renderEngine.terrains.Terrain;
+import renderEngine.utils.FPS;
+
 public class Camera {
 	
-	private static final float ZOOM_OUT_MAX = 200;
+	private static final float ZOOM_OUT_MAX = 800;
 	private static final float SPEED = 1.5f;
 	
 	private Vector3f position = new Vector3f(0,0,0);
@@ -16,65 +21,113 @@ public class Camera {
 	private float distanceFromPivot=200;
 	private float yangle;
 	private float roll;
-	
+
 	
 	public Camera(){
 		
 	}
 
 	public void move(){
-		float zoomLevel = Mouse.getDWheel() *0.1f;
 		
-		if (distanceFromPivot - zoomLevel > 5f && distanceFromPivot - zoomLevel < ZOOM_OUT_MAX )
+
+		
+		float zoomLevel = Mouse.getDWheel() * distanceFromPivot/4000.0f;
+		Vector3f position = new Vector3f(0,0,100000);
+		int cX = (int) (this.position.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		int cY = (int) (this.position.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		
+		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
+			position = Terrain.getHeightByTab(cX,cY);
+		
+		if (distanceFromPivot - zoomLevel > 5f && distanceFromPivot - zoomLevel < ZOOM_OUT_MAX)
 			distanceFromPivot -= zoomLevel;
 		
 		
 		if(Mouse.isButtonDown(0)){
-			float pitchChange = Mouse.getDY() * 0.3f;
-			//if(pitch - pitchChange >0 && pitch - pitchChange <85)
+			float pitchChange = Mouse.getDY() *0.3f;// * distanceFromPivot/500.0f;
+			if(pitch - pitchChange >0 && pitch - pitchChange <85 && simulate(pitchChange))
 				pitch -= pitchChange;
-			float angleChange = Mouse.getDX() * 0.3f;
+			float angleChange = Mouse.getDX() *0.3f;// * distanceFromPivot/500.0f;
 			angleAroundPivot -= angleChange;
 			
 		}
-
+		float speed = distanceFromPivot/100.0f;
 		if(Keyboard.isKeyDown(Keyboard.KEY_Z)){
 			
-			lookAt.z += SPEED * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.z += speed * Math.cos(Math.toRadians(angleAroundPivot));
 		
-			lookAt.x += SPEED * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.x += speed * Math.sin(Math.toRadians(angleAroundPivot));
 		
 		}
-		else if(Keyboard.isKeyDown(Keyboard.KEY_S)){
+		if(Keyboard.isKeyDown(Keyboard.KEY_S)){
 			
-				lookAt.z -= SPEED * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.z -= speed * Math.cos(Math.toRadians(angleAroundPivot));
 			
-				lookAt.x -= SPEED * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.x -= speed * Math.sin(Math.toRadians(angleAroundPivot));
 		}
-		else if(Keyboard.isKeyDown(Keyboard.KEY_Q)){
+		if(Keyboard.isKeyDown(Keyboard.KEY_Q)){
 			
-				lookAt.z -= SPEED * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.z -= speed * Math.sin(Math.toRadians(angleAroundPivot));
 			
-				lookAt.x += SPEED * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.x += speed * Math.cos(Math.toRadians(angleAroundPivot));
 		}
-		else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
+		if(Keyboard.isKeyDown(Keyboard.KEY_D)){
 			
-				lookAt.z += SPEED * Math.sin(Math.toRadians(angleAroundPivot));
+			lookAt.z += speed * Math.sin(Math.toRadians(angleAroundPivot));
 			
-				lookAt.x -= SPEED * Math.cos(Math.toRadians(angleAroundPivot));
+			lookAt.x -= speed * Math.cos(Math.toRadians(angleAroundPivot));
 	
 			}
-		
 		float horizontalDistance = calculateHorizontal();
 		float verticalDistance = calculateVertical();
 		calculateCameraPosition(horizontalDistance,verticalDistance);
 		
+		cX = (int) (this.position.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		cY = (int) (this.position.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		
+		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
+			position = Terrain.getHeightByTab(cX,cY);
+		while(this.position.y<position.y+5){
+		
+			
+			if(pitch>85)
+				distanceFromPivot++;
+			else
+				this.pitch++;
+			horizontalDistance = calculateHorizontal();
+			verticalDistance = calculateVertical();
+			calculateCameraPosition(horizontalDistance,verticalDistance);
+		}
 		yangle = 180 - angleAroundPivot;
-        /*position.x = (float) ( -Math.sin(cameraX*(Math.PI/180)) * Math.cos((cameraY)*(Math.PI/180)));
-        position.y = (float) (  -Math.sin((cameraY)*(Math.PI/180)));
-        position.z = (float) ( -Math.cos((cameraX)*(Math.PI/180)) * Math.cos((cameraY)*(Math.PI/180)));*/
+		
+		if(this.position.x<0 || this.position.z<0){//RollBack
+			
+		}
+
+
 	}
 	
+	private boolean simulate(float pitchChange) {
+		pitch -=pitchChange;
+		float horizontalDistance = calculateHorizontal();
+		float verticalDistance = calculateVertical();
+		
+		Vector3f pos = new Vector3f(position);
+		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(angleAroundPivot)));
+		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(angleAroundPivot)));
+		pos.x = lookAt.x - offsetX;
+		pos.y = lookAt.y + verticalDistance;
+		pos.z = lookAt.z - offsetZ;
+		
+		int cX = (int) (pos.x/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		int cY = (int) (pos.z/((World.getAccuracy()*World.getSize3D())/WorldViewer.initialCellSize));
+		Vector3f p = new Vector3f(0,0,100000);
+		if(cX>0 && cY>0 && cX<Terrain.VERTEX_COUNT_W && cY< Terrain.VERTEX_COUNT_H)
+			p = Terrain.getHeightByTab(cX,cY);
+		pitch += pitchChange;
+		return pos.y>p.y+5;
+	}
+
 	public void invertPitch(){
 		this.pitch = -this.pitch;
 	}
@@ -113,9 +166,11 @@ public class Camera {
 
 	public void setTarget(Vector3f position2) {
 		this.lookAt = position2;
+	
 		
 	}
-	
-	
+	public void setDistance(){
+		distanceFromPivot = 40;
+	}
 	
 }

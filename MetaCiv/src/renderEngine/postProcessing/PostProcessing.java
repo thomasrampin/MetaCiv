@@ -29,32 +29,48 @@ public class PostProcessing {
 	private static CombineFilter combineFilter;
 	private static DepthOfFieldFilter dofFilter;
 
-	public static void init(Loader loader){
+	public static void init(Loader loader, int width, int height){
 		quad = loader.loadToVAO(POSITIONS, 2);
-		contrastChanger = new ContrastBalance();
-		brightFilter = new BrightFilter(Display.getWidth()/2,Display.getHeight()/2);
-		hBlur = new HorizontalBlur(Display.getWidth()/16,Display.getHeight()/16);
-		vBlur = new VerticalBlur(Display.getWidth()/16,Display.getHeight()/16);
-		hBlur2 = new HorizontalBlur(Display.getWidth()/4,Display.getHeight()/4);
-		vBlur2 = new VerticalBlur(Display.getWidth()/4,Display.getHeight()/4);
-		hBlur3 = new HorizontalBlur(Display.getWidth(),Display.getHeight());
-		vBlur3 = new VerticalBlur(Display.getWidth(),Display.getHeight());
+		contrastChanger = new ContrastBalance(width,height);
+		brightFilter = new BrightFilter(width/2,height/2);
+		hBlur = new HorizontalBlur(width/16,height/16);
+		vBlur = new VerticalBlur(width/16,height/16);
+		hBlur2 = new HorizontalBlur(width/4,height/4);
+		vBlur2 = new VerticalBlur(width/4,height/4);
+		hBlur3 = new HorizontalBlur(width,height);
+		vBlur3 = new VerticalBlur(width,height);
 		dofFilter = new DepthOfFieldFilter();
-		combineFilter = new CombineFilter(Display.getWidth(),Display.getHeight());
+		combineFilter = new CombineFilter(width,height);
 	}
+	
+	public static void update(int width, int height) {
+		contrastChanger = new ContrastBalance(width,height);
+		brightFilter = new BrightFilter(width/2,height/2);
+		hBlur = new HorizontalBlur(width/16,height/16);
+		vBlur = new VerticalBlur(width/16,height/16);
+		hBlur2 = new HorizontalBlur(width/4,height/4);
+		vBlur2 = new VerticalBlur(width/4,height/4);
+		hBlur3 = new HorizontalBlur(width,height);
+		vBlur3 = new VerticalBlur(width,height);
+		dofFilter = new DepthOfFieldFilter();
+		combineFilter = new CombineFilter(width,height);
+	}
+
 	
 	public static void doPostProcessing(int colourTexture,int depthBuffer){
 		start();
+		
 		brightFilter.render(colourTexture);
-		hBlur.render(brightFilter.getOutputTexture());
-		vBlur.render(hBlur.getOutputTexture());
-		hBlur2.render(hBlur.getOutputTexture());
-		vBlur2.render(hBlur2.getOutputTexture());
+		hBlur.render(brightFilter.getTexture());
+		vBlur.render(hBlur.getTexture());
+		hBlur2.render(hBlur.getTexture());
+		vBlur2.render(hBlur2.getTexture());
 	
-		combineFilter.render(colourTexture,vBlur2.getOutputTexture());
+		combineFilter.render(colourTexture,vBlur2.getTexture());
 		hBlur3.render(combineFilter.getOutputTexture());
-		vBlur3.render(hBlur3.getOutputTexture());	
-		dofFilter.render(combineFilter.getOutputTexture(), vBlur3.getOutputTexture(),depthBuffer);
+		vBlur3.render(hBlur3.getTexture());
+		contrastChanger.render(combineFilter.getOutputTexture());
+		dofFilter.render(contrastChanger.getTexture(), vBlur3.getTexture(),depthBuffer);
 		end();
 	}
 	
@@ -82,6 +98,7 @@ public class PostProcessing {
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 	}
+
 
 
 }

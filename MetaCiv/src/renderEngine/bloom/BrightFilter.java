@@ -3,16 +3,16 @@ package renderEngine.bloom;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import renderEngine.postProcessing.ImageRenderer;
+import renderEngine.postProcessing.PostProcessingRenderer;
 
 public class BrightFilter {
 
-	private ImageRenderer renderer;
+	private PostProcessingRenderer renderer;
 	private BrightFilterShader shader;
 	
 	public BrightFilter(int width, int height){
 		shader = new BrightFilterShader();
-		renderer = new ImageRenderer(width, height);
+		renderer = new PostProcessingRenderer(width, height);
 	}
 	
 	public void render(int texture){
@@ -23,8 +23,8 @@ public class BrightFilter {
 		shader.stop();
 	}
 	
-	public int getOutputTexture(){
-		return renderer.getOutputTexture();
+	public int getTexture(){
+		return renderer.getTexture();
 	}
 	
 	public void cleanUp(){

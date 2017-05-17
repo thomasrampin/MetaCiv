@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 
 in vec2 textureCoords;
 in vec3 cameraVector;
@@ -32,14 +32,17 @@ void main(void){
 	vec3 light = vec3(-2,-1,1);
 	 uv -= vec2(sunPosition.xy/15000);
 	float dist =  sqrt(dot(uv, uv));
-
+	FragmentColor0 = vec4(0,0,0,1.0);
 	//out_Color = mix(Zenith,Horizon,textureCoords.y*2-0.6)*1.2;
 	FragmentColor0 += texture(diffuseMap, vec2(textureCoords.x+angle/6,textureCoords.y*1.8)) ;
 
 	FragmentColor0 += CloudColor* max(texture(alphaMap, vec2(textureCoords.x+angle,textureCoords.y*1.8)).r - cloudDensity*2,0);
 
     //out_Color += mix(vec4(1,1,1,1),out_Color,textureCoords.y/30);
-	FragmentColor0 = mix(Horizon,FragmentColor0,textureCoords.y);
+	if(textureCoords.y>0.55)
+		FragmentColor0 = Horizon;
+	else
+		FragmentColor0 = mix(Horizon,FragmentColor0,textureCoords.y);
     //out_Color = mix(fog_color,out_Color,textureCoords.y);
    /* if ( (dist < (0.005)) )
     	 out_Color = vec4(1,0.8,0.4,1);*/
