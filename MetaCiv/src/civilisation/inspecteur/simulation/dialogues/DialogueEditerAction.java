@@ -43,16 +43,16 @@ public class DialogueEditerAction extends JDialog implements ActionListener, Pro
 	ArrayList<JComponent> components = new ArrayList<JComponent>();
 
     JOptionPane optionPane;
-    PanelArbreActions p;
+    //PanelArbreActions p;
     Action a;
     ArrayList<String[]> schema;
     JComboBox extraBox=null;
 
-	public DialogueEditerAction(Frame f , boolean modal , PanelArbreActions p , Action a) throws IOException{
+	public DialogueEditerAction(Frame f , boolean modal , Action a) throws IOException{
 		super(f,modal);
-
+		
 		this.setTitle("Editer une action");
-
+		setLocationRelativeTo(null);
 		boolean extraAttribute = false;
 		String extraTitle="extra Attribute";
 		
@@ -60,7 +60,7 @@ public class DialogueEditerAction extends JDialog implements ActionListener, Pro
 		ButtonGroup grpSelector=null;
 		
 		this.a = a;
-		this.p = p;
+		//this.p = p;
 		schema = a.getSchemaParametres();
 		
 		System.out.println("DialogueEditerAction "+a.getOptions().toString());
