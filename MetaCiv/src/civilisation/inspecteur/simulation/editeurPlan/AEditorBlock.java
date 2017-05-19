@@ -27,11 +27,11 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 	
 	protected boolean canHaveChild;
 	protected Action action;
-	protected AEditorPanelParametres content;
+	protected AEditorPanelParametres content; // panel qui contient le nom de l'action et les parametres
 	protected String name;
 	protected JLabel lname;
-	protected AEditorBlock parent;
-	protected AEditorBlock fils;
+	protected AEditorBlock parent; // block parent
+	protected AEditorBlock fils; // block fils
 	protected int INDENT_RATIO = 0; // val utilisé pour determiner le ratio d'indentation d'un block fils
 	protected final static int SPACE_BETWEEN_BLOCK = 7; // espace entre chaque block quand ils sont connectés
 	public static final int OK_MODE = 0; // mode utilisé pour changer les borders
@@ -44,11 +44,19 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 	public static final int PREPEND = 0; // mode utilisé pour ajouter un block 
 	public static final int APPEND = 1; // mode utilisé pour ajouter un block 
 	
+	/**
+	 * Cree un block sans action mais avec le nom en parametre
+	 * @param name
+	 */
 	public AEditorBlock(String name) {
 		super();		
 		init(name);
 	}
 	
+	/**
+	 * Cree un block en utilisant representant l'action en parametre
+	 * @param action
+	 */
 	public AEditorBlock(Action action) {
 		super();
 		this.action = action;
@@ -78,10 +86,18 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 		setBorder(PADDING);
 	}
 	
+	/**
+	 * 
+	 * @return l'action du block
+	 */
 	public Action getAction() {
 		return action;
 	}
 
+	/**
+	 * bl devient le parent de ce block
+	 * @param bl lenouveau parent
+	 */
 	public void setParentBlock(AEditorBlock bl) {
 		this.parent = bl;
 		if(bl != null)
@@ -90,14 +106,26 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 			lname.setForeground(Color.RED);
 	}
 	
+	/**
+	 * 
+	 * @return block parent
+	 */
 	public AEditorBlock getParentBlock() {
 		return this.parent;
 	}
 	
+	/**
+	 * 
+	 * @param child le fils du block, càd le block en dessous de celui ci
+	 */
 	public void setChild(AEditorBlock child) {
 		this.fils = child;
 	}
 	
+	/**
+	 * 
+	 * @return le fils du block, càd le block en dessous
+	 */
 	public AEditorBlock getChild() {
 		return this.fils;
 	}
@@ -127,7 +155,7 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 	}
 	
 	/**
-	 * Associe les deux blocks, le block 
+	 * Associe les deux blocks au blocken parametre qui deviendra son parent
 	 * @param parent le nouveau parent pour ce block
 	 */
 	public void associate(AEditorBlock parent) {
@@ -137,12 +165,20 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 		}
 	}
 	
+	/**
+	 * Dessasocie le block de son parent
+	 * @param child doit etre le block faisant appel a la fonction
+	 * Exemple : block.dissociateFromParent(block)
+	 */
 	public void dissociateFromParent(AEditorBlock child) {
 		if(parent != null) {
 			parent.dissociateFromChild(child);
 		}
 	}
 	
+	/**
+	 * Dessasocie le block de son fils
+	 */
 	public void dissociateFromChild() {
 		if(fils != null) {
 			fils.setParentBlock(null);
@@ -150,22 +186,35 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 		}
 	}
 	
+	/**
+	 * 
+	 * @param child
+	 */
 	protected void dissociateFromChild(AEditorBlock child) {
 		dissociateFromChild();
 	}
 	
+	/**
+	 * Dessasocie le block de son parent et de ses fils
+	 * @param bl le block faisant appel a la fonction 
+	 * @param plan le plan a modifié
+	 */
 	public void dissociate(AEditorBlock bl, NPlan plan) {
 		removeActionFromPlan(plan);
 		dissociateFromParent(bl);
 		dissociateFromChild();
 	}
 	
+	/**
+	 * Supprime l'action de ce block du plan
+	 * @param plan
+	 */
 	public void removeActionFromPlan(NPlan plan) {
 		for(Action a : plan.getActions()) {
 			if(a.equals(action)) { // si l'action de ce block est directement accesible depuis le plan
 				plan.removeAction(action);
 				AEditorBlock f = fils;
-				while(f != null) {
+				while(f != null) { // tant que ya des fils
 					plan.removeAction(f.getAction());
 					f = f.getChild();
 				}
@@ -175,7 +224,7 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 				if(act != null) { // si on on a trouvé cette action
 					act.removeAction(action);
 					AEditorBlock f = fils;
-					while(f != null) {
+					while(f != null) { // tant que ya des fils
 						act.removeAction(f.getAction());
 						f = f.getChild();
 					}
@@ -204,6 +253,12 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 		return INDENT_RATIO;
 	}
 	
+	/**
+	 * retourne l'action parente de l'action du block dans le plan
+	 * Par exemple, pour trouver l'action Repeat dans laquelle est contenue une action simple, on remonte les blocks parents recursivement jusqua que le block instant revoit son action
+	 * @param thisAction
+	 * @return
+	 */
 	public Action getParentAction(Action thisAction) {
 		if(parent != null) {
 			return parent.getParentAction(action);
@@ -244,8 +299,8 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 	 * @param bl
 	 */
 	public void append(AEditorBlock bl, NPlan plan) {
-		bl.associate(this);
-		if(getIndentRatio() == 0) {
+		bl.associate(this); // on associe bl a ce block
+		if(getIndentRatio() == 0) { // pour indenter les blocks dans l'editeur
 			bl.setLocationWithChildren(getX(), getY() + getHeight() + SPACE_BETWEEN_BLOCK);
 		} else {
 			bl.setLocationWithChildren(getX() + getWidth() / getIndentRatio(), getY() + getHeight() + SPACE_BETWEEN_BLOCK);
@@ -259,14 +314,7 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 					plan.addActionAfter(bl.getAction(), a); // on ajoute l'action de notre nouveau block directement apres
 					bl.addChildrenActionsPlan(plan);
 					return;
-				}/* else { // sinon on cherche l'action parent de l'action du block auquel on append
-					//Action act = a.getParentAction(action); // on cherche l'action parent de l'action de ce block
-					if(act != null) { // si on on a trouvé cette action
-						act.addActionAfter(bl.getAction(), action); // on ajoute l'action de notre nouveau block aprés l'action de ce block dans l'action parente qu'on vient de cherché
-						bl.addChildrenActions(act);
-						return;
-					}
-				}*/
+				}
 			}
 			Action act = getParentAction(this.action);
 			if(act != null) { // si on on a trouvé cette action
@@ -278,7 +326,8 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 
 	/**
 	 * Ajoute le block en parametre avant ce block
-	 * N'est plus utilisé
+	 * N'est jamais utilisé puisque il n'y a plus de blocks permettant le PREPEND
+	 * Ne marche pas je crois
 	 * @param bl
 	 */
 	@Deprecated
@@ -333,7 +382,7 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 	/**
 	 * Determine si l'endroit au point p est dans une zone magnetique
 	 * @param p
-	 * @return
+	 * @return 
 	 */
 	public boolean isInMagnetEffect(Point p) {
 		if(isInsideMagnetEffectBottom(p) || isInsideMagnetEffectTop(p)) {
@@ -351,13 +400,13 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 	 */
 	public boolean attach(AEditorBlock block, Point p, NPlan plan) {
 		if(isInsideMagnetEffectBottom(p) && canHaveChild()) {
-			if(!hasChild()) {
+			if(!hasChild()) { // si pas de fils, on append direct
 				append(block, plan);
-			} else {
+			} else { // sinon on recupere le fils actuel, on append le nouveau block puis on append l'ancien fils au block qu'on a ajouté
 				AEditorBlock currentChild = getChild();
 				dissociateFromChild(currentChild);
 				append(block, plan);
-				block.getLastChild().append(currentChild, null);
+				block.getLastChild().append(currentChild, null); // plan a null puisque le plan estdeja modifie dans append du nouveau block
 			}
 			return true;
 		} else if(isInsideMagnetEffectTop(p)) {
@@ -400,19 +449,6 @@ public abstract class AEditorBlock extends JPanel implements AEditorMagnetCompon
 				break;
 		}
 		return false;
-	}
-	
-	/**
-	 * Ajoute un parametre au block
-	 * @param name
-	 */
-	public void addParam(String name) {
-		JLabel paramName = new JLabel(name, SwingConstants.CENTER);
-		paramName.setForeground(Color.WHITE);
-		Integer vals[] = {0, 1, 2, 3};
-		JComboBox<Integer> val = new JComboBox<Integer>(vals);
-		this.content.add(paramName);
-		this.content.add(val);
 	}
 	
 	/**

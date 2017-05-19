@@ -8,26 +8,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import civilisation.Configuration;
 
 @SuppressWarnings("serial")
+/**
+ * Panel qui contient l'abre des actions disponibles a ajouter dans l'editeur
+ * @author Arnau
+ *
+ */
 public class AEditorPanelActions extends JPanel {
 	private JTree actionsTree;
 
 	public AEditorPanelActions() {
 		super();
-		init();
-	}
-
-	public AEditorPanelActions(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		init();
-	}
-
-	public AEditorPanelActions(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		init();
-	}
-
-	public AEditorPanelActions(LayoutManager layout) {
-		super(layout);
 		init();
 	}
 	

@@ -10,6 +10,11 @@ import civilisation.individu.plan.NPlan;
 import civilisation.individu.plan.action.Action;
 
 @SuppressWarnings("serial")
+/**
+ * Block type instant ou repeat
+ * @author Arnau
+ *
+ */
 public class AEditorBlockInstant extends AEditorBlock{
 	
 	public final static int INSTANT = 3;
@@ -45,7 +50,7 @@ public class AEditorBlockInstant extends AEditorBlock{
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		updateBlockSize();
+		updateBlockSize(); // met a jour la taille du block avant de la repeindre
 		g.setColor(instantColor);
 		g.fillRect((int) instantBlock.getX(),(int) instantBlock.getY(),(int) instantBlock.getWidth(),(int) instantBlock.getHeight());
 	}
@@ -69,6 +74,11 @@ public class AEditorBlockInstant extends AEditorBlock{
 		return getX()< p.x && getY() < p.y && (getX() + getWidth()) > p.x && (getY() + getHeight()) > p.y;
 	}
 	
+	/**
+	 * Ajout d'un block comme block instant
+	 * @param bl le block a ajouter
+	 * @param plan 
+	 */
 	public void addInstantBlock(AEditorBlock bl, NPlan plan) {
 		associateInstant(bl);
 		bl.setLocationWithChildren((int) (this.getX() + instantBlock.getX() + 5),(int) (this.getY() + instantBlock.getY() + SPACE_BETWEEN_BLOCK + 2)); 
@@ -77,10 +87,13 @@ public class AEditorBlockInstant extends AEditorBlock{
 		 */
 		if(plan != null && action != null) { // si ce block contient une action et que l'on ajoute au plan
 			action.addSousAction(bl.getAction());
-			bl.addChildrenActions(action);
+			bl.addChildrenActions(action); // ajoute les actions fils du block ajouté a cet action
 		}
 	}
 	
+	/**
+	 * Met a jour la taille du block selon la taille du panel content, le nombre de fils dans le blockInstant et les separateurs visuels
+	 */
 	private void updateBlockSize() {
 		int nbif = 0, nbelse = 0;
 		int spaceBetweenBlockPlusBorder = SPACE_BETWEEN_BLOCK + 2; // la bordure verte ajouté sous les blocks pour dire indiquer apres quels blocks insérés fait que les blocks Actions finnissent par depasser du cadre du block if du block logique au bout d'un certain nombre ajoutés.
@@ -104,16 +117,19 @@ public class AEditorBlockInstant extends AEditorBlock{
 			parent.repaint();
 	}
 	
+	/**
+	 * Met a jour la position des fils en les detachant et en les reattachant pour qu'ils se mettent a la bonne place
+	 */
 	private void updateChildrenLocation() {
 		if(filsInstant != null) {
 			AEditorBlock fi = filsInstant;
 			filsInstant.dissociateFromParent(filsInstant);
-			attach(fi, INSTANT, null);
+			attach(fi, INSTANT, null); // null car on modifie pas le plan
 		}
 		if(fils != null) {
 			AEditorBlock ch = fils;
 			fils.dissociateFromParent(fils);
-			attach(ch, APPEND, null);
+			attach(ch, APPEND, null); // null car on modifie pas le plan
 		}
 	}
 	
@@ -128,7 +144,6 @@ public class AEditorBlockInstant extends AEditorBlock{
 
 	@Override
 	protected void addChildrenActionsPlan(NPlan plan) {
-		//addChildrenActions(action);
 		super.addChildrenActionsPlan(plan);
 	}
 	
@@ -156,7 +171,7 @@ public class AEditorBlockInstant extends AEditorBlock{
 			default:
 				break;
 		}
-		return super.attach(block, mode, plan);
+		return super.attach(block, mode, plan); // pour mode APPEND et PREPEND
 	}
 	
 	/**
@@ -182,8 +197,6 @@ public class AEditorBlockInstant extends AEditorBlock{
 	@Override
 	protected void dissociateFromChild(AEditorBlock child) {
 		if(filsInstant != null && child.equals(filsInstant)) {
-			/*filsInstant.setParentBlock(null);
-			filsInstant = null;*/
 			dissociateInstant();
 		} else {
 			super.dissociateFromChild(child);

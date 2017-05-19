@@ -13,71 +13,47 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
 @SuppressWarnings("serial")
-public class AEditorActionsTree extends JTree{
-
-	public AEditorActionsTree() {
-		super();
-		init();
-	}
-
-	public AEditorActionsTree(Hashtable<?, ?> value) {
-		super(value);
-		init();
-	}
-
-	public AEditorActionsTree(Object[] value) {
-		super(value);
-		init();
-	}
-
-	public AEditorActionsTree(TreeModel newModel) {
-		super(newModel);
-		init();
-	}
-
-	public AEditorActionsTree(TreeNode root, boolean asksAllowsChildren) {
-		super(root, asksAllowsChildren);
-		init();
-	}
+/**
+ * JTree contenant le nom des actions
+ * 
+ * @author Arnau
+ *
+ */
+public class AEditorActionsTree extends JTree {
 
 	public AEditorActionsTree(TreeNode root) {
 		super(root);
 		init();
 	}
 
-	public AEditorActionsTree(Vector<?> value) {
-		super(value);
-		init();
-	}
-	
 	private void init() {
 		setDragEnabled(true);
 		setTransferHandler(new ActionsJTreeTransferHandler());
-
 	}
 
 	/**
 	 * Gestionnaire du transfert de données
+	 * 
 	 * @author Arnau
 	 *
 	 */
 	private class ActionsJTreeTransferHandler extends TransferHandler {
-		
+
 		@Override
 		public int getSourceActions(JComponent c) {
-			return TransferHandler.COPY; //copy seulement
+			return TransferHandler.COPY; // copy seulement
 		}
-		
+
 		@Override
 		protected Transferable createTransferable(JComponent c) {
 			JTree tree = (JTree) c;
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-			if(node.isLeaf()) { //seulement les feuilles sont transferables
+			if (node.isLeaf()) { // seulement les feuilles sont transferables
 				return new StringSelection(node.getUserObject().toString());
 			} else {
 				return null;
 			}
 		}
-		
+
 	}
 }

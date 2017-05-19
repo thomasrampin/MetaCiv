@@ -10,6 +10,11 @@ import civilisation.individu.plan.NPlan;
 import civilisation.individu.plan.action.Action;
 
 @SuppressWarnings("serial")
+/**
+ * Block Logique If Else
+ * @author Arnau
+ *
+ */
 public class AEditorBlockLogique extends AEditorBlock{
 	
 	public final static int IF = 2;
@@ -99,10 +104,8 @@ public class AEditorBlockLogique extends AEditorBlock{
 			if(plan != null && action != null) { // si ce block contient une action et que l'on ajoute au plan
 				if(filsElse != null) { // si le block contient un fils dans la partie Else
 					action.addActionBefore(bl.getAction(), action.getListeActions().get(0));
-					//bl.addChildrenActions(action);
 				} else {
 					action.addSousAction(bl.getAction());
-					//bl.addChildrenActions(action);
 				}
 			}
 		}
@@ -128,7 +131,7 @@ public class AEditorBlockLogique extends AEditorBlock{
 	}
 	
 	/**
-	 * Mets a jour la taille du block suivant le nombre de fils 
+	 * Mets a jour la taille du block suivant la taille des fils
 	 */
 	private void updateBlockSize() {
 		int nbif = 0, nbelse = 0;
@@ -198,7 +201,6 @@ public class AEditorBlockLogique extends AEditorBlock{
 	
 	@Override
 	protected void addChildrenActionsPlan(NPlan plan) {
-		//addChildrenActions(action);
 		super.addChildrenActionsPlan(plan);
 	}
 	
@@ -236,7 +238,7 @@ public class AEditorBlockLogique extends AEditorBlock{
 			default:
 				break;
 		}
-		return super.attach(block, mode, plan);
+		return super.attach(block, mode, plan); // mode APPEND ou PREPEND
 	}
 	
 	/**
@@ -282,12 +284,8 @@ public class AEditorBlockLogique extends AEditorBlock{
 	@Override
 	protected void dissociateFromChild(AEditorBlock child) {
 		if(filsIf != null && child.equals(filsIf)) {
-			/*filsIf.setParentBlock(null);
-			filsIf = null;*/
 			dissociateIf();
 		} else if(filsElse != null && child.equals(filsElse)) {
-			/*filsElse.setParentBlock(null);
-			filsElse = null;*/
 			dissociateElse();
 		} else {
 			super.dissociateFromChild(child);

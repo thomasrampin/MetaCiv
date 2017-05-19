@@ -2,6 +2,11 @@ package civilisation.inspecteur.simulation.editeurPlan;
 
 import java.awt.Color;
 
+/**
+ * Couleur utilisé par l'editeur de plan
+ * @author Arnau
+ *
+ */
 public enum AEditorColors {
 
 	WHITE(236, 240, 241),
