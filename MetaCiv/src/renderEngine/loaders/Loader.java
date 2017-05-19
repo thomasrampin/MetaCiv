@@ -62,8 +62,8 @@ public class Loader {
 	 *  -------------------------------
 	 * | 0 | vertex
 	 * | 1 | textureCoord
-	 * | 2 | normals
-	 * |   |
+	 * | 2 | normal
+	 * | 3 | tangent
 	 * |   |
 	 *  -------------------------------
 	 * 
@@ -710,7 +710,7 @@ public class Loader {
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW); // Cannot be modified
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer,usage); // Cannot be modified
 		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false,0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
@@ -724,7 +724,7 @@ public class Loader {
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
 		IntBuffer buffer = storeDataInIntBuffer(indices);
-		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STREAM_DRAW); // Cannot be modified
+		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW); // Cannot be modified
 	}
 	
 	private IntBuffer storeDataInIntBuffer(int[] data){
