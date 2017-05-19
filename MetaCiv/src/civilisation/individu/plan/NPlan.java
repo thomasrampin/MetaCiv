@@ -282,4 +282,5 @@ public class NPlan implements Cloneable, Serializable{
 	public void setCustomColor(Color customColor) {
 		CustomColor = customColor;
 	}
+	
 }

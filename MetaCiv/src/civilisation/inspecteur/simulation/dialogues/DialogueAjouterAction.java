@@ -87,7 +87,7 @@ public class DialogueAjouterAction extends JDialog implements ActionListener, Pr
  
 				DialogueEditerAction d;
 				try {
-					d = new DialogueEditerAction((Frame) p.getTopLevelAncestor() , true , p, nouvelleAction);
+					d = new DialogueEditerAction((Frame) p.getTopLevelAncestor() , true , nouvelleAction);
 					d.setVisible(true);
 				} catch (IOException e2) {
 					e2.printStackTrace();

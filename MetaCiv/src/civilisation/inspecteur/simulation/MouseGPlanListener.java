@@ -20,7 +20,11 @@ public class MouseGPlanListener implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-	    if(SwingUtilities.isLeftMouseButton(e)){
+	    if(SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2 && !e.isConsumed()) { // si double click gauche
+	    	e.consume();
+	    	p.editerPlanAvecEditeur();
+	    }
+	    else if(SwingUtilities.isLeftMouseButton(e)){
 			p.selectionnerPlan();
 	    }	
 	    if(SwingUtilities.isRightMouseButton(e)){

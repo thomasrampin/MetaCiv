@@ -18,6 +18,7 @@ import civilisation.individu.plan.NPlan;
 import civilisation.individu.plan.NPlanPondere;
 import civilisation.inspecteur.animations.JJComponent;
 import civilisation.inspecteur.animations.JJPanel;
+import civilisation.inspecteur.simulation.editeurPlan.AEditorWindow;
 
 
 public class GPlan extends GItemCognitif{
@@ -91,6 +92,10 @@ public class GPlan extends GItemCognitif{
 
 	public void selectionnerPlan(){
 		((PanelStructureCognitive) this.getParent()).selectionnerPlan(typePlan);
+	}
+	
+	public void editerPlanAvecEditeur() {
+		AEditorWindow editeur = new AEditorWindow(typePlan.getNom(), typePlan);
 	}
 
 

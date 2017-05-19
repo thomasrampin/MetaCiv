@@ -28,7 +28,7 @@ public class ActionsMenuActions implements ActionListener{
 		if (index == 0){
 			DialogueEditerAction d;
 			try {
-				d = new DialogueEditerAction((Frame) pa.getTopLevelAncestor() , true , pa, selectedAction);
+				d = new DialogueEditerAction((Frame) pa.getTopLevelAncestor() , true, selectedAction);
 				d.setVisible(true);
 			} catch (IOException e1) {
 				e1.printStackTrace();

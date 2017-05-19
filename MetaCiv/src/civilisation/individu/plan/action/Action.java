@@ -413,4 +413,23 @@ public abstract class Action implements Cloneable, Serializable {
 		MCDoubleParameter ret = new MCDoubleParameter(val, Const);	
 		return ret;
 	}
+	
+	/**
+	 * Get the action which contain the action in parameter
+	 * @param action
+	 * @return the action or null if not found
+	 */
+	public Action getParentAction(Action action) {
+		for(Action a : getListeActions()) {
+			if(a.equals(action)){
+				return this;
+			} else {
+				Action act = a.getParentAction(action);
+				if(act != null) {
+					return act;
+				}
+			}
+		}
+		return null;
+	}
 }
