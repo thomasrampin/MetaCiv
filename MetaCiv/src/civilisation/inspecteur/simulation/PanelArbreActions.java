@@ -26,6 +26,7 @@ import civilisation.individu.plan.action.Action;
 import civilisation.inspecteur.animations.JJPanel;
 import civilisation.inspecteur.simulation.dialogues.DialogueAjouterAction.Option_BeforeAfter;
 
+@SuppressWarnings("serial")
 public class PanelArbreActions extends JJPanel{
 
 	JTree arbreActions;
@@ -75,7 +76,6 @@ public class PanelArbreActions extends JJPanel{
 		
 		this.add(scrollAction , BorderLayout.CENTER);
 		
-		//this.add(arbreActions , BorderLayout.CENTER);
 		javax.swing.ToolTipManager.sharedInstance().registerComponent(arbreActions);
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)arbreActions.getModel().getRoot();
 	        Enumeration<?> e = root.breadthFirstEnumeration();
@@ -91,16 +91,12 @@ public class PanelArbreActions extends JJPanel{
 		if (arbreActions != null) {
 			this.remove(scrollAction);
 		}
-		//System.out.println("Nouveau plan : " + plan.getNom());
 		this.plan = plan;
 		setupArbreActions();
 	}
 	public void afficherPopup(MouseEvent e, Action a){
-		
 		NodeArbreActions parentNode = ((NodeArbreActions)(((NodeArbreActions) this.getArbreActions().getPathForLocation(e.getX(), e.getY()).getLastPathComponent()).getParent()));
 		
-	//	System.out.println(a.getSimpleName() + " actions slot "+a.getNumberActionSlot() );
-
 		popup = new JPopupMenu(I18nList.CheckLang("Action"));
 		JMenuItem editerAction = new JMenuItem(I18nList.CheckLang("Edit"));
 

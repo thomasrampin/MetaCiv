@@ -6,7 +6,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -30,9 +32,14 @@ import civilisation.inventaire.Objet;
 import civilisation.world.Terrain;
 
 @SuppressWarnings("serial")
+/**
+ * Classe qui fabrique le panel contenant le nom de l'action du block et les parametres de l'action 
+ * @author Arnau
+ *
+ */
 public class AEditorPanelParametres extends JPanel {
 	
-	JLabel lname;
+	JLabel lname; // label du nom de l'action
 	ArrayList<JComponent> boxs = new ArrayList<JComponent>();
 	ArrayList<String[]> schema;
 	Action a;
@@ -47,6 +54,7 @@ public class AEditorPanelParametres extends JPanel {
 	
 	public AEditorPanelParametres(Action action) {
 		super();
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		a = action;
 		lname = new JLabel(action.getSimpleName(), SwingConstants.CENTER);
 		this.add(lname);
@@ -62,6 +70,10 @@ public class AEditorPanelParametres extends JPanel {
 		return lname;
 	}
 	
+	/**
+	 * Ajout des parametres dans le panel
+	 * Tiré de la fonction du créer la boite de dialogue d'edition
+	 */
 	private void addParameters() {
 		boolean extraAttribute = false;
 		String extraTitle="extra Attribute";
@@ -247,7 +259,8 @@ public class AEditorPanelParametres extends JPanel {
 					{
 						grpSelector = new ButtonGroup();
 						selector = new JRadioButton();
-						selector.setName(Integer.toString(boxs.size()+3));
+						//selector.setName(Integer.toString(boxs.size()+3));
+						selector.setOpaque(false);
 						grpSelector.add(selector);
 						selector.setSelected(true);
 						selector.addActionListener(new ActionListener() {
@@ -260,16 +273,19 @@ public class AEditorPanelParametres extends JPanel {
 						selector.addActionListener(new AEditorParameterSelectorChangeListener()); // listener de changement
 						boxs.add(selector);
 					}
+					box.setMaximumSize(box.getPreferredSize());
 					boxs.add(box);					
 				}
 				box.addItemListener(new AEditoComboBoxParameterChangeListener()); // listenr de changement
 				Box hb = Box.createHorizontalBox();
+				hb.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 				
 				JLabel nom = new JLabel(schema.get(i)[1]);
 				nom.setForeground(AEditorColors.WHITE.color);
 				if(extraAttribute)
 				{
 					selector = new JRadioButton();
+					selector.setOpaque(false);
 					grpSelector.add(selector);
 					if(!extraBox.getSelectedItem().equals(DefineConstants.__MC_NULL_CONSTANT))
 					{
@@ -280,17 +296,17 @@ public class AEditorPanelParametres extends JPanel {
 					boxs.add(selector);
 					boxs.add(extraBox);
 					hb.add(boxs.get(boxs.size()-4));
-					hb.add(nom);
+					//hb.add(nom);
 					hb.add(boxs.get(boxs.size()-3));
 					hb.add(boxs.get(boxs.size()-2));
-					JLabel eT = new JLabel(extraTitle);
+					/*JLabel eT = new JLabel(extraTitle);
 					eT.setForeground(AEditorColors.WHITE.color);
-					hb.add(eT);
+					hb.add(eT);*/
 					hb.add(boxs.get(boxs.size()-1));	
 				}
 				else
 				{
-					hb.add(nom);
+					//hb.add(nom);
 					hb.add(boxs.get(boxs.size()-1));
 				}
 				this.add(hb);
@@ -301,6 +317,7 @@ public class AEditorPanelParametres extends JPanel {
 	
 	/**
 	 * Mets a jour les paramaetres de l'action suivants les valeurs saisies dans les blocks
+	 * tiré de la classe qui créer la boite de dialogue d'edition
 	 */
 	private void appliquerChangementsParametres() {
 		a.clearOptions(); //Suppression des anciennes options

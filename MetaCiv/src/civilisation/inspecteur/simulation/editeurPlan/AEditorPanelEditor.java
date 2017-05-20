@@ -27,11 +27,16 @@ import civilisation.individu.plan.action.Action;
 import civilisation.inspecteur.simulation.editeurPlan.AEditorBlock.ActionBlockPopupMenu;
 
 @SuppressWarnings("serial")
+/**
+ * Panel editeur où sont posés les blocks
+ * @author Arnau
+ *
+ */
 public class AEditorPanelEditor extends JLayeredPane{
 	
 	public final static Color EDITOR_COLOR = AEditorColors.WHITE.color;
 	private NPlan plan;
-	private AEditorBlock root;
+	private AEditorBlock root; // block root
 	
 	public AEditorPanelEditor(NPlan plan) {
 		super();
@@ -39,6 +44,10 @@ public class AEditorPanelEditor extends JLayeredPane{
 		init(plan);
 	}
 	
+	/**
+	 * Fonction d'initialisation du panel
+	 * @param plan
+	 */
 	private void init(NPlan plan) {
 		initPlan(plan);
 		setLayout(new AEditorDragLayout()); // pour poser où on veut dans le panel
@@ -46,6 +55,10 @@ public class AEditorPanelEditor extends JLayeredPane{
 		setBackground(EDITOR_COLOR);
 	}
 	
+	/**
+	 * Ajout du block root ainsi que les actions déjà presentes dans le plan
+	 * @param plan
+	 */
 	private void initPlan(NPlan plan) {
 		root = new AEditorBlockRoot("Root"); // ajout du block root
 		addBlock(root, new Point(100, 30));
@@ -126,8 +139,8 @@ public class AEditorPanelEditor extends JLayeredPane{
 	private void addListenersToBlock(AEditorBlock block) {
 		//on cree un drag listener pour bouger les block apres les avoir inserer
 		DragEListener dragL = new DragEListener();
-		block.addMouseListener(dragL);
-		block.addMouseMotionListener(dragL);
+		block.addMouseListener(dragL); // listeners pour deplacer les blocks
+		block.addMouseMotionListener(dragL); // listeners pour deplacer les blocks
 		//on ajoute l'option delete dans le menu popup du block
 		final ActionBlockPopupMenu menuPopupBlock = (ActionBlockPopupMenu) block.getComponentPopupMenu();
 		JMenuItem delete = new JMenuItem("Supprimer");
@@ -137,16 +150,16 @@ public class AEditorPanelEditor extends JLayeredPane{
 				menuPopupBlock.getBlock().dissociate(menuPopupBlock.getBlock(), plan);
 				AEditorPanelEditor.this.remove(menuPopupBlock.getBlock());
 				AEditorPanelEditor.this.revalidate();
-				//AEditorPanelEditor.this.repaint();
+				AEditorPanelEditor.this.repaint();
 			}
 		});
 		menuPopupBlock.add(delete);
 	}
 	
 	/**
-	 * Ajoute un block si possible au point loc
+	 * Ajoute un block, si possible, au point loc
 	 * @param block le block a ajouté
-	 * @param loc , la position où ajouter le block
+	 * @param loc la position où ajouter le block
 	 */
 	public void addBlock(AEditorBlock block, Point loc) {
 		this.add(block);
@@ -172,8 +185,9 @@ public class AEditorPanelEditor extends JLayeredPane{
 	
 	/**
 	 * Ajoute un block dans l'editeur apres le block parent passé en parametre
-	 * @param parent, block parent du block a ajouter
-	 * @param block, le block a ajouter
+	 * @param parent block parent du block a ajouter
+	 * @param block le block a ajouter
+	 * @param mode le mode d'ajout
 	 */
 	private void addBlock(AEditorBlock parent, AEditorBlock block, int mode) {
 		this.add(block);
@@ -183,16 +197,6 @@ public class AEditorPanelEditor extends JLayeredPane{
 		block.updatePanelLayer(this);// on met a jour le layer du block ajouté ainsi que ses fils potentiels
 		revalidate();
 		//repaint();
-	}
-	
-	public void applyPlanEdition() {
-		//ArrayList<Action> listeAction = ;
-		plan.setActions(getListeActions());
-	}
-	
-	private ArrayList<Action> getListeActions() {
-		ArrayList<Action> listeAction = new ArrayList<>();
-		return listeAction;
 	}
 	
 	/**
@@ -231,11 +235,11 @@ public class AEditorPanelEditor extends JLayeredPane{
 		        for(Component c : getComponents()) {
 					AEditorBlock b = (AEditorBlock) c;
 					if(!b.equals(blockDrag)) // ne pas changer la bordure du block que l'on drag
-						b.changeBorder(dropLocation);
+						b.changeBorder(dropLocation); // on change la bordure des blocks pour les indications visuelles pour relier les blocks
 				}
 		        int x = location.x - pressed.getX() + me.getX();
 		        int y = location.y - pressed.getY() + me.getY();
-		        blockDrag.setLocationWithChildren(x, y);
+		        blockDrag.setLocationWithChildren(x, y); // on bouge le block et ses fils
 	    	}
 	     }
 	    
@@ -247,15 +251,16 @@ public class AEditorPanelEditor extends JLayeredPane{
 		        Point dropLocation = new Point(location.x + me.getX() , location.y + me.getY());
 				for(Component c : getComponents()) {
 					AEditorBlock b = (AEditorBlock) c;
-					b.resetBorder();
-					if(!b.equals(blockDrag) && b.attach(blockDrag, dropLocation, plan)) {
-						blockDrag.updatePanelLayer(AEditorPanelEditor.this);
+					b.resetBorder(); // on enelve les indications visuelles
+					if(!b.equals(blockDrag) && b.attach(blockDrag, dropLocation, plan)) { // si on a reussit l'ajout du block
+						blockDrag.updatePanelLayer(AEditorPanelEditor.this); // on met a jour l'index du block dans le panel
 						setCursor(Cursor.getDefaultCursor());
 						revalidate();
 						//repaint();
 						return;
 					}
 				}
+				//si on a pas reussi a ajouter le block, on le pose a l'endroit de la souris
 		        int x = location.x - pressed.getX() + me.getX();
 		        int y = location.y - pressed.getY() + me.getY();
 		        blockDrag.setLocationWithChildren(x, y);
@@ -315,8 +320,8 @@ public class AEditorPanelEditor extends JLayeredPane{
 				} else { // actions de type repeat ou instant
 					block = new AEditorBlockInstant(action);
 				}
-				addListenersToBlock(block);
-				editorPanel.addBlock(block, loc.getDropPoint());
+				addListenersToBlock(block); // on ajoute les listeners du panel au block
+				editorPanel.addBlock(block, loc.getDropPoint()); // on ajoute le block au panel a l'endroit du drop
 				for(Component c : editorPanel.getComponents()) { // reset les borders d'aide au drop des blocks
 					AEditorBlock b = (AEditorBlock) c;
 					b.resetBorder();
