@@ -280,7 +280,7 @@ public class Terrain {
         
         //Compute tangents
        
-        for(int i=0;i<pointer-3;i+=3){
+       /* for(int i=0;i<pointer-3;i+=3){
 	        Vector3f deltaPos1 = Vector3f.sub(pos[indices[i+1]], pos[indices[i]],null);
 	        Vector3f deltaPos2 = Vector3f.sub(pos[indices[i+2]], pos[indices[i]],null);
 	
@@ -292,32 +292,32 @@ public class Terrain {
 	        //System.out.println("Pos1 " + deltaPos1.toString() + " Pos2 " + deltaPos2.toString() + " UV1 " + deltaUv1.toString() + " UV2 " + deltaUv2.toString());
 	        
 	        deltaPos1.scale(deltaUv2.y);
-	        deltaPos2.scale(deltaUv1.y);
+	        deltaPos2.scale(deltaUv2.x);
 			Vector3f tangent = Vector3f.sub(deltaPos1, deltaPos2, null);
 			tangent.scale(r);
 			tangent.normalise();
 			
-	        tangents[indices[i]*3] = tangent.x;
-	        tangents[indices[i]*3+1] =  tangent.y;
-	        tangents[indices[i]*3+2] =  tangent.z;
+	        tangents[indices[i]*3] += tangent.x;
+	        tangents[indices[i]*3+1] +=  tangent.y;
+	        tangents[indices[i]*3+2] +=  tangent.z;
 	        
-	        tangents[indices[i]*3] = tangent.x;
-	        tangents[indices[i+1]*3+1] = tangent.y;
-	        tangents[indices[i+2]*3+2] =  tangent.z;
+	        tangents[indices[i]*3] += tangent.x;
+	        tangents[indices[i+1]*3+1] += tangent.y;
+	        tangents[indices[i+2]*3+2] +=  tangent.z;
 	        
-	        tangents[indices[i]*3] = tangent.x;
-	        tangents[indices[i+1]*3+1] = tangent.y;
-	        tangents[indices[i+2]*3+2] =  tangent.z;
+	        tangents[indices[i]*3] += tangent.x;
+	        tangents[indices[i+1]*3+1] += tangent.y;
+	        tangents[indices[i+2]*3+2] +=  tangent.z;
 	        //k+=3;
         }
         
-       /* for(int i=0;i<count-3;i+=3){
+       for(int i=0;i<count-3;i+=3){
         	Vector3f tangent = new Vector3f(tangents[i],tangents[i+1],tangents[i+2]);
         	if(tangent.length()>0)
         		tangent.normalise();
-        	tangents[i] += tangent.x;
- 	        tangents[i+1] += tangent.y;
- 	        tangents[i+2] +=  tangent.z;
+        	tangents[i] = tangent.x;
+ 	        tangents[i+1] = tangent.y;
+ 	        tangents[i+2] =  tangent.z;
         	
         }*/
         

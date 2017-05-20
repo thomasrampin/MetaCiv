@@ -122,7 +122,7 @@ void main(void){
 	bool isRoad=(red==0.0 && green==0.0 && blue==0.0);
 
 
-	vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+	//vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
 
 	vec3 unitVectorToCamera = normalize(fs_in.toCameraVector);
 
@@ -201,7 +201,7 @@ void main(void){
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
 
-	vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+	//vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
 	vec3 unitLightVector = normalize(fs_in.toLightVector);
 
 	float nDotl = dot(unitNormal,unitLightVector);

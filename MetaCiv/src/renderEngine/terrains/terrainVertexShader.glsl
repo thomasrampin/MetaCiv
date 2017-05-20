@@ -56,7 +56,7 @@ void main(void){
 
 	vs_out.normal = (transformationMatrix * vec4(normal,0.0)).xyz;
 
-    mat3 normalMatrix = transpose(inverse(mat3(transformationMatrix)));
+    /*mat3 normalMatrix = transpose(inverse(mat3(transformationMatrix)));
     vec3 T = normalize(mat3(transformationMatrix) * tangent);
     vec3 N = normalize(mat3(transformationMatrix) * normal);
     vec3 B = normalize(cross(N,T));
@@ -64,7 +64,7 @@ void main(void){
 
     vs_out.TangentLightPos = vs_out.TBN * lightPosition;
     vs_out.TangentViewPos  = vs_out.TBN * viewPos;
-    vs_out.TangentFragPos  = vs_out.TBN * worldPosition.xyz;
+    vs_out.TangentFragPos  = vs_out.TBN * worldPosition.xyz;*/
 
 	vs_out.RM = mat3( transformationMatrix[0].xyz,
 			transformationMatrix[1].xyz,
