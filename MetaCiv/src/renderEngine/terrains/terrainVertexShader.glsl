@@ -66,9 +66,9 @@ void main(void){
     vs_out.TangentViewPos  = vs_out.TBN * viewPos;
     vs_out.TangentFragPos  = vs_out.TBN * worldPosition.xyz;*/
 
-	vs_out.RM = mat3( transformationMatrix[0].xyz,
+	/*vs_out.RM = mat3( transformationMatrix[0].xyz,
 			transformationMatrix[1].xyz,
-			transformationMatrix[2].xyz );
+			transformationMatrix[2].xyz );*/
 	vs_out.toLightVector =  (lightPosition - worldPosition.xyz);
 
 	vs_out.toCameraVector =  ((inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz);

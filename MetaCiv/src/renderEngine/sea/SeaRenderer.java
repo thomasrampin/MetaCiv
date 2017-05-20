@@ -55,6 +55,7 @@ public class SeaRenderer {
 		this.shader = new SeaShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.conectTexture();
 		shader.stop();
 		
 		//setUpVAO(loader);
@@ -68,63 +69,81 @@ public class SeaRenderer {
 	public void render(Camera camera, Light light,SeaFrameBuffers fbos,float distanceFog, float delta) {
 		prepareRender(camera,light,delta);	
 		
-			Matrix4f modelMatrix;/* = Matrix.createTransformationMatrix(
-					new Vector3f(-128,0,-128), 0, 0, 0,
-					13,13,13);*/
-			if(Window.is4 && World.getSea()==2){
-				
-				shaderTess.conectTexture();
-				shaderTess.loadTessLevel(tessLevel);
-				shaderTess.loadDistanceFog(distanceFog);
-			}else{
-				
-				shader.conectTexture();
-				shader.loadDistanceFog(distanceFog);
-			}
+		Matrix4f modelMatrix;/* = Matrix.createTransformationMatrix(
+				new Vector3f(-128,0,-128), 0, 0, 0,
+				13,13,13);*/
+		if(Window.is4 && World.getSea()==2){
 			
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getReflectionTexture());
-			GL13.glActiveTexture(GL13.GL_TEXTURE1);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionTexture());
-			GL13.glActiveTexture(GL13.GL_TEXTURE2);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,dudvID);
-			GL13.glActiveTexture(GL13.GL_TEXTURE3);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,normalID);
-			GL13.glActiveTexture(GL13.GL_TEXTURE4);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,dispID);
-			GL13.glActiveTexture(GL13.GL_TEXTURE5);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionDepthTexture());
+			shaderTess.conectTexture();
+			shaderTess.loadTessLevel(tessLevel);
+			shaderTess.loadDistanceFog(distanceFog);
+		}else{
 			
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			shader.loadDistanceFog(distanceFog);
+		}
 		
-			
-			
-			int l=0;
-			int m=0;
-			
-			while(Terrain.SIZE_Z>-128+64*13*l){
-				m=0;
-				while(Terrain.SIZE_X>-128+64*13*m){
-					modelMatrix = Matrix.createTransformationMatrix(
-							new Vector3f(-128+(64*13*l),0,-128+(64*13*m)), 0, 0, 0,
-							13,13,13);
-					if(Window.is4 && World.getSea()==2){
-						shaderTess.loadModelMatrix(modelMatrix);
-					}else{
-						shader.loadModelMatrix(modelMatrix);
-					}
-					if(Window.is4 && World.getSea()==2){
-						GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64 * 64);
-					}else{
-						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-					}
-					m++;
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getReflectionTexture());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionTexture());
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,dudvID);
+		GL13.glActiveTexture(GL13.GL_TEXTURE3);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,normalID);
+		GL13.glActiveTexture(GL13.GL_TEXTURE4);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,dispID);
+		GL13.glActiveTexture(GL13.GL_TEXTURE5);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionDepthTexture());
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+	
+		
+		
+		int l=0;
+		int m=0;
+		
+		while(Terrain.SIZE_Z>-128+64*13*l){
+			m=0;
+			while(Terrain.SIZE_X>-128+64*13*m){
+				modelMatrix = Matrix.createTransformationMatrix(
+						new Vector3f(-128+(64*13*l),0,-128+(64*13*m)), 0, 0, 0,
+						13,13,13);
+				if(Window.is4 && World.getSea()==2 ){
+					
+					shaderTess.loadModelMatrix(modelMatrix);
+				}else{
+				
+					shader.loadModelMatrix(modelMatrix);
 				}
-				l++;
+				if(Window.is4 && World.getSea()==2){
+					if(-128+64*13*(l+1) + 64*13>camera.getPosition().x && -128+64*13*(l-1)<camera.getPosition().x && -128+(64*13*(m+1)) + 64*13>camera.getPosition().z && -128+(64*13*(m-1))<camera.getPosition().z)
+						GL31.glDrawArraysInstanced(GL40.GL_PATCHES, 0, 4, 64*64);
+					else{
+						shaderTess.stop();
+						
+						shader.start();
+						shader.loadDistanceFog(distanceFog);
+						shader.loadlight(light);
+						shader.loadViewMatrix(camera);
+						shader.loadCamera(camera);
+						shader.loadModelMatrix(modelMatrix);
+						GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+						shader.stop();
+					
+						
+						shaderTess.start();
+					}
+				}else{
+					GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+				}
+				m++;
 			}
-			
-			
+			l++;
+		}
+		
+		
 		unbind();
 	}
 	
