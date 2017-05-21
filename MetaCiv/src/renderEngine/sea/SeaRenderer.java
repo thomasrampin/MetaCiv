@@ -25,9 +25,10 @@ public class SeaRenderer {
 
     private static final String DIFFUSE_MAP = "water/water_NRM.png";
     private static final String DUDV_MAP = "water/waterDUDV.png";
+    private static final String DUDV_MAP_WAVE = "water/waterDUDV_wave.png";
     private static final String NORMAL_MAP = "water/water_NRM.png";
     private static final String DISP_MAP = "water/water_DISP.png";
-	private static final float WAVE_SPEED = 0.01f;
+	private static final float WAVE_SPEED = 0.008f;
 	private static float WAVE_INCREASE_SPEED = 0.001f;
     
 	private Mesh quad;
@@ -36,6 +37,7 @@ public class SeaRenderer {
 	
 	private int textureID;
 	private int dudvID;
+	private int dudvWaveID;
 	private int normalID;
 	private int dispID;
 	private float moveFactor = 0;
@@ -60,9 +62,10 @@ public class SeaRenderer {
 		
 		//setUpVAO(loader);
 		//textureID = loader.loadTexture(DIFFUSE_MAP);
-		dudvID = loader.loadTexture(DUDV_MAP);
-		normalID = loader.loadTexture(NORMAL_MAP);
-		dispID = loader.loadTexture(DISP_MAP);
+		dudvID = loader.loadTexture(DUDV_MAP,false);
+		dudvWaveID = loader.loadTexture(DUDV_MAP_WAVE,false);
+		normalID = loader.loadTexture(NORMAL_MAP,false);
+		dispID = loader.loadTexture(DISP_MAP,false);
 		GL40.glPatchParameteri(GL40.GL_PATCH_VERTICES, 4);
 	}
 
@@ -95,7 +98,10 @@ public class SeaRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D,dispID);
 		GL13.glActiveTexture(GL13.GL_TEXTURE5);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D,fbos.getRefractionDepthTexture());
-		
+		if(Window.is4 && World.getSea()==2 ){
+			GL13.glActiveTexture(GL13.GL_TEXTURE6);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D,dudvWaveID);
+		}
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
 	
@@ -162,10 +168,10 @@ public class SeaRenderer {
 		//GL30.glBindVertexArray(quad.getVaoID());
 		//GL20.glEnableVertexAttribArray(0);
 		moveFactor += WAVE_SPEED * delta/1000;
-		moveFactor %= 1;
+		//moveFactor %= 1;
 		waveStrenght += WAVE_INCREASE_SPEED ;
 		
-		if(waveStrenght>=1.5 || waveStrenght<=0.001)
+		if(waveStrenght>=1.8 || waveStrenght<=0.5)
 			WAVE_INCREASE_SPEED = -WAVE_INCREASE_SPEED;
 
 		if(Window.is4 && World.getSea()==2){

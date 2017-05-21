@@ -142,7 +142,11 @@ void main(void){
 		vec4 gloss_color;
 		float gloss = texture(roughnessMap,texCoords).r;
 		float fresnelFactor = max(1-dot(unitVectorToCamera,unitNormal),0.8);
-		vec3 r = reflect(normalize(fs_in.toCameraVector),normalize(fs_in.RM * (unitNormal * fs_in.TBN)));
+		vec3 r;
+		if(normalMapped)
+			r = reflect(normalize(fs_in.toCameraVector),normalize(fs_in.RM * (unitNormal * fs_in.TBN)));
+		else
+			r = reflect(normalize(fs_in.toCameraVector),normalize((unitNormal)));
 		//Compute texture coordinate based on direction
 		vec2 tc;
 
@@ -163,10 +167,7 @@ void main(void){
 			FragmentColor0 = mix(FragmentColor0,final_gloss,(fresnelFactor)*texture(metalMap,texCoords).r);
 		else
 			FragmentColor0 = mix(FragmentColor0,final_gloss,0.5);
-		//FragmentColor0 += texture(reflexion_blur,tc);
-		//FragmentColor0 += mix(texture(reflexion,  vec2(tc.x+skyAngle/6,tc.y)),texture(reflexion_blur, vec2(tc.x+skyAngle/6,tc.y)),0.0);
-		//FragmentColor0 += CloudColor* max(texture(reflexion_blur, vec2(tc.x+skyAngle,tc.y)).r - 0.01*2,0)*gloss;
-		//FragmentColor0 = mix(Horizon,FragmentColor0,tc.y);
+
 	}
 	if(colorAction.r != -1.0)
 		FragmentColor0 *= vec4(colorAction,1.0);

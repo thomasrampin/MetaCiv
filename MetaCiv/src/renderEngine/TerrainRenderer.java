@@ -40,7 +40,7 @@ public class TerrainRenderer {
     public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix,ArrayList<TerrainTexture> textures,Loader loader) {
         this.shader = shader;
         lShader = new LightShadowShader();
-        envTexture_level = loader.loadTexture("reflect/level1.png");
+        envTexture_level = loader.loadTexture("reflect/level1.png",false);
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);

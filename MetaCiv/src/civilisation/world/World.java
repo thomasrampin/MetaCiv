@@ -138,7 +138,7 @@ public class World extends TKEnvironment implements Serializable
        		accuracy=5;
        	}
 
-     	String[] MultiplySize3DS = Initialiseur.getChamp("MultiplySize3DS", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
+     	String[] MultiplySize3DS = Initialiseur.getChamp("MultiplySize3D", new File(pathToRessources + "/environnements/"+Configuration.environnementACharger+Configuration.getExtension()));
        	if(!MultiplySize3DS[0].equals("null")){
        		size3D = Float.parseFloat(MultiplySize3DS[0]);
        	}else{

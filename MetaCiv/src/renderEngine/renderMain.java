@@ -349,6 +349,12 @@ public class renderMain implements Runnable {
 	            else
 	            	GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	            	
+	            if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+	            	if(turtles.size()>0 ){
+	            		focusCamera = 0;
+						camera.setDistance();
+	            	}
+	            }
 	            
 	            if(focusCamera != -1)
 	            	camera.setTarget(turtles.get(focusCamera).getObject3d().getPosition());

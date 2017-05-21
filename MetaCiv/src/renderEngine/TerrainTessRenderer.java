@@ -92,7 +92,7 @@ public class TerrainTessRenderer {
         	
 	        for(TerrainTexture t:textures){
 	        	
-	        	diffuseArray[diffuseArraySize] = loader.loadTexture(t.getTexture()+".png");
+	        	diffuseArray[diffuseArraySize] = loader.loadTexture(t.getTexture()+".png",false);
 	        	handle[diffuseArraySize] = ARBBindlessTexture.glGetTextureHandleARB(diffuseArray[diffuseArraySize]);
 	        	ARBBindlessTexture.glMakeTextureHandleResidentARB(handle[diffuseArraySize]);
 	        	shader.connectBindless(handle[diffuseArraySize],diffuseArraySize);

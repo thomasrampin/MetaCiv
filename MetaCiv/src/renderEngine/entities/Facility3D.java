@@ -74,7 +74,7 @@ public class Facility3D {
 		ArrayList<TypeAmenagement> Amenagements = Configuration.getAllAmenagementFor3D();
 		for(TypeAmenagement Amenagement : Amenagements){
 			
-			File f = new File(Configuration.pathToRessources+"/Skin/Amenagement/" + Amenagement.getNom() + "/" + Amenagement.getNom() + ".OBJ");
+			File f = new File(Configuration.pathToRessources+"/Skin/Amenagement/" + Amenagement.getNom() + "/" + Amenagement.getNom() + ".obj");
 			
 			if(f.isFile()){
 				objects3d.add(new ObjectFacility3D(Amenagement.getNom(),new Object3D(f.getAbsolutePath(),f.getParent(), loader,true,true, new Vector3f(0, 0, 0), 0, 0, 0, 1.0f),Amenagement.getColor(),true));

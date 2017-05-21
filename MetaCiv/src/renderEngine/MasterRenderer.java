@@ -64,7 +64,7 @@ public class MasterRenderer {
         terrainInit = false;
         renderer = new EntityRenderer(loader,shader,projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix,textures,loader);
-        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png"),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<TerrainTexture>());
+        terrain= new Terrain(0,0, loader,new Material(loader.loadTexture("grass/grass.png",false),15f,new Vector3f(0,0,0),new Vector3f(1,1,1)),new ArrayList<TerrainTexture>());
     }
      
     public void render(List<Light> lights,Camera camera, BufferedImage image,Light sun,ArrayList<TerrainTexture> textures,Vector4f clipPlane,float distanceFog,boolean invertPitch,boolean forceLow,boolean fromLight,ShadowFrameBuffer shadowsTexture,SeaFrameBuffers fbos,Matrix4f shadowMatrix,Matrix4f  light_vp_matrix, boolean render_objects){

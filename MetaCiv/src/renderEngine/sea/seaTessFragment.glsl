@@ -30,7 +30,7 @@ uniform vec4 fog_color = vec4(0.4, 0.6, 0.9, 0);
 uniform float distanceFog;
 
 uniform float waveStrenght;
-const float shineDamper = 20.0;
+const float shineDamper = 50.0;
 const float reflectivity = 0.6;
 const vec4 coastlineColor = vec4(0.039,0.719,0.925,1);
 
@@ -116,28 +116,31 @@ void main(void) {
 
 	float nDotl = dot(vec3(0,1,0),normalize(fs_in.toLightVector));
 	float brightness = max(nDotl,0.2);
+	float nDotl2 = dot(normal,normalize(fs_in.toLightVector));
+	float brightness2 = max(nDotl,0.8);
 
 
-
-	float fresnelFactor = min(max(dot(viewVector,normal),0.3),1.0);
+	float fresnelFactor = max(dot(vec3(0,1,0),viewVector),0.0);
 
 	vec4 lighting =  min(vec4(brightness * lightColour ,1.0),1.0);
 
 
 
-	vec4 depthTexture = mix(vec4(0.302, 0.439, 1.0,1.0),texture(refractionMap,coords2),(1-texture(depthMap,coords2).r));
+	vec4 depthTexture = mix(coastlineColor,texture(refractionMap,coords2),clamp(seaDepth/30.0,0.0,1.0));
 	//out_Color = texture(diffuseMap,modifyTexCoords);
 	out_Color = mix(texture(diffuseMap,coords), depthTexture,fresnelFactor);
+	//out_Color *= brightness2;
 	out_Color = (mix(out_Color,vec4(1.0,1.0,1.0,1.0),fs_in.height));
 
-	if(dot(normal3,vec3(0,1,0))>0.5)
+	if(dot(normal3,vec3(0,1,0))>0.8)
 		out_Color += min(max(dot(normal2,vec3(0,1,0)),0),0.7);
 
 	out_Color *= lighting;
 
-	out_Color = mix(coastlineColor,out_Color,clamp(seaDepth/15.0,0.0,1.0)),
+	out_Color = mix(coastlineColor,out_Color,clamp(seaDepth/20.0,0.0,1.0)),
 	out_Color += vec4(specularHighlights,0.0);
 	out_Color.a = clamp(seaDepth/5.0,0.0,1.0);
+
 	out_Color = fog(out_Color);
 
 

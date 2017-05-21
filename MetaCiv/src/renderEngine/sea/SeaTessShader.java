@@ -33,6 +33,7 @@ public class SeaTessShader extends ShaderTessProgram {
 	private int location_waveStrenght;
 	private int location_distanceFog;
 	private int location_depthMap;
+	private int location_dudvwaveMap;
 	
 	
 	public SeaTessShader() {
@@ -62,6 +63,7 @@ public class SeaTessShader extends ShaderTessProgram {
 		location_waveStrenght = getUniformLocation("waveStrenght");
 		location_distanceFog = super.getUniformLocation("distanceFog");
 		location_depthMap = super.getUniformLocation("depthMap");
+		location_dudvwaveMap = super.getUniformLocation("dudvwaveMap");
 	}
 
 	public void conectTexture(){
@@ -71,6 +73,7 @@ public class SeaTessShader extends ShaderTessProgram {
 		super.loadInt(location_normalMap, 3);
 		super.loadInt(location_dispMap, 4);
 		super.loadInt(location_depthMap, 5);
+		super.loadInt(location_dudvwaveMap, 6);
 	}
 
 	public void loadDistanceFog(float distanceFog){

@@ -49,7 +49,7 @@ public class Turtle3D {
 	
 	public static void setUp(Loader loader){
 		for (int i = 0; i < Configuration.civilisations.size(); i++){
-			File f = new File(Configuration.pathToRessources+"/Skin/Civilisations/" + Configuration.civilisations.get(i).getNom() + "/" + Configuration.civilisations.get(i).getNom() + ".OBJ");
+			File f = new File(Configuration.pathToRessources+"/Skin/Civilisations/" + Configuration.civilisations.get(i).getNom() + "/" + Configuration.civilisations.get(i).getNom() + ".obj");
 			
 			if(f.isFile()){
 				objects3ds.add(new Object3D(f.getAbsolutePath(),f.getParent(), loader,true,true, new Vector3f(0, 0, 0), 0, 0, 0, 1.0f));

@@ -37,8 +37,8 @@ public class SkyRenderer {
 	
 	public SkyRenderer(Loader loader,Matrix4f projectionMatrix){
 		cube = OBJLoader.loadObjModel("sky", loader).getRawModel();
-		texture = loader.loadTexture("T_Sky_Blue.png");
-		alpha = loader.loadTexture("T_Sky_Clouds_M.png");
+		texture = loader.loadTexture("T_Sky_Blue.png",false);
+		alpha = loader.loadTexture("T_Sky_Clouds_M.png",false);
 		shader = new SkyShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);

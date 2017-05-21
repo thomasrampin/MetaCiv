@@ -30,7 +30,7 @@ public class EntityRenderer {
  
     public EntityRenderer(Loader loader,StaticShader shader,Matrix4f projectionMatrix) {
         this.shader = shader;
-        envTexture_level = loader.loadTexture("reflect/level1.png");
+        envTexture_level = loader.loadTexture("reflect/level1.png",false);
 
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);

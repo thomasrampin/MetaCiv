@@ -217,9 +217,14 @@ public class OBJLoader {
 			List<Vector3f> textures) {
 		Vector3f delatPos1 = Vector3f.sub(v1.position, v0.position, null);
 		Vector3f delatPos2 = Vector3f.sub(v2.position, v0.position, null);
-		Vector3f uv0 = textures.get(v0.getTextureIndex());
-		Vector3f uv1 = textures.get(v1.getTextureIndex());
-		Vector3f uv2 = textures.get(v2.getTextureIndex());
+		Vector3f uv0 = new Vector3f(0,0,0);
+		Vector3f uv1 = new Vector3f(0,0,0);
+		Vector3f uv2 = new Vector3f(0,0,0);
+		if(!textures.isEmpty()){
+			uv0 = textures.get(v0.getTextureIndex());
+			uv1 = textures.get(v1.getTextureIndex());
+			uv2 = textures.get(v2.getTextureIndex());
+		}
 		Vector3f deltaUv1 = Vector3f.sub(uv1, uv0, null);
 		Vector3f deltaUv2 = Vector3f.sub(uv2, uv0, null);
 
@@ -237,9 +242,14 @@ public class OBJLoader {
 			List<Vector3f> textures) {
 		Vector3f delatPos1 = Vector3f.sub(v1.position, v0.position, null);
 		Vector3f delatPos2 = Vector3f.sub(v2.position, v0.position, null);
-		Vector3f uv0 = textures.get(v0.getTextureIndex());
-		Vector3f uv1 = textures.get(v1.getTextureIndex());
-		Vector3f uv2 = textures.get(v2.getTextureIndex());
+		Vector3f uv0 = new Vector3f(0,0,0);
+		Vector3f uv1 = new Vector3f(0,0,0);
+		Vector3f uv2 = new Vector3f(0,0,0);
+		if(!textures.isEmpty()){
+			uv0 = textures.get(v0.getTextureIndex());
+			uv1 = textures.get(v1.getTextureIndex());
+			uv2 = textures.get(v2.getTextureIndex());
+		}
 		Vector3f deltaUv1 = Vector3f.sub(uv1, uv0, null);
 		Vector3f deltaUv2 = Vector3f.sub(uv2, uv0, null);
 
@@ -258,7 +268,9 @@ public class OBJLoader {
 			List<Integer> indices, int lastVertices, int lastTextures, int lastNormals) {
 		int index = Integer.parseInt(vertex[0]) - 1 - lastVertices;
 		Vertex currentVertex = vertices.get(index);
-		int textureIndex = Integer.parseInt(vertex[1]) - 1 - lastTextures;
+		int textureIndex = 0;
+		if(!vertex[1].equals(""))
+			textureIndex = Integer.parseInt(vertex[1]) - 1 - lastTextures;
 		int normalIndex = Integer.parseInt(vertex[2]) - 1 - lastNormals;
 		if (!currentVertex.isSet()) {
 			currentVertex.setTextureIndex(textureIndex);
@@ -279,7 +291,9 @@ public class OBJLoader {
 			Vertex currentVertex = vertices.get(i);
 
 			Vector3f position = currentVertex.position;
-			Vector3f textureCoord = textures.get(currentVertex.getTextureIndex());
+			Vector3f textureCoord = new Vector3f(0,0,0);
+			if(!textures.isEmpty())	
+				textureCoord = textures.get(currentVertex.getTextureIndex());
 			Vector3f normalVector = normals.get(currentVertex.getNormalIndex());
 			Vector3f tangent = currentVertex.tangent;
 			verticesArray[i * 3] = position.x;
@@ -480,26 +494,26 @@ public class OBJLoader {
 		
 		Material materialReturn = new Material(damper,reflectivity,diffuse);
 		if(!textureFile.equals(""))
-			materialReturn.setTextureID(loader.loadTexture(textureFile));
+			materialReturn.setTextureID(loader.loadTexture(textureFile,false));
 		
 		if(!normalFile.equals(""))
-			materialReturn.setNormalID(loader.loadTexture(normalFile));
+			materialReturn.setNormalID(loader.loadTexture(normalFile,false));
 		
 		if(!dispFile.equals(""))
-			materialReturn.setDispID(loader.loadTexture(dispFile));
+			materialReturn.setDispID(loader.loadTexture(dispFile,false));
 		
 		if(!reflFile.equals(""))
-			materialReturn.setReflID(loader.loadTexture(reflFile));
+			materialReturn.setReflID(loader.loadTexture(reflFile,false));
 					
 		if(!metalFile.equals(""))
-			materialReturn.setMetalID(loader.loadTexture(metalFile));
+			materialReturn.setMetalID(loader.loadTexture(metalFile,false));
 
 		
 		return materialReturn;
 	}
 	
 	
-	private static Material loadMaterial(String fileName,boolean absolute,String path, Loader loader,String material){
+	private static Material loadMaterial(String fileName,String filenameOBJ,boolean absolute,String path, Loader loader,String material){
 		FileReader fr = null;
 		try {
 			if(absolute)
@@ -510,7 +524,10 @@ public class OBJLoader {
 			System.err.println("Couldn't load file!");
 			e.printStackTrace();
 		}
-		
+		String remove = ".obj";
+		String removeCaps = ".OBJ";
+		String filenameCopy = filenameOBJ.replace(remove, "");
+		filenameCopy = filenameCopy.replace(removeCaps, "");
 		BufferedReader reader = new BufferedReader(fr);
 		String line;
 		String textureFile="";
@@ -551,20 +568,20 @@ public class OBJLoader {
 				}
 				else if(line.startsWith("	map_Kd")){
 					String[] currentLine = line.split(" ");
-					textureFile = currentLine[1];
+					textureFile =  path + "\\" +currentLine[1];
 				}
 				else if(line.startsWith("	map_bump")){
 					String[] currentLine = line.split(" ");
-					normalFile = currentLine[1];
+					normalFile = path + "\\" +currentLine[1];
 					
 				}
 				else if(line.startsWith("	disp")){
 					String[] currentLine = line.split(" ");
-					dispFile = currentLine[1];
+					dispFile =  path + "\\" +currentLine[1];
 				}
 				else if(line.startsWith("	map_refl")){
 					String[] currentLine = line.split(" ");
-					reflFile = currentLine[1];
+					reflFile = path + "\\" +currentLine[1];
 				}
 				
 				line = reader.readLine();
@@ -579,10 +596,10 @@ public class OBJLoader {
 		//Check out if any folder
 		File f ;
 		if(absolute){
-			f = new File(path + "/" + fileName);
+			f = new File(path + "/" + material);
 		}
 		else{
-			f = new File("Assets/texture/" + fileName);
+			f = new File("Assets/texture/" + material);
 		}
 		if(f.isDirectory()){
 			
@@ -590,38 +607,38 @@ public class OBJLoader {
 
 				if(fileEntry.getName().equals("Diffuse.png") || fileEntry.getName().equals("diffuse.png") || fileEntry.getName().equals("Albedo.png") || fileEntry.getName().equals("albedo.png") || fileEntry.getName().equals("Base_Color.png") || fileEntry.getName().equals("base_color.png") || fileEntry.getName().equals("Base_color.png")
 						|| fileEntry.getName().equals("base_Color.png") || fileEntry.getName().equals("BaseColor.png") || fileEntry.getName().equals("Basecolor.png") || fileEntry.getName().equals("baseColor.png") || fileEntry.getName().equals("basecolor.png")){
-					textureFile = fileName + "/" + fileEntry.getName();
+					textureFile = path + "/" + material + "/" + fileEntry.getName();
 				}
 				else if(fileEntry.getName().equals("normal.png") || fileEntry.getName().equals("Normal.png") || fileEntry.getName().equals("Normal_OpenGL.png")){
-					normalFile = fileName + "/" + fileEntry.getName();
+					normalFile = path + "/" + material + "/" + fileEntry.getName();
 				}
 				else if(fileEntry.getName().equals("Height.png") || fileEntry.getName().equals("height.png") || fileEntry.getName().equals("DisplacementMap.png") || fileEntry.getName().equals("displacentMap.png") || fileEntry.getName().equals("displacentmap.png") || fileEntry.getName().equals("dispMap.png") || fileEntry.getName().equals("dispmap.png")){
-					dispFile = fileName + "/" + fileEntry.getName();
+					dispFile = path + "/" + material + "/" + fileEntry.getName();
 				}
 				else if(fileEntry.getName().equals("Roughness.png") || fileEntry.getName().equals("roughness.png")){
-					reflFile = fileName + "/" + fileEntry.getName();
+					reflFile = path + "/" + material + "/" + fileEntry.getName();
 				}
 				else if(fileEntry.getName().equals("Metallic.png") || fileEntry.getName().equals("metallic.png") || fileEntry.getName().equals("Metal.png") || fileEntry.getName().equals("metal.png")){
-					metalFile = fileName + "/" + fileEntry.getName();
+					metalFile = path + "/" + material + "/" + fileEntry.getName();
 				}
 			}
 		}
 		
 		Material materialReturn = new Material(damper,reflectivity,diffuse);
 		if(!textureFile.equals(""))
-			materialReturn.setTextureID(loader.loadTexture(textureFile));
+			materialReturn.setTextureID(loader.loadTexture(textureFile,absolute));
 		
 		if(!normalFile.equals(""))
-			materialReturn.setNormalID(loader.loadTexture(normalFile));
+			materialReturn.setNormalID(loader.loadTexture(normalFile,absolute));
 		
 		if(!dispFile.equals(""))
-			materialReturn.setDispID(loader.loadTexture(dispFile));
+			materialReturn.setDispID(loader.loadTexture(dispFile,absolute));
 		
 		if(!reflFile.equals(""))
-			materialReturn.setReflID(loader.loadTexture(reflFile));
+			materialReturn.setReflID(loader.loadTexture(reflFile,absolute));
 		
 		if(!metalFile.equals(""))
-			materialReturn.setMetalID(loader.loadTexture(metalFile));				
+			materialReturn.setMetalID(loader.loadTexture(metalFile,absolute));				
 		return materialReturn;
 	}
 
@@ -812,7 +829,7 @@ public class OBJLoader {
 						texturesArray, normalsArray, tangentsArray);
 	
 	
-				Material texture = loadMaterial(fileMaterial,absolute,path,loader,Material);
+				Material texture = loadMaterial(fileMaterial,fileName,absolute,path,loader,Material);
 				
 				models.add(new Model(loader.loadToVAO(verticesArray, texturesArray,normalsArray, indicesArray,tangentsArray),texture));
 			}

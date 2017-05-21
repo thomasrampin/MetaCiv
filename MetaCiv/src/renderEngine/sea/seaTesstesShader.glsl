@@ -5,6 +5,7 @@
 layout (quads, fractional_odd_spacing) in;
 
 uniform sampler2D dudvMap;
+uniform sampler2D dudvwaveMap;
 uniform sampler2D dispMap;
 uniform sampler2D normalMap;
 
@@ -51,15 +52,16 @@ void main(void){
 
 	vec2 modifyTexCoords = tc;
 
-	vec2 distortion1 = vec2(tc.x*5.0 + moveFactor,tc.y*5.0 + moveFactor*2.0);
-	vec2 distortion2 = vec2(tc.x*5.0,tc.y*5.0 - moveFactor*2.0);
-	//distortion1 += (texture(dudvMap, vec2(tc.x + moveFactor,tc.y + moveFactor)).rg * 2.0 -1.0) * waveStrenght;
+	vec2 distortion1;
+	vec2 distortion2;
+	distortion1 = (texture(dudvwaveMap, vec2(tc.x + moveFactor,tc.y+ moveFactor)).rg * 2.0 -1.0) * waveStrenght;
+	distortion2 =  (texture(dudvwaveMap, vec2(tc.x - moveFactor,tc.y - moveFactor)).rg * 2.0 -1.0) * waveStrenght;
 	modifyTexCoords += distortion1;
 
 
 
-	p.y += (texture(dispMap, modifyTexCoords).r)*waveStrenght*2.0 ;
-	p.y += (texture(dispMap, distortion2).r)*waveStrenght*2.0 ;
+	p.y += (texture(dispMap, modifyTexCoords).r)*waveStrenght*3.0 ;
+	p.y += (texture(dispMap, distortion2).r)*waveStrenght*3.0 ;
 
 	distortion1 = (texture(dudvMap, vec2(tc.x*10.0 + moveFactor * 2.0,tc.y*10.0)).rg * 2.0 -1.0) * waveStrenght;
 	distortion1 += (texture(dudvMap, vec2(tc.x*10.0 + moveFactor* 2.0,tc.y*10.0 + moveFactor* 2.0)).rg * 2.0 -1.0) * waveStrenght;
@@ -82,7 +84,7 @@ void main(void){
 
 	vec4 worldPos = modelMatrix * p;
 	tess_out.world_coord =  vec3(projectionMatrix) * vec3(viewMatrix) * worldPos.xyz;
-	tess_out.clipSpace = projectionMatrix * viewMatrix * modelMatrix * p;
+	tess_out.clipSpace = projectionMatrix * viewMatrix * worldPos;
 	gl_Position =   projectionMatrix * viewMatrix * worldPos;
 
 
