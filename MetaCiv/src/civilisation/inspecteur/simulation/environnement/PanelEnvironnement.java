@@ -106,6 +106,11 @@ public class PanelEnvironnement extends JJPanel{
 		out.println("SnowDensity : " + World.getSnowDensity());
 		out.println("RoadTiling : " + World.getRoadTiling());
 		out.println("CliffTiling : " + World.getCliffTiling());
+		out.println("Accuracy : " + World.getAccuracy());
+		out.println("MultiplySize3D : " + World.getSize3D());
+		out.println("HeightMap : " + World.getHeightMap());
+		out.println("HeightIntensity : " + World.getIntensityHeight());
+		out.println("Sea : " + World.getSea());
 		
 		out.println();
 		for (int i = 0;i < Configuration.terrains.size(); i++){
