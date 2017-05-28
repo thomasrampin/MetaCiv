@@ -372,7 +372,7 @@ public class Initialiseur {
 		       	
 		       	String[] IH = getChamp("intensityHeightMap",file);
 		       	if(!IH[0].equals("null")){
-		       		t.setIntensityHeightMap(Integer.parseInt(IH[0]));
+		       		t.setIntensityHeightMap((double)Float.parseFloat(IH[0]));
 		       	}else{
 		       		t.setIntensityHeightMap(0);
 		       	}
