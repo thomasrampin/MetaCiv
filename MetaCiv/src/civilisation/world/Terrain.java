@@ -33,6 +33,8 @@ public class Terrain {
 	float height;
 	int erosion;
 	int blur;
+	int merge;
+	float intensityHeightMap;
 	private String texture;
 	float tiling;
 	
@@ -58,6 +60,8 @@ public class Terrain {
 		this.tiling = 1.0f;
 		this.erosion = 1;
 		this.blur = 0;
+		this.merge = 1;
+		this.intensityHeightMap = 0;
 		this.texture = nom;
 	}
 
@@ -161,6 +165,8 @@ public class Terrain {
 			out.println("Apparition : " + this.getApparition());
 			out.println("Hauteur : " + this.height);
 			out.println("Erosion : " + this.erosion);
+			out.println("Merge : " + this.merge);
+			out.println("intensityHeightMap : " + this.intensityHeightMap );
 			out.println("BlurMethod : " + this.blur);
 			out.println("Texture : " + this.texture);
 			out.println("Tiling : " + this.tiling);
@@ -246,6 +252,22 @@ public class Terrain {
 
 	public void setBlur(int blur){
 		this.blur = blur;
+	}
+
+	public int getMerge() {
+		return merge;
+	}
+
+	public void setMerge(int merge) {
+		this.merge = merge;
+	}
+
+	public float getIntensityHeightMap() {
+		return intensityHeightMap;
+	}
+
+	public void setIntensityHeightMap(double d) {
+		this.intensityHeightMap = (float) d;
 	}
 	
 	

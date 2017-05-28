@@ -191,7 +191,7 @@ public class GCarte extends JJComponent{
 		
 		JMenuItem editerPhero = new JMenuItem("Emplacement de d_part");
 		editerPhero.addActionListener(new ActionsMenuGCarte(this,0,e));
-		editerPhero.setIcon(new ImageIcon(this.getClass().getResource("../../icones/pencil.png")));
+		editerPhero.setIcon(Configuration.getIcon("pencil.png"));
 		popup.add(editerPhero);
 		
 		popup.show(this, e.getX(), e.getY());			

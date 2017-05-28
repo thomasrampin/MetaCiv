@@ -50,6 +50,8 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
     ArrayList<JSpinner> growthPh = new ArrayList<JSpinner>();
     Frame f;
     boolean modal;
+	private JSpinner jSpinnerMerge;
+	private JSpinner jSpinnerIH;
 	public DialogueEditerTerrain(Frame f , boolean modal, Terrain terrain){
 		super(f,modal);
 		f = f;
@@ -148,6 +150,18 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 		jSpinnerBlurMethod = new JSpinner(spinModel);
 		boxBlurMethod.add(jSpinnerBlurMethod);
 		
+		Box boxMerge = Box.createHorizontalBox();
+		spinModel = new SpinnerNumberModel(terrain.getMerge(), 0, 100, 1);
+		boxMerge.add(new JLabel(I18nList.CheckLang("Merge : ")));
+		jSpinnerMerge= new JSpinner(spinModel);
+		boxMerge.add(jSpinnerMerge);
+		
+		Box boxIntensity = Box.createHorizontalBox();
+		spinModel = new SpinnerNumberModel(terrain.getIntensityHeightMap(), 0, 1000, 0.1);
+		boxIntensity.add(new JLabel(I18nList.CheckLang("Intensity HeightMap : ")));
+		jSpinnerIH= new JSpinner(spinModel);
+		boxIntensity.add(jSpinnerIH);
+		
 		Box boxTexture = Box.createHorizontalBox();
 		boxTexture.add(new JLabel(I18nList.CheckLang("Textures Folder : ")));
 		textureFile = new JTextField(terrain.getTexture());
@@ -163,6 +177,8 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 		box.add(boxHeight);
 		box.add(boxErosion);
 		box.add(boxBlurMethod);
+		box.add(boxMerge);
+		box.add(boxIntensity);
 		box.add(boxTexture);
 		box.add(boxTiling);
 		
@@ -202,8 +218,10 @@ public class DialogueEditerTerrain extends JDialog implements ActionListener, Pr
 				terrain.setHeight( (double) jSpinnerHeight.getValue());
 				terrain.setErosion((Integer) jSpinnerErosion.getValue());
 				terrain.setBlur((Integer) jSpinnerBlurMethod.getValue());
+				terrain.setMerge((Integer) jSpinnerMerge.getValue());
 				terrain.setTexture(textureFile.getText());
 				terrain.setTiling((double) jSpinnerTiling.getValue());
+				terrain.setIntensityHeightMap((double) jSpinnerIH.getValue());
 				renderMain.updateTerrain();
 				terrain.clearPheromones();		
 				for (int i = 0 ; i < Configuration.itemsPheromones.size() ; i++) {

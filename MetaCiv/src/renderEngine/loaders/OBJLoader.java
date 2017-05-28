@@ -699,7 +699,13 @@ public class OBJLoader {
 						fileMaterial = currentLine[1];
 					}
 					else if(line.startsWith("v ")){	//Vertices position
-						Vector3f vertex = new Vector3f(Float.parseFloat(currentLine[2]),Float.parseFloat(currentLine[3]),Float.parseFloat(currentLine[4]));
+						Vector3f vertex = new Vector3f(0,0,0);
+						if(currentLine[1].isEmpty()){
+							vertex = new Vector3f(Float.parseFloat(currentLine[2]),Float.parseFloat(currentLine[3]),Float.parseFloat(currentLine[4]));
+						}else{
+							
+							vertex = new Vector3f(Float.parseFloat(currentLine[1]),Float.parseFloat(currentLine[2]),Float.parseFloat(currentLine[3]));
+						}
 						vertices.add(new Vertex(vertices.size(),vertex));
 						if(vertex.x < minX)
 							minX = vertex.x;
@@ -749,9 +755,16 @@ public class OBJLoader {
 					Vertex v0 = processVertex(vertex1, vertices, indices,lastVertices,lastTextures,lastNormals);
 					Vertex v1 = processVertex(vertex2, vertices, indices,lastVertices,lastTextures,lastNormals);
 					Vertex v2 = processVertex(vertex3, vertices, indices,lastVertices,lastTextures,lastNormals);
-					calculateTangents(v0, v1, v2, textures);
 					
 					
+					if(currentLine.length==5){
+						String[] vertex4 = currentLine[4].split("/");
+						v2 = processVertex(vertex3, vertices, indices,lastVertices,lastTextures,lastNormals);
+						Vertex v3 = processVertex(vertex4, vertices, indices,lastVertices,lastTextures,lastNormals);
+						v0 = processVertex(vertex1, vertices, indices,lastVertices,lastTextures,lastNormals);
+						calculateTangents(v0,v1,v2,v3, textures);
+					}else
+						calculateTangents(v0, v1, v2, textures);
 					/*rocessVertex(vertex1,indices,vertices,textures,normals,verticesArray,textureArray,normalsArray);
 					processVertex(vertex2,indices,vertices,textures,normals,verticesArray,textureArray,normalsArray);
 					processVertex(vertex3,indices,vertices,textures,normals,verticesArray,textureArray,normalsArray);

@@ -18,7 +18,7 @@ import renderEngine.utils.Matrix;
 
 public class SkyRenderer {
 
-	private static final float SIZE = World.getSize3D();
+	private static final float SIZE = 5;
 	
 	public static final Vector3f COLOUR = new Vector3f(0.8f,0.8f,0.8f);
 	

@@ -10,6 +10,8 @@ public class I18nListRessources_fr_FR extends ListResourceBundle {
 		  //tableau des mots cl�s et des valeurs 
 
 		  static final Object[][] contents = {
+			  {"Intensity HeightMap : ","Insité de la carte de hauteur : "},
+			  {"Merge : ","Fusion : "},
 			  {"Intensity Height : ","Intensité de la hauteur : "},
 			  {"Use Sea : ","Utilisé la mer : "},
 			  {"HeightMap : ","Carte de hauteur : "},

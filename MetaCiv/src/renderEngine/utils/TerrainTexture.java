@@ -19,10 +19,12 @@ public class TerrainTexture {
 	private float height;
 	private int erosion;
 	private float tiling;
+	private int merge;
 	private int blur;
 	private float isTextured;
+	private float intensityHeightMap;
 	
-	public TerrainTexture(float h, float s, float b,float height, int erosion,int blur,String texture,String normalMap,String displacementMap){
+	public TerrainTexture(float h, float s, float b,float height, int erosion,int blur,int merge,float intensityHeightMap,String texture,String normalMap,String displacementMap){
 		int color = Color.HSBtoRGB(h, s,b);
 		this.r = (color >> 16) & 0x000000FF;
 		this.g = (color >>8 ) & 0x000000FF;
@@ -33,9 +35,11 @@ public class TerrainTexture {
 		this.height = height;
 		this.erosion = erosion;
 		this.blur = blur;
+		this.merge = merge;
+		this.intensityHeightMap = intensityHeightMap;
 	}
 
-	public TerrainTexture(Color couleur, float height, int erosion,int blur, float tiling, String texture) {
+	public TerrainTexture(Color couleur, float height, int erosion,int blur,int merge,float intensityHeightMap, float tiling, String texture) {
 		this.isTextured = 1.0f;
 		this.r = couleur.getRed();
 		this.g = couleur.getGreen();
@@ -65,6 +69,8 @@ public class TerrainTexture {
 		this.erosion = erosion;
 		this.tiling = tiling;
 		this.blur = blur;
+		this.merge=merge;
+		this.intensityHeightMap = intensityHeightMap;
 	}
 
 	public TerrainTexture(TerrainTexture terrainTexture) {
@@ -79,6 +85,8 @@ public class TerrainTexture {
 		this.erosion = terrainTexture.erosion;
 		this.tiling = terrainTexture.tiling;
 		this.blur = terrainTexture.blur;
+		this.merge = terrainTexture.merge;
+		this.intensityHeightMap = intensityHeightMap;
 	}
 
 	public int getR() {
@@ -166,6 +174,22 @@ public class TerrainTexture {
 
 	public void setTextured(float isTextured) {
 		this.isTextured = isTextured;
+	}
+
+	public int getMerge() {
+		return merge;
+	}
+
+	public void setMerge(int merge) {
+		this.merge = merge;
+	}
+
+	public float getIntensityHeightMap() {
+		return intensityHeightMap;
+	}
+
+	public void setIntensityHeightMap(float intensityHeightMap) {
+		this.intensityHeightMap = intensityHeightMap;
 	}
 	
 	

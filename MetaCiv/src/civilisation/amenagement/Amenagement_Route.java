@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import civilisation.world.World;
+import civilisation.world.WorldViewer;
 import turtlekit.kernel.Patch;
 
 public class Amenagement_Route extends AmenagementPublic implements Serializable{
@@ -52,8 +53,8 @@ public class Amenagement_Route extends AmenagementPublic implements Serializable
 			g.drawLine(x, y+(cellS/2) + 1, x+(cellS-1)/2, y+(cellS/2) + 1);
 			
 			if(is3D){
-				g2d.drawLine((int) (x/(cellS/5.0)), (int) (y/(cellS/5.0))+(5/2)    , (int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2)    );
-				g2d.drawLine((int) (x/(cellS/5.0)), (int) (y/(cellS/5.0))+(5/2) + 1, (int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2) + 1);
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize)), (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    , (int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize-1)/2, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    );
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize)), (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1, (int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize-1)/2, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1);
 			}
 		} 
 		if (roadDirection[3]) {
@@ -61,8 +62,8 @@ public class Amenagement_Route extends AmenagementPublic implements Serializable
 			g.drawLine(x+(cellS/2) + 1, y+((cellS-1)/2), x+(cellS/2) + 1, y+cellS-1);
 			
 			if(is3D){
-				g2d.drawLine((int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0))+((5-1)/2), (int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0))+5-1);
-				g2d.drawLine((int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0))+((5-1)/2), (int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0))+5-1);
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    , (int) (y/(cellS/(float)WorldViewer.initialCellSize))+((WorldViewer.initialCellSize-1)/2), (int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    , (int) (y/(cellS/(float)WorldViewer.initialCellSize))+WorldViewer.initialCellSize-1);
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+((WorldViewer.initialCellSize-1)/2), (int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+WorldViewer.initialCellSize-1);
 			}
 		} 
 		if (roadDirection[0]) {
@@ -70,8 +71,8 @@ public class Amenagement_Route extends AmenagementPublic implements Serializable
 			g.drawLine(x+(cellS-1)/2, y+(cellS/2) + 1, x+cellS-1, y+(cellS/2) + 1);
 			
 			if(is3D){
-				g2d.drawLine((int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2)    , (int) (x/(cellS/5.0))+5-1, (int) (y/(cellS/5.0))+(5/2)    );
-				g2d.drawLine((int) (x/(cellS/5.0))+(5-1)/2, (int) (y/(cellS/5.0))+(5/2) + 1, (int) (x/(cellS/5.0))+5-1, (int) (y/(cellS/5.0))+(5/2) + 1);
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize-1)/2, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    , (int) (x/(cellS/(float)WorldViewer.initialCellSize))+WorldViewer.initialCellSize-1, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    );
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize-1)/2, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1, (int) (x/(cellS/(float)WorldViewer.initialCellSize))+WorldViewer.initialCellSize-1, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1);
 			}
 		} 
 		if (roadDirection[1]) {
@@ -79,8 +80,8 @@ public class Amenagement_Route extends AmenagementPublic implements Serializable
 			g.drawLine(x+(cellS/2) + 1, y, x+(cellS/2) + 1, y+((cellS-1)/2));
 			
 			if(is3D){
-				g2d.drawLine((int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0)), (int) (x/(cellS/5.0))+(5/2)    , (int) (y/(cellS/5.0))+((5-1)/2));
-				g2d.drawLine((int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0)), (int) (x/(cellS/5.0))+(5/2) + 1, (int) (y/(cellS/5.0))+((5-1)/2));
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    , (int) (y/(cellS/(float)WorldViewer.initialCellSize)), (int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2)    , (int) (y/(cellS/(float)WorldViewer.initialCellSize))+((WorldViewer.initialCellSize-1)/2));
+				g2d.drawLine((int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1, (int) (y/(cellS/(float)WorldViewer.initialCellSize)), (int) (x/(cellS/(float)WorldViewer.initialCellSize))+(WorldViewer.initialCellSize/2) + 1, (int) (y/(cellS/(float)WorldViewer.initialCellSize))+((WorldViewer.initialCellSize-1)/2));
 			}
 		}
 		

@@ -158,7 +158,7 @@ public class Terrain {
                 vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT_H - 1) * SIZE_X;
                 vertices[vertexPointer*3+1] = h;
                 if(!World.getHeightMap().equals(""))
-                	vertices[vertexPointer*3+1] += getHeight(jj%image2.getHeight(),ii%image2.getWidth());
+                	vertices[vertexPointer*3+1] += getHeightHeighMap(jj%image2.getHeight(),ii%image2.getWidth(),image,textures);
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT_W - 1) * SIZE_Z;
                
                 
@@ -370,14 +370,16 @@ public class Terrain {
 		return image.getWidth();
 	}
 	
-	public static float getHeight(int x, int z){
+	public static float getHeightHeighMap(int x, int z,BufferedImage image2,ArrayList<TerrainTexture> textures){
+		int I = getIndice(x,z,image2,textures);
 		if(x<0 || x>= image.getHeight() || z<0 || z>=image.getHeight()){
 			return 0;
 		}
 		float height = image.getRGB(x, z);
 		height += MAX_PIXEL_COLOUR /2f;
 		height /= MAX_PIXEL_COLOUR /2f;
-		height *= World.getIntensityHeight();
+		if(I!=-1)
+		height *= textures.get(I).getIntensityHeightMap();
 		
 		return height;
 	}
@@ -415,7 +417,7 @@ public class Terrain {
 		return height;
 	}
 	
-	private static int getErosion(int x, int z, BufferedImage image,ArrayList<TerrainTexture> textures){
+	private static int getIndice(int x, int z, BufferedImage image,ArrayList<TerrainTexture> textures){
 		if(x<0 || x>= image.getWidth() || z<0 || z>=image.getHeight()){
 			return 0;
 		}
@@ -423,7 +425,7 @@ public class Terrain {
 		float red = (rgb >> 16) & 0x000000FF;
 		float green = (rgb >>8 ) & 0x000000FF;
 		float blue = (rgb) & 0x000000FF;
-		int erosion = 0;
+		int indice = -1;
 		
 		
 		for(int i=0;i<textures.size();i++){
@@ -437,51 +439,28 @@ public class Terrain {
 			
 			
 			if(red2 == red && green2 == green && blue2 == blue){
-				erosion = (int) vector.w;
+				indice = i;
 				break;
 			}
 		}
-		return erosion;
+		return indice;
 	}
 	
-	private static int getBlur(int x, int z, BufferedImage image,ArrayList<TerrainTexture> textures){
-		if(x<0 || x>= image.getWidth() || z<0 || z>=image.getHeight()){
-			return 0;
-		}
-		int rgb = image.getRGB(x, z);
-		float red = (rgb >> 16) & 0x000000FF;
-		float green = (rgb >>8 ) & 0x000000FF;
-		float blue = (rgb) & 0x000000FF;
-		int erosion = 0;
-		
-		
-		for(int i=0;i<textures.size();i++){
-			Vector4f vector = new Vector4f(textures.get(i).getR(),textures.get(i).getG(),textures.get(i).getB(),textures.get(i).getBlur());
-			
-			
-			
-			float red2 = vector.x;
-			float green2 = vector.y;
-			float blue2 = vector.z;
-			
-			
-			if(red2 == red && green2 == green && blue2 == blue){
-				erosion = (int) vector.w;
-				break;
-			}
-		}
-		return erosion;
-	}
 	
 	public static float getHeight(int x, int z, BufferedImage image,ArrayList<TerrainTexture> textures){
-		
-		int N=getErosion(x,z,image,textures);
+		int I = getIndice(x,z,image,textures);
+		int N = 0,merge = 0,algo = 0;
+		if(I!=-1){
+			N= textures.get(I).getErosion();
+			merge =  textures.get(I).getMerge();
+			algo = (int) textures.get(I).getBlur();
+		}
 		
 		int dividande=0;
-		int merge = 3;
+		
 		float height = 0;
 		float heightL,heightR,heightD,heightU;
-		int algo = getBlur(x,z,image,textures);
+		
 		if(algo==0){
 			for(int i=0;i<N;i++){
 

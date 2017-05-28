@@ -108,7 +108,7 @@ public class renderMain implements Runnable {
 		
 		textures = new ArrayList<>();
 		for(civilisation.world.Terrain terrain: Configuration.terrains){
-			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getBlur(),terrain.getTiling(),terrain.getTexture());
+			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getBlur(),terrain.getMerge(),terrain.getIntensityHeightMap(),terrain.getTiling(),terrain.getTexture());
 			textures.add(type);
 		}
 		this.worldViewer = worldViewer;
@@ -151,7 +151,7 @@ public class renderMain implements Runnable {
 			font = new FontType(loader.loadFontTextureAtlas("arial"), new File("Assets/Font/arial.fnt"));
 			StaticShader shader = new StaticShader();
 			
-			float distanceFog = 50.0f;
+			float distanceFog = 100.0f;
 			
 			FPS.start();
 			
@@ -490,7 +490,7 @@ public class renderMain implements Runnable {
 		isNotify = true;
 		textures = new ArrayList<>();
 		for(civilisation.world.Terrain terrain: Configuration.terrains){
-			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getBlur(),terrain.getTiling(),terrain.getTexture());
+			TerrainTexture type = new TerrainTexture(terrain.getCouleur(),terrain.getHeight(),terrain.getErosion(),terrain.getBlur(),terrain.getMerge(),terrain.getIntensityHeightMap(),terrain.getTiling(),terrain.getTexture());
 			textures.add(type);
 		}
 		
@@ -590,8 +590,8 @@ public class renderMain implements Runnable {
 			for(int j=0;j<grid.length;j++){
 				if(grid[j].x == Configuration.civilisations.get(i).getStartX() && grid[j].y == Configuration.civilisations.get(i).getStartY()){
 					
-					int cX = (int) ((grid[j].x*5)/World.getAccuracy());
-					int cY = (int) ((grid[j].y*5)/World.getAccuracy());
+					int cX = (int) ((grid[j].x*WorldViewer.initialCellSize)/World.getAccuracy());
+					int cY = (int) ((grid[j].y*WorldViewer.initialCellSize)/World.getAccuracy());
 
 					Vector3f position = Terrain.getHeightByTab(cX,cY);
 					facilitys.add(new Facility3D(new Vector3f(position.x,position.y,position.z),-1,true));
