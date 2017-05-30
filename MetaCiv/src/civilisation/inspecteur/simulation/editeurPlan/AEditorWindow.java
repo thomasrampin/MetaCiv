@@ -39,6 +39,7 @@ public class AEditorWindow extends JFrame {
 		setSize(1024, 768);
 		setLocationRelativeTo(null);
 		JScrollPane scrollP = new JScrollPane(panelEditor);
+		scrollP.getVerticalScrollBar().setUnitIncrement(16);
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollP, new JScrollPane(panelActions));
 		splitPane.setResizeWeight(0.8);
 		add(splitPane);
