@@ -87,8 +87,8 @@ void main(void) {
 
 
 
-	distortion1 = (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor * 2.0,fs_in.tc.y*50.0)).rg * 2.0 -1.0) * waveStrenght;
-	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor* 2.0,fs_in.tc.y*50.0 + moveFactor* 2.0)).rg * 2.0 -1.0) * waveStrenght;
+	distortion1 = (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor * 10.0,fs_in.tc.y*50.0)).rg * 2.0 -1.0) * waveStrenght;
+	distortion1 += (texture(dudvMap, vec2(fs_in.tc.x*50.0 + moveFactor* 10.0,fs_in.tc.y*50.0 + moveFactor* 10.0)).rg * 2.0 -1.0) * waveStrenght;
 	vec3 normal2 =  normalize((texture(normalMap, distortion1).rbg* fs_in.height*2 ) - vec3(1.0));
 
 	vec2 distortion2 = (texture(dudvMap, vec2(fs_in.tc.x*50.0 - moveFactor * 2.0,fs_in.tc.y*50.0)).rg * 2.0 -1.0) * waveStrenght;
@@ -126,7 +126,7 @@ void main(void) {
 
 
 
-	vec4 depthTexture = mix(coastlineColor,texture(refractionMap,coords2),clamp(seaDepth/30.0,0.0,1.0));
+	vec4 depthTexture = mix(coastlineColor,texture(refractionMap,coords2),clamp(seaDepth/30.0,0.0,0.0));
 	//out_Color = texture(diffuseMap,modifyTexCoords);
 	out_Color = mix(texture(diffuseMap,coords), depthTexture,fresnelFactor);
 	//out_Color *= brightness2;
