@@ -103,7 +103,7 @@ public class PanelEnvironnement extends JJPanel{
 		out.println();
 		out.println("SnowHeight : " + World.getSnowHeight());
 		out.println("SnowDistanceAttenuation : " + World.getSnowDistanceAtt());
-		out.println("SnowDensity : " + World.getSnowDensity());
+		out.println("SnowDensity : " + World.getSnowDensity()*100);
 		out.println("RoadTiling : " + World.getRoadTiling());
 		out.println("CliffTiling : " + World.getCliffTiling());
 		out.println("Accuracy : " + World.getAccuracy());
